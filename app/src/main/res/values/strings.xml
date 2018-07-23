@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">Savory</string>
+
+    <!-- Facebook SDK related things -->
+    <string name="facebook_app_id">409640192858052</string>
+    <string name="fb_login_protocol_scheme">fb409640192858052</string>
+</resources>

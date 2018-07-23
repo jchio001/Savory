@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/facebook_button"
+    android:background="@drawable/rounded_button_background"
+    android:layout_width="match_parent"
+    android:layout_height="60dp"
+    android:padding="6dp">
+
+    <ImageView
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_gravity="start|center_vertical"
+        android:layout_marginLeft="16dp"
+        android:src="@drawable/facebook_f_white"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Continue with Facebook"
+        android:textColor="@color/white"
+        android:textSize="20sp"/>
+
+</FrameLayout>

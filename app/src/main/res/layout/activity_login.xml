@@ -10,13 +10,22 @@
 
     <TextView
         android:id="@+id/welcome_text"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:text="Welcome To Savory."
         android:textColor="@color/white"
         android:textSize="32sp"
         android:textStyle="bold"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/welcome_text"
+        android:layout_marginTop="4dp"
+        android:text="No cruft. Just food."
+        android:textColor="@color/white"
+        android:textSize="18sp"/>
 
     <com.savory.login.FacebookButton
         android:id="@+id/facebook_button"

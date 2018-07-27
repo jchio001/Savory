@@ -14,17 +14,14 @@ import com.savory.R
 
 class LoginActivity : AppCompatActivity() {
 
-    @BindView(R.id.facebook_button) lateinit var facebookButton : FrameLayout
-
-    val facebookClient = FacebookClient()
+    @BindView(R.id.facebook_button) lateinit var facebookButton : FacebookButton
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         ButterKnife.bind(this)
 
-        facebookClient.bindButton(facebookButton)
-        facebookClient.registerCallback(object : FacebookCallback<LoginResult> {
+        facebookButton.registerCallback(object : FacebookCallback<LoginResult> {
             override fun onSuccess(result: LoginResult?) {
                 Toast.makeText(this@LoginActivity, "We did it!", Toast.LENGTH_SHORT).show()
             }
@@ -39,6 +36,6 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        facebookClient.onResultReceived(requestCode, resultCode, data)
+        facebookButton.onFacebookLoginResult(requestCode, resultCode, data)
     }
 }

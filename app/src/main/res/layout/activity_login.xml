@@ -18,10 +18,10 @@
         android:textSize="32sp"
         android:textStyle="bold"/>
 
-    <include
-        layout="@layout/button_facebook"
+    <com.savory.login.FacebookButton
+        android:id="@+id/facebook_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_alignParentBottom="true" />
 
 </RelativeLayout>

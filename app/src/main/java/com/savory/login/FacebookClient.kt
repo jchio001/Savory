@@ -14,21 +14,26 @@ class FacebookClient {
     // As it turns out, lambdas that represent interfaces can generate synthetic methods
     protected val loginManager: LoginManager = LoginManager.getInstance()
 
+    // I did not make this a primary constructor since Kotlin tries to be smart with primary
+    // constructors and auto-generates a respective member variable, getters and setters for values
+    // in the primary constructor. I don't need that since all I literally just want to do is jam a
+    // single onClickListener to my button.
+    constructor(facebookButton: FacebookButton) {
+        facebookButton.setOnClickListener { _ ->
+            loginManager.logInWithReadPermissions(facebookButton.context as Activity, permissions) }
+    }
+
     fun registerCallback(callback: FacebookCallback<LoginResult>) {
         loginManager.registerCallback(callbackManager, callback)
     }
 
-    fun bindButton(button: View) {
-        button.setOnClickListener { _ ->
-            loginManager.logInWithReadPermissions(button.context as Activity, permissions) }
-    }
-
-    fun onResultReceived(requestCode: Int, resultCode: Int, data: Intent?) {
+    fun onFacebookLoginResult(requestCode: Int, resultCode: Int, data: Intent?) {
         callbackManager.onActivityResult(requestCode, resultCode, data)
     }
 
     companion object Constants {
         // https://developers.facebook.com/docs/facebook-login/permissions
-        val permissions = arrayListOf("public_profile", "user_friends")
+        // TODO: Add back in "user_friends" once there's an actual logo
+        val permissions = arrayListOf("public_profile")
     }
 }

@@ -1,10 +1,12 @@
 package com.savory.login;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
+import com.data.SPClient;
 import com.savory.R;
 import com.savory.api.SavoryClient;
 import com.savory.api.models.SavoryToken;
@@ -20,6 +22,9 @@ public class LoginActivity extends AppCompatActivity {
 
     private SavoryClient savoryClient;
     private LoginClient loginClient;
+    protected SPClient spClient;
+
+    protected ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -27,14 +32,29 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
+        spClient = new SPClient(this);
+        if (spClient.retrieveSavoryToken() != null) {
+            startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+            finish();
+        }
+
         savoryClient = SavoryClient.get();
         loginClient = new LoginClient(savoryClient);
 
         loginClient.bindFacebookButton(facebookButton);
         loginClient.listen(new LoginListener() {
             @Override
+            public void onLoginPending() {
+                progressDialog = new ProgressDialog(LoginActivity.this);
+                progressDialog.setMessage(getString(R.string.connecting));
+                progressDialog.show();
+            }
+
+            @Override
             public void onSuccessfulLogin(SavoryToken savoryToken) {
+                spClient.persistSavoryToken(savoryToken.getToken());
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
+                finish();
             }
 
             @Override
@@ -43,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onLoginError(Throwable throwable) {
+                progressDialog.dismiss();
             }
         });
     }

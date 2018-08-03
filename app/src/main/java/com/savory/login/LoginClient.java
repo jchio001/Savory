@@ -15,22 +15,24 @@ import retrofit2.Response;
 public class LoginClient {
 
     interface LoginListener {
+        void onLoginPending();
         void onSuccessfulLogin(SavoryToken savoryToken);
         void onLoginCancelled();
         void onLoginError(Throwable throwable);
     }
 
-    private SavoryClient savoryClient;
+    protected SavoryClient savoryClient;
 
-    private Call<SavoryToken> savoryTokenCall;
+    protected Call<SavoryToken> savoryTokenCall;
 
-    private LoginListener listener;
+    protected LoginListener listener;
 
     private FacebookClient facebookClient = new FacebookClient();
     private FacebookCallback<LoginResult> fbLoginCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
             if (listener != null) {
+                listener.onLoginPending();
                 savoryTokenCall = savoryClient.connect(
                     loginResult.getAccessToken().getToken());
                 savoryTokenCall.enqueue(new Callback<SavoryToken>() {

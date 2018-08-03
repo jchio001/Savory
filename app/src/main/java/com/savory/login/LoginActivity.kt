@@ -26,37 +26,26 @@ class LoginActivity : AppCompatActivity() {
 
     protected lateinit var savoryClient : SavoryClient
 
+    protected val loginClient = LoginClient(SavoryClient.get())
     protected var connectCallback : Call<Response<SavoryToken>>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
         ButterKnife.bind(this)
+
         this.savoryClient = SavoryClient.get()
 
-        facebookButton.registerCallback(object : FacebookCallback<LoginResult> {
-            override fun onSuccess(result: LoginResult?) {
-                Toast.makeText(this@LoginActivity, "We did it!", Toast.LENGTH_SHORT).show()
-                savoryClient.connect(result!!.accessToken.token.toString())
-                        .enqueue(object : Callback<SavoryToken> {
-                            override fun onResponse(call: Call<SavoryToken>?,
-                                                    response: Response<SavoryToken>?) {
-                                Log.i("LoginActivity", "We did it reddit!")
-                                startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
-                                finish()
-                            }
-
-                            override fun onFailure(call: Call<SavoryToken>?,
-                                                   t: Throwable?) {
-                                Log.e("LoginActivity", t?.message ?: "Rip")
-                            }
-                        })
+        loginClient.bindFacebookButton(facebookButton)
+        loginClient.listen(object : LoginClient.LoginListener {
+            override fun onSuccessfulLogin(savoryToken: SavoryToken) {
+                startActivity(Intent(this@LoginActivity, HomeActivity::class.java))
             }
 
-            override fun onCancel() {
+            override fun onLoginCancelled() {
             }
 
-            override fun onError(error: FacebookException?) {
+            override fun onLoginError(throwable: Throwable) {
             }
         })
     }
@@ -66,8 +55,8 @@ class LoginActivity : AppCompatActivity() {
         connectCallback?.cancel()
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent) {
         super.onActivityResult(requestCode, resultCode, data)
-        facebookButton.onFacebookLoginResult(requestCode, resultCode, data)
+        loginClient.onLoginResult(requestCode, resultCode, data)
     }
 }

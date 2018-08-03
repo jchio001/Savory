@@ -11,18 +11,7 @@ import com.savory.R
 
 class FacebookButton : FrameLayout {
 
-    private val facebookClient : FacebookClient
-
     constructor(context: Context?, attrs: AttributeSet?) : super(context, attrs) {
         View.inflate(context, R.layout.button_facebook, this);
-        facebookClient = FacebookClient(this)
-    }
-
-    fun onFacebookLoginResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        facebookClient.onFacebookLoginResult(requestCode, resultCode, data)
-    }
-
-    fun registerCallback(callback : FacebookCallback<LoginResult>) {
-        facebookClient.registerCallback(callback)
     }
 }

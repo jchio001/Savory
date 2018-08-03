@@ -31,14 +31,19 @@
                 <data android:scheme="@string/fb_login_protocol_scheme"/>
             </intent-filter>
         </activity>
-        <activity android:name=".login.LoginActivity">
+
+        <activity
+            android:name=".login.LoginActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".home.HomeActivity">
+        <activity
+            android:name=".home.HomeActivity"
+            android:screenOrientation="portrait">
         </activity>
     </application>
 

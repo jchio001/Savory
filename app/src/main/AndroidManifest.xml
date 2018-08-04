@@ -30,7 +30,6 @@
                 <data android:scheme="@string/fb_login_protocol_scheme"/>
             </intent-filter>
         </activity>
-
         <activity
             android:name=".login.LoginActivity"
             android:screenOrientation="portrait"
@@ -43,6 +42,11 @@
         </activity>
         <activity
             android:name=".home.HomeActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
+            android:name=".settings.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">
         </activity>

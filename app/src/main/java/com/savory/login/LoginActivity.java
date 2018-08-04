@@ -47,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onLoginPending() {
                 progressDialog = new ProgressDialog(LoginActivity.this);
                 progressDialog.setMessage(getString(R.string.connecting));
+                progressDialog.setCancelable(false);
                 progressDialog.show();
             }
 
@@ -63,7 +64,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onLoginError(Throwable throwable) {
-                progressDialog.dismiss();
+                progressDialog.hide();
             }
         });
     }

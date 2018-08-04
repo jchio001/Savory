@@ -27,4 +27,10 @@ public class SPClient {
     public String retrieveSavoryToken() {
         return sharedPreferences.getString(TOKEN, null);
     }
+
+    public void clear() {
+        sharedPreferences.edit()
+            .clear()
+            .apply();
+    }
 }

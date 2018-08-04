@@ -4,9 +4,12 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Menu;
 import android.widget.ImageView;
 
+import com.data.SPClient;
 import com.savory.R;
 
 import java.util.List;
@@ -21,12 +24,15 @@ public class HomeActivity extends AppCompatActivity {
     @BindView(R.id.action_profile) ImageView actionProfile;
 
     private FragmentManager fragmentManager;
+    private ActionBarManager actionBarManager;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        actionBarManager = new ActionBarManager(getSupportActionBar());
 
         fragmentManager = getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() == 0) {

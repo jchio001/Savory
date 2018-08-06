@@ -1,4 +1,4 @@
-package com.data;
+package com.savory.data;
 
 import android.content.Context;
 import android.content.SharedPreferences;

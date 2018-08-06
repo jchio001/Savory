@@ -6,7 +6,7 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.data.SPClient;
+import com.savory.data.SPClient;
 import com.savory.R;
 import com.savory.api.SavoryClient;
 import com.savory.api.models.SavoryToken;

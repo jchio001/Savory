@@ -4,9 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.ActionBar;
 
-import com.data.SPClient;
 import com.savory.R;
-import com.savory.login.LoginActivity;
 import com.savory.settings.SettingsActivity;
 
 import butterknife.ButterKnife;

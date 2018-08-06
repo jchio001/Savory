@@ -4,12 +4,9 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Menu;
 import android.widget.ImageView;
 
-import com.data.SPClient;
 import com.savory.R;
 
 import java.util.List;
@@ -63,10 +60,10 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.action_profile)
     public void onActionProfile() {
         List<Fragment> fragmentList = fragmentManager.getFragments();
-        if (!(fragmentList.get(fragmentList.size() - 1) instanceof ProfileFragment)) {
+        if (!(fragmentList.get(fragmentList.size() - 1) instanceof AccountFragment)) {
             fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, new ProfileFragment())
-                .addToBackStack("ProfileFragment")
+                .replace(R.id.fragment_container, new AccountFragment())
+                .addToBackStack("AccountFragment")
                 .commit();
         }
     }

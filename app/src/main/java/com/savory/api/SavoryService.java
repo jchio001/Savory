@@ -1,5 +1,6 @@
 package com.savory.api;
 
+import com.savory.api.models.AccountInfo;
 import com.savory.api.models.SavoryToken;
 
 import retrofit2.Call;
@@ -16,4 +17,7 @@ public interface SavoryService {
      */
     @GET("/connect")
     Call<SavoryToken> connectWithSocial(@Query("token") String socialPlatformToken);
+
+    @GET("/me")
+    Call<AccountInfo> getMyAccountInfo(@Query("token") String savoryToken);
 }

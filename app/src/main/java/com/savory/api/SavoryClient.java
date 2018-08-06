@@ -1,5 +1,9 @@
 package com.savory.api;
 
+import android.support.annotation.NonNull;
+
+import com.savory.api.models.Account;
+import com.savory.api.models.AccountInfo;
 import com.savory.api.models.SavoryToken;
 
 import okhttp3.OkHttpClient;
@@ -46,5 +50,9 @@ public class SavoryClient {
 
     public Call<SavoryToken> connect(String socialPlatformToken) {
         return savoryService.connectWithSocial(socialPlatformToken);
+    }
+
+    public Call<AccountInfo> getMyAccountInfo(@NonNull String savoryToken) {
+        return savoryService.getMyAccountInfo(savoryToken);
     }
 }

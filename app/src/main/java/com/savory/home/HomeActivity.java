@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
 
 import com.savory.R;
+import com.savory.account.AccountFragment;
 
 import java.util.List;
 

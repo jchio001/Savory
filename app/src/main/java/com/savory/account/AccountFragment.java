@@ -1,4 +1,4 @@
-package com.savory.home;
+package com.savory.account;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;

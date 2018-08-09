@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
+import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 /**
@@ -39,13 +40,13 @@ public interface SavoryService {
     /**
      * Represents getting a page of photos for a specific account
      */
-    @GET("/account/photos/{user_id}")
-    Call<List<Photo>> getAccountPhotos(@Field("user_id") int userId);
+    @GET("/account/{user_id}/photos")
+    Call<List<Photo>> getAccountPhotos(@Path("user_id") int userId);
 
     /**
      * Represents an account getting a page of their own photos.
      */
     @GET("/account/me/photos")
     Call<List<Photo>> getMyPhotos(@Header("Authorization") String savoryToken,
-                                  @Field("last_id") Integer lastId);
+                                  @Query("last_id") Integer lastId);
 }

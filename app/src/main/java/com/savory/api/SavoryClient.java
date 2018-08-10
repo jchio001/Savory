@@ -2,9 +2,11 @@ package com.savory.api;
 
 import android.support.annotation.NonNull;
 
-import com.savory.api.models.Account;
 import com.savory.api.models.AccountInfo;
+import com.savory.api.models.Photo;
 import com.savory.api.models.SavoryToken;
+
+import java.util.List;
 
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -54,5 +56,10 @@ public class SavoryClient {
 
     public Call<AccountInfo> getMyAccountInfo(@NonNull String savoryToken) {
         return savoryService.getMyAccountInfo(savoryToken);
+    }
+
+    public Call<List<Photo>> getMyPhotos(@NonNull String savoryToken,
+                                         int lastId) {
+        return savoryService.getMyPhotos(savoryToken, lastId);
     }
 }

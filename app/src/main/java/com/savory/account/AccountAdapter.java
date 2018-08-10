@@ -66,6 +66,16 @@ public class AccountAdapter extends BaseAdapter {
         }
     }
 
+    public int getLastId() {
+        int currentSize = photos.size();
+
+        if (currentSize > 0) {
+            return photos.get(photos.size() - 1).getId();
+        } else {
+            return -1;
+        }
+    }
+
     private View renderAccountCell(View convertView, ViewGroup parent) {
         AccountInfoViewHolder accountInfoViewHolder;
         if (convertView == null) {

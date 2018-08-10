@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,9 +13,12 @@ import android.widget.ProgressBar;
 import com.savory.R;
 import com.savory.api.SavoryClient;
 import com.savory.api.models.AccountInfo;
+import com.savory.api.models.Photo;
 import com.savory.data.SPClient;
+import com.savory.ui.PagingOnScrollListener;
+import com.savory.ui.PagingOnScrollListener.PageSupplier;
 
-import java.util.logging.Logger;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -24,16 +26,15 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-
 public class AccountFragment extends Fragment {
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.profile_listview) ListView profileListView;
 
-    private SavoryClient savoryClient;
+    protected SavoryClient savoryClient;
     private SPClient spClient;
 
-    private String savoryToken;
+    protected String savoryToken;
 
     @Nullable
     @Override
@@ -60,7 +61,17 @@ public class AccountFragment extends Fragment {
                     if (response.isSuccessful()) {
                         progressBar.setVisibility(View.GONE);
                         profileListView.setVisibility(View.VISIBLE);
-                        profileListView.setAdapter(new AccountAdapter(response.body()));
+
+                        final AccountAdapter accountAdapter = new AccountAdapter(response.body());
+                        profileListView.setAdapter(accountAdapter);
+                        profileListView.setOnScrollListener(new PagingOnScrollListener<>(
+                            new PageSupplier<Photo>() {
+                                @Override
+                                public Call<List<Photo>> supplyPage() {
+                                    return savoryClient.getMyPhotos(savoryToken,
+                                        accountAdapter.getLastId());
+                                }
+                            }));
                     }
                 }
 

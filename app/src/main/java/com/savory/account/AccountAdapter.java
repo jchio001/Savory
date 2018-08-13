@@ -10,27 +10,33 @@ import com.savory.api.models.Account;
 import com.savory.api.models.AccountInfo;
 import com.savory.api.models.Photo;
 import com.savory.photos.PhotosCellViewHolder;
+import com.savory.ui.AbstractPagingAdapter;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class AccountAdapter extends BaseAdapter {
+public class AccountAdapter extends AbstractPagingAdapter<Photo> {
 
     private Account account;
-    private ArrayList<Photo> photos = new ArrayList<>(18);
 
-    public AccountAdapter(AccountInfo accountInfo) {
-        this.account = accountInfo.getAccount();
-        photos.addAll(accountInfo.getPhotos());
+    public AccountAdapter(int pageSize) {
+        super(pageSize);
     }
 
     @Override
     public int getCount() {
-        return 2 + (photos.size() / 3);
+        return (account != null ? 1 : 0) + (objects.size() / 3) + (isPageAvailable ? 1 : 0);
     }
 
     @Override
     public Object getItem(int position) {
-        return account;
+        if (position == 0) {
+            return account;
+        } else if (1 <= position && position < 1 + (objects.size() / 3)) {
+            return objects.get(position - 1);
+        } else {
+            return null;
+        }
     }
 
     @Override
@@ -42,7 +48,7 @@ public class AccountAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         if (position == 0) {
             return 1;
-        } else if (1 <= position && position < 1 + (photos.size() / 3)) {
+        } else if (1 <= position && position < 1 + (objects.size() / 3)) {
             return 2;
         } else {
             return 3;
@@ -66,11 +72,18 @@ public class AccountAdapter extends BaseAdapter {
         }
     }
 
+    public void addAccountInfo(AccountInfo accountInfo) {
+        this.account = accountInfo.getAccount();
+        objects.addAll(accountInfo.getPhotos());
+        isPageAvailable = (objects.size() == pageSize);
+        notifyDataSetChanged();
+    }
+
     public int getLastId() {
-        int currentSize = photos.size();
+        int currentSize = objects.size();
 
         if (currentSize > 0) {
-            return photos.get(photos.size() - 1).getId();
+            return objects.get(objects.size() - 1).getId();
         } else {
             return -1;
         }
@@ -104,9 +117,9 @@ public class AccountAdapter extends BaseAdapter {
 
         int startIndex = ((position - 1) * 3);
         photosCellViewHolder.setContent(
-            photos.get(startIndex),
-            photos.get(startIndex + 1),
-            photos.get(startIndex + 2));
+            objects.get(startIndex),
+            objects.get(startIndex + 1),
+            objects.get(startIndex + 2));
 
         return convertView;
     }

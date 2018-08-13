@@ -36,6 +36,9 @@ public class AccountFragment extends Fragment {
 
     protected String savoryToken;
 
+    private PagingOnScrollListener<Photo> pagingOnScrollListener;
+    protected AccountAdapter accountAdapter = new AccountAdapter(15);
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
@@ -54,31 +57,43 @@ public class AccountFragment extends Fragment {
         spClient = new SPClient(getContext());
         savoryToken = spClient.retrieveSavoryToken();
 
+        PageSupplier<Photo> photoPageSupplier = new PageSupplier<Photo>() {
+            @Override
+            public Call<List<Photo>> supplyPage() {
+                return savoryClient.getMyPhotos(savoryToken, accountAdapter.getLastId());
+            }
+
+            @Override
+            public void onFailure(@NonNull Throwable throwable) {
+            }
+        };
+
+        pagingOnScrollListener = new PagingOnScrollListener<>(photoPageSupplier);
+        profileListView.setAdapter(accountAdapter);
+        profileListView.setOnScrollListener(pagingOnScrollListener);
+
+        // TODO: Fix nested class spaghetti
         savoryClient.getMyAccountInfo(savoryToken)
             .enqueue(new Callback<AccountInfo>() {
                 @Override
-                public void onResponse(Call<AccountInfo> call, Response<AccountInfo> response) {
+                public void onResponse(@NonNull Call<AccountInfo> call,
+                                       @NonNull Response<AccountInfo> response) {
                     if (response.isSuccessful()) {
                         progressBar.setVisibility(View.GONE);
                         profileListView.setVisibility(View.VISIBLE);
-
-                        final AccountAdapter accountAdapter = new AccountAdapter(response.body());
-                        profileListView.setAdapter(accountAdapter);
-                        profileListView.setOnScrollListener(new PagingOnScrollListener<>(
-                            new PageSupplier<Photo>() {
-                                @Override
-                                public Call<List<Photo>> supplyPage() {
-                                    return savoryClient.getMyPhotos(savoryToken,
-                                        accountAdapter.getLastId());
-                                }
-                            }));
+                        accountAdapter.addAccountInfo(response.body());
                     }
                 }
 
                 @Override
                 public void onFailure(Call<AccountInfo> call, Throwable t) {
-
                 }
             });
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        pagingOnScrollListener.cancelPendingPage();
     }
 }

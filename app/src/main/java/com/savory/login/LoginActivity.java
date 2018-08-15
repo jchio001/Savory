@@ -36,6 +36,7 @@ public class LoginActivity extends AppCompatActivity {
         if (spClient.retrieveSavoryToken() != null) {
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             finish();
+            return;
         }
 
         savoryClient = SavoryClient.get();

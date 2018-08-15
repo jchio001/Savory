@@ -72,23 +72,27 @@ public class AccountFragment extends Fragment {
         profileListView.setAdapter(accountAdapter);
         profileListView.setOnScrollListener(pagingOnScrollListener);
 
-        // TODO: Fix nested class spaghetti
-        savoryClient.getMyAccountInfo(savoryToken)
-            .enqueue(new Callback<AccountInfo>() {
-                @Override
-                public void onResponse(@NonNull Call<AccountInfo> call,
-                                       @NonNull Response<AccountInfo> response) {
-                    if (response.isSuccessful()) {
-                        progressBar.setVisibility(View.GONE);
-                        profileListView.setVisibility(View.VISIBLE);
-                        accountAdapter.addAccountInfo(response.body());
+        if (accountAdapter.getCount() == 0) {
+            savoryClient.getMyAccountInfo(savoryToken)
+                .enqueue(new Callback<AccountInfo>() {
+                    @Override
+                    public void onResponse(@NonNull Call<AccountInfo> call,
+                                           @NonNull Response<AccountInfo> response) {
+                        if (response.isSuccessful()) {
+                            progressBar.setVisibility(View.GONE);
+                            profileListView.setVisibility(View.VISIBLE);
+                            accountAdapter.addAccountInfo(response.body());
+                        }
                     }
-                }
 
-                @Override
-                public void onFailure(Call<AccountInfo> call, Throwable t) {
-                }
-            });
+                    @Override
+                    public void onFailure(Call<AccountInfo> call, Throwable t) {
+                    }
+                });
+        } else {
+            progressBar.setVisibility(View.GONE);
+            profileListView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

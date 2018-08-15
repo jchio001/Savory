@@ -24,18 +24,24 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private ActionBarManager actionBarManager;
 
+    private FeedFragment feedFragment;
+    private AccountFragment accountFragment;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
+        feedFragment = new FeedFragment();
+        accountFragment = new AccountFragment();
+
         actionBarManager = new ActionBarManager(getSupportActionBar());
 
         fragmentManager = getSupportFragmentManager();
         if (fragmentManager.getBackStackEntryCount() == 0) {
             fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, new FeedFragment())
+                .replace(R.id.fragment_container, feedFragment)
                 .addToBackStack("FeedFragment")
                 .commit();
         }
@@ -63,7 +69,7 @@ public class HomeActivity extends AppCompatActivity {
         List<Fragment> fragmentList = fragmentManager.getFragments();
         if (!(fragmentList.get(fragmentList.size() - 1) instanceof AccountFragment)) {
             fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, new AccountFragment())
+                .replace(R.id.fragment_container, accountFragment)
                 .addToBackStack("AccountFragment")
                 .commit();
         }

@@ -28,7 +28,7 @@ public interface SavoryService {
      * Represents a user getting their own account information
      */
     @GET("/account/me")
-    Call<AccountInfo> getMyAccountInfo(@Query("token") String savoryToken);
+    Call<AccountInfo> getMyAccountInfo(@Header("Authorization") String savoryToken);
 
     /**
      * Represents getting a page of photos for a user's feed

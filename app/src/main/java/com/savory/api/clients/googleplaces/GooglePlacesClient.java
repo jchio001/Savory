@@ -12,7 +12,7 @@ import retrofit2.Call;
 public class GooglePlacesClient {
 
     private static final String BASE_URL =
-        "https://maps.googleapis.com/maps/api/place/findplacefromtext/output";
+        "https://maps.googleapis.com/";
 
     private static final String GOOGLE_API_KEY = BuildConfig.GOOGLE_API_KEY;
 

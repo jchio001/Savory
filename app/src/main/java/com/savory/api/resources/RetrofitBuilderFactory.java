@@ -17,7 +17,7 @@ public class RetrofitBuilderFactory {
 
     private static final HttpLoggingInterceptor HTTP_LOGGING_INTERCEPTOR;
 
-    private static final String STUBBED_BASE_URL = "http://pleasereplace.thisbaseurl";
+    private static final String STUBBED_BASE_URL = "http://pleasereplace.thisbaseurl/";
 
     static {
         HTTP_LOGGING_INTERCEPTOR = new HttpLoggingInterceptor();

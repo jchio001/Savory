@@ -10,7 +10,7 @@ public class Place {
 
     private String name;
 
-    private List<Void> photos;
+    private List<Photo> photos;
 
     @Json(name = "place_id")
     private String placeId;
@@ -25,7 +25,7 @@ public class Place {
         return name;
     }
 
-    public List<Void> getPhotos() {
+    public List<Photo> getPhotos() {
         return photos;
     }
 

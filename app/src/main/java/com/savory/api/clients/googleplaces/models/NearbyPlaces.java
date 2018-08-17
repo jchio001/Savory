@@ -4,12 +4,12 @@ import java.util.List;
 
 public class NearbyPlaces {
 
-    private List<Place> nearbyPlaces;
+    private List<Place> results;
 
     private String status;
 
-    public List<Place> getNearbyPlaces() {
-        return nearbyPlaces;
+    public List<Place> getResults() {
+        return results;
     }
 
     public String getStatus() {

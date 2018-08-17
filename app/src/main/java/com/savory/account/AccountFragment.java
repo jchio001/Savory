@@ -11,9 +11,9 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 
 import com.savory.R;
-import com.savory.api.SavoryClient;
-import com.savory.api.models.AccountInfo;
-import com.savory.api.models.Photo;
+import com.savory.api.clients.savory.SavoryClient;
+import com.savory.api.clients.savory.models.AccountInfo;
+import com.savory.api.clients.savory.models.Photo;
 import com.savory.data.SPClient;
 import com.savory.ui.PagingOnScrollListener;
 import com.savory.ui.PagingOnScrollListener.PageSupplier;

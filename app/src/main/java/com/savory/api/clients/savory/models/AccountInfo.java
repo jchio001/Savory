@@ -1,4 +1,4 @@
-package com.savory.api.models;
+package com.savory.api.clients.savory.models;
 
 import java.util.List;
 

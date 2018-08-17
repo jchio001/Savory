@@ -1,11 +1,10 @@
 package com.savory.photos;
 
-import android.media.Image;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.savory.api.models.Photo;
+import com.savory.api.clients.savory.models.Photo;
 import com.squareup.picasso.Picasso;
 
 public class PhotosCellViewHolder {

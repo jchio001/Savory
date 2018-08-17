@@ -3,17 +3,13 @@ package com.savory.account;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
 import com.savory.R;
-import com.savory.api.models.Account;
-import com.savory.api.models.AccountInfo;
-import com.savory.api.models.Photo;
+import com.savory.api.clients.savory.models.Account;
+import com.savory.api.clients.savory.models.AccountInfo;
+import com.savory.api.clients.savory.models.Photo;
 import com.savory.photos.PhotosCellViewHolder;
 import com.savory.ui.AbstractPagingAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class AccountAdapter extends AbstractPagingAdapter<Photo> {
 

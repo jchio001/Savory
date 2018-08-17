@@ -5,8 +5,8 @@ import android.content.Intent;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
-import com.savory.api.SavoryClient;
-import com.savory.api.models.SavoryToken;
+import com.savory.api.clients.savory.SavoryClient;
+import com.savory.api.clients.savory.models.SavoryToken;
 
 import retrofit2.Call;
 import retrofit2.Callback;

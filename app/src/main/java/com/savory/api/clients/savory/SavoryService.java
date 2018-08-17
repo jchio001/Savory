@@ -1,13 +1,12 @@
-package com.savory.api;
+package com.savory.api.clients.savory;
 
-import com.savory.api.models.AccountInfo;
-import com.savory.api.models.Photo;
-import com.savory.api.models.SavoryToken;
+import com.savory.api.clients.savory.models.AccountInfo;
+import com.savory.api.clients.savory.models.Photo;
+import com.savory.api.clients.savory.models.SavoryToken;
 
 import java.util.List;
 
 import retrofit2.Call;
-import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Header;
 import retrofit2.http.Path;
@@ -21,32 +20,32 @@ public interface SavoryService {
     /**
      * Represents connecting with Facebook.
      */
-    @GET("/connect")
+    @GET("connect")
     Call<SavoryToken> connectWithSocial(@Query("token") String socialPlatformToken);
 
     /**
      * Represents a user getting their own account information
      */
-    @GET("/account/me")
+    @GET("account/me")
     Call<AccountInfo> getMyAccountInfo(@Header("Authorization") String savoryToken);
 
     /**
      * Represents getting a page of photos for a user's feed
      */
-    @GET("/photos")
+    @GET("photos")
     Call<List<Photo>> getPhotos(@Header("Authorization") String savoryToken,
                                 @Query("last_id") Integer lastId);
 
     /**
      * Represents getting a page of photos for a specific account
      */
-    @GET("/account/{user_id}/photos")
+    @GET("account/{user_id}/photos")
     Call<List<Photo>> getAccountPhotos(@Path("user_id") int userId);
 
     /**
      * Represents an account getting a page of their own photos.
      */
-    @GET("/account/me/photos")
+    @GET("account/me/photos")
     Call<List<Photo>> getMyPhotos(@Header("Authorization") String savoryToken,
                                   @Query("last_id") Integer lastId);
 }

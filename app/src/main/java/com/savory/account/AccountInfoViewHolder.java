@@ -5,7 +5,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.savory.R;
-import com.savory.api.models.Account;
+import com.savory.api.clients.savory.models.Account;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;

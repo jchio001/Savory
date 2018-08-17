@@ -14,6 +14,7 @@ import com.savory.R;
 import com.savory.api.clients.googleplaces.GooglePlacesClient;
 import com.savory.ui.PlacesAdapter;
 import com.savory.ui.PlacesAdapter.ErrorListener;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -25,12 +26,13 @@ public class FeedFragment extends Fragment {
     private PlacesAdapter placesAdapter;
 
     public FeedFragment() {
-        placesAdapter = new PlacesAdapter(GooglePlacesClient.get(), new ErrorListener() {
-            @Override
-            public void onErrorReceived(Throwable t) {
+        placesAdapter = new PlacesAdapter(Picasso.get(), GooglePlacesClient.get(),
+            new ErrorListener() {
+                @Override
+                public void onErrorReceived(Throwable t) {
 
-            }
-        });
+                }
+            });
     }
 
     @Nullable

@@ -8,6 +8,8 @@ public class Place {
 
     private Geometry geometry;
 
+    private String icon;
+
     private String name;
 
     private List<Photo> photos;
@@ -19,6 +21,10 @@ public class Place {
 
     public Geometry getGeometry() {
         return geometry;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 
     public String getName() {

@@ -11,7 +11,9 @@ import android.widget.TextView;
 import com.savory.R;
 import com.savory.api.clients.googleplaces.GooglePlacesClient;
 import com.savory.api.clients.googleplaces.models.NearbyPlaces;
+import com.savory.api.clients.googleplaces.models.Photo;
 import com.savory.api.clients.googleplaces.models.Place;
+import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -29,6 +31,8 @@ public class PlacesAdapter extends BaseAdapter {
     }
 
     public static final String DEFAULT_KEYWORD = "food";
+
+    private Picasso picasso;
 
     private GooglePlacesClient googlePlacesClient;
 
@@ -55,8 +59,10 @@ public class PlacesAdapter extends BaseAdapter {
 
     private Call<NearbyPlaces> nearbyPlacesCall;
 
-    public PlacesAdapter(@NonNull GooglePlacesClient googlePlacesClient,
+    public PlacesAdapter(@NonNull Picasso picasso,
+                         @NonNull GooglePlacesClient googlePlacesClient,
                          @NonNull final ErrorListener errorListener) {
+        this.picasso = picasso;
         this.googlePlacesClient = googlePlacesClient;
         this.errorListener = errorListener;
     }
@@ -76,7 +82,6 @@ public class PlacesAdapter extends BaseAdapter {
         return position;
     }
 
-    // TODO: Create the image url & load it into preview Image
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         PlacesViewHolder placesViewHolder;
@@ -90,6 +95,14 @@ public class PlacesAdapter extends BaseAdapter {
         }
 
         Place place = places.get(position);
+        List<Photo> photos = place.getPhotos();
+
+        String imageUrl = (photos != null && !photos.isEmpty()) ? photos.get(0).getPhotoUrl() :
+            place.getIcon();
+
+        picasso.load(imageUrl)
+            .into(placesViewHolder.previewImage);
+        
         placesViewHolder.nameTextView.setText(place.getName());
         placesViewHolder.addressTextView.setText(place.getVicinity());
 

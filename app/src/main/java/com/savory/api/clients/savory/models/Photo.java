@@ -2,6 +2,10 @@ package com.savory.api.clients.savory.models;
 
 import com.squareup.moshi.Json;
 
+/**
+ * Photo object returned from our backend. Not be confused with
+ * {@link com.savory.api.clients.googleplaces.models.Photo}.
+ */
 public class Photo {
 
     private int id;

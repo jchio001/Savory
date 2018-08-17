@@ -2,6 +2,7 @@ package com.savory.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.facebook.CallbackManager;
@@ -19,7 +20,7 @@ public class FacebookClient {
     private CallbackManager callbackManager = CallbackManager.Factory.create();
     protected LoginManager loginManager = LoginManager.getInstance();
 
-    public void bind(FacebookButton facebookButton) {
+    public void bind(@NonNull FacebookButton facebookButton) {
         facebookButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -28,7 +29,7 @@ public class FacebookClient {
         });
     }
 
-    public void registerCallback(FacebookCallback<LoginResult> callback) {
+    public void registerCallback(@NonNull FacebookCallback<LoginResult> callback) {
         loginManager.registerCallback(callbackManager, callback);
     }
 

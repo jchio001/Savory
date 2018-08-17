@@ -1,6 +1,7 @@
 package com.savory.login;
 
 import android.content.Intent;
+import android.support.annotation.NonNull;
 
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
@@ -71,16 +72,16 @@ public class LoginClient {
         }
     };
 
-    public LoginClient(SavoryClient savoryClient) {
+    public LoginClient(@NonNull SavoryClient savoryClient) {
         this.savoryClient = savoryClient;
         facebookClient.registerCallback(fbLoginCallback);
     }
 
-    void bindFacebookButton(FacebookButton facebookButton) {
+    void bindFacebookButton(@NonNull FacebookButton facebookButton) {
         facebookClient.bind(facebookButton);
     }
 
-    void listen(LoginListener listener) {
+    void listen(@NonNull LoginListener listener) {
         this.listener = listener;
     }
 

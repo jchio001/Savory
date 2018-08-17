@@ -41,7 +41,7 @@ public class SavoryClient {
         return instance;
     }
 
-    public Call<SavoryToken> connect(String socialPlatformToken) {
+    public Call<SavoryToken> connect(@NonNull String socialPlatformToken) {
         return savoryService.connectWithSocial(socialPlatformToken);
     }
 

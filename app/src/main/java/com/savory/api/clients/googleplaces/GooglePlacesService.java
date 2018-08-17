@@ -1,5 +1,7 @@
 package com.savory.api.clients.googleplaces;
 
+import android.support.annotation.NonNull;
+
 import com.savory.api.clients.googleplaces.models.NearbyPlaces;
 
 import retrofit2.Call;
@@ -16,6 +18,6 @@ public interface GooglePlacesService {
      * Makes a request to Google Places API to retrieve a list of nearby restaurants.
      */
     @GET("maps/api/place/nearbysearch/json?rankby=distance&type=food,restaurant")
-    Call<NearbyPlaces> getPlaces(@Query("key") String apiKey,
-                                 @Query("keyword") String keyword);
+    Call<NearbyPlaces> getPlaces(@NonNull @Query("key") String apiKey,
+                                 @NonNull @Query("keyword") String keyword);
 }

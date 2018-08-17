@@ -2,6 +2,7 @@ package com.savory.home;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.annotation.NonNull;
 import android.support.v7.app.ActionBar;
 
 import com.savory.R;
@@ -14,7 +15,7 @@ public class ActionBarManager {
 
     private ActionBar actionBar;
 
-    public ActionBarManager(ActionBar actionBar) {
+    public ActionBarManager(@NonNull ActionBar actionBar) {
         this.actionBar = actionBar;
         actionBar.setCustomView(R.layout.action_bar_layout);
         actionBar.setDisplayShowCustomEnabled(true);

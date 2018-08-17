@@ -1,5 +1,6 @@
 package com.savory.photos;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -22,7 +23,7 @@ public class PhotosCellViewHolder {
         }
     }
 
-    public void setContent(Photo... photos) {
+    public void setContent(@NonNull Photo... photos) {
         Picasso picasso = Picasso.get();
         for (int i = 0, len = photos.length; i < len; ++i) {
             picasso.load(photos[i].getPhotoUrl())

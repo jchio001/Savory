@@ -3,6 +3,7 @@ package com.savory.data;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.NonNull;
 
 /**
  * Client that wraps around SharedPreferences. Activity/fragment code should rarely interface with
@@ -18,7 +19,7 @@ public class SPClient {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
 
-    public void persistSavoryToken(String token) {
+    public void persistSavoryToken(@NonNull String token) {
         sharedPreferences.edit()
             .putString(TOKEN, token)
             .apply();

@@ -1,5 +1,6 @@
 package com.savory.ui;
 
+import android.support.annotation.NonNull;
 import android.widget.BaseAdapter;
 
 import java.util.ArrayList;
@@ -21,7 +22,7 @@ public abstract class AbstractPagingAdapter<T> extends BaseAdapter {
         objects = new ArrayList<>(pageSize * 2);
     }
 
-    public final void addPage(List<T> page) {
+    public final void addPage(@NonNull List<T> page) {
         objects.addAll(page);
         isPageAvailable = (page.size() == pageSize);
         notifyDataSetChanged();

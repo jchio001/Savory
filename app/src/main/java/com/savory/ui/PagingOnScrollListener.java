@@ -71,7 +71,7 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
         }
     }
 
-    private boolean isLastItemProgressBar(AbsListView view,
+    private boolean isLastItemProgressBar(@NonNull AbsListView view,
                                           int firstVisibleItem,
                                           int visibleItemCount,
                                           int totalItemCount) {

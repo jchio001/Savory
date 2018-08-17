@@ -1,5 +1,6 @@
 package com.savory.account;
 
+import android.support.annotation.NonNull;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -23,7 +24,7 @@ public class AccountInfoViewHolder {
         ButterKnife.bind(this, view);
     }
 
-    public void populate(Account account) {
+    public void populate(@NonNull Account account) {
         accountName.setText(account.getFullName());
         Picasso.get()
             .load(account.getProfileImage())

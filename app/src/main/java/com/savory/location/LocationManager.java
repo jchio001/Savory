@@ -1,5 +1,7 @@
 package com.savory.location;
 
+import android.support.annotation.NonNull;
+
 import java.io.IOException;
 import java.util.Locale;
 
@@ -24,7 +26,7 @@ public class LocationManager implements Interceptor {
     }
 
     @Override
-    public Response intercept(Chain chain) throws IOException {
+    public Response intercept(@NonNull Chain chain) throws IOException {
         Request request = chain.request();
 
         HttpUrl httpUrl = request.url().newBuilder()

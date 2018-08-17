@@ -1,6 +1,7 @@
 package com.savory.ui;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -83,7 +84,9 @@ public class PlacesAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(int position,
+                        @Nullable View convertView,
+                        @NonNull ViewGroup parent) {
         PlacesViewHolder placesViewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
@@ -102,7 +105,7 @@ public class PlacesAdapter extends BaseAdapter {
 
         picasso.load(imageUrl)
             .into(placesViewHolder.previewImage);
-        
+
         placesViewHolder.nameTextView.setText(place.getName());
         placesViewHolder.addressTextView.setText(place.getVicinity());
 

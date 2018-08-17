@@ -1,5 +1,7 @@
 package com.savory.api.resources;
 
+import android.support.annotation.NonNull;
+
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -39,7 +41,7 @@ public class RetrofitBuilderFactory {
      * instances, which saves a good amount of memory.
      * @return A cookie cutter Retrofit.Builder() instance
      */
-    public static Retrofit.Builder createBase(Interceptor... interceptors) {
+    public static Retrofit.Builder createBase(@NonNull Interceptor... interceptors) {
         OkHttpClient.Builder okHttpClientBuilder = BASE_OK_HTTP_CLIENT.newBuilder();
 
         // This is to ensure that the properly formatted request/response will be logged, as OkHttp

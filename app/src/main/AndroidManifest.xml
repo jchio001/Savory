@@ -46,6 +46,11 @@
             android:theme="@style/AppTheme">
         </activity>
         <activity
+            android:name=".restaurant.RestaurantPickerActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppTheme">
+        </activity>
+        <activity
             android:name=".settings.SettingsActivity"
             android:screenOrientation="portrait"
             android:theme="@style/AppTheme">

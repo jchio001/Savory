@@ -21,44 +21,11 @@ import butterknife.ButterKnife;
 
 public class FeedFragment extends Fragment {
 
-    @BindView(R.id.places_listview) ListView placesListView;
-
-    private PlacesAdapter placesAdapter;
-
-    public FeedFragment() {
-        placesAdapter = new PlacesAdapter(Picasso.get(), GooglePlacesClient.get(),
-            new ErrorListener() {
-                @Override
-                public void onErrorReceived(Throwable t) {
-
-                }
-            });
-    }
-
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_feed, container, false);
-    }
-
-    @Override
-    public void onViewCreated(@NonNull View view,
-                              @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-
-        if (placesAdapter.getCount() == 0) {
-            placesAdapter.query(PlacesAdapter.DEFAULT_KEYWORD);
-        }
-
-        placesListView.setAdapter(placesAdapter);
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        placesAdapter.cancelPendingRequest();
     }
 }

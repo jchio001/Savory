@@ -5,10 +5,12 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.savory.R;
 import com.savory.account.AccountFragment;
+import com.savory.upload.UploadFragment;
 
 import java.util.List;
 
@@ -18,13 +20,14 @@ import butterknife.OnClick;
 
 public class HomeActivity extends AppCompatActivity {
 
-    @BindView(R.id.action_home) ImageView actionHome;
-    @BindView(R.id.action_profile) ImageView actionProfile;
+    @BindView(R.id.action_home) FrameLayout actionHome;
+    @BindView(R.id.action_profile) FrameLayout actionProfile;
 
     private FragmentManager fragmentManager;
     private ActionBarManager actionBarManager;
 
     private FeedFragment feedFragment;
+    private UploadFragment uploadFragment;
     private AccountFragment accountFragment;
 
     @Override
@@ -34,6 +37,7 @@ public class HomeActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         feedFragment = new FeedFragment();
+        uploadFragment = new UploadFragment();
         accountFragment = new AccountFragment();
 
         actionBarManager = new ActionBarManager(getSupportActionBar());
@@ -61,6 +65,17 @@ public class HomeActivity extends AppCompatActivity {
         List<Fragment> fragmentList = fragmentManager.getFragments();
         if (!(fragmentList.get(fragmentList.size() - 1) instanceof FeedFragment)) {
             fragmentManager.popBackStack();
+        }
+    }
+
+    @OnClick(R.id.action_camera)
+    public void onActionCamera() {
+        List<Fragment> fragmentList = fragmentManager.getFragments();
+        if (!(fragmentList.get(fragmentList.size() - 1) instanceof UploadFragment)) {
+            fragmentManager.beginTransaction()
+                .replace(R.id.fragment_container, uploadFragment)
+                .addToBackStack("UploadFragment")
+                .commit();
         }
     }
 

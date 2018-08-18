@@ -15,4 +15,11 @@
         <item name="colorAccent">@color/colorPrimary</item>
     </style>
 
+    <style name="UploadCardTheme">
+        <item name="cardCornerRadius">4dp</item>
+        <item name="cardElevation">4dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="contentPadding">6dp</item>
+    </style>
+
 </resources>

@@ -18,15 +18,15 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:weightSum="100">
+        android:weightSum="99">
 
         <FrameLayout
+            android:id="@+id/action_home"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="50">
+            android:layout_weight="33">
 
             <ImageView
-                android:id="@+id/action_home"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"
@@ -36,12 +36,27 @@
         </FrameLayout>
 
         <FrameLayout
+            android:id="@+id/action_camera"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="50">
+            android:layout_weight="33">
+            
+            <ImageView
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_gravity="center"
+                android:padding="6dp"
+                android:src="@drawable/ic_camera"/>
+            
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/action_profile"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="33">
 
             <ImageView
-                android:id="@+id/action_profile"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
                 android:layout_gravity="center"

@@ -60,7 +60,7 @@ public class AccountFragment extends Fragment {
         PageSupplier<Photo> photoPageSupplier = new PageSupplier<Photo>() {
             @Override
             public Call<List<Photo>> supplyPage() {
-                return savoryClient.getMyPhotos(savoryToken, accountAdapter.getLastId());
+                return savoryClient.getPageOfMyPhotos(savoryToken, accountAdapter.getLastId());
             }
 
             @Override

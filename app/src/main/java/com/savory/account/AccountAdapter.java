@@ -75,6 +75,7 @@ public class AccountAdapter extends AbstractPagingAdapter<Photo> {
         notifyDataSetChanged();
     }
 
+    @Override
     public int getLastId() {
         int currentSize = objects.size();
 

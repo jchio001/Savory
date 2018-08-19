@@ -1,6 +1,7 @@
 package com.savory.api.clients.savory;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.savory.api.clients.savory.models.AccountInfo;
 import com.savory.api.clients.savory.models.Photo;
@@ -19,8 +20,6 @@ public class SavoryClient {
     private static SavoryClient instance;
 
     private SavoryService savoryService;
-
-    private LocationManager locationManager = new LocationManager();
 
     private SavoryClient() {
         savoryService = RetrofitBuilderFactory.createBase()
@@ -45,12 +44,17 @@ public class SavoryClient {
         return savoryService.connectWithSocial(socialPlatformToken);
     }
 
+    public Call<List<Photo>> getPageOfPhotos(@NonNull String savoryToken,
+                                             @Nullable Integer lastId)  {
+        return savoryService.getPageOfPhotos(savoryToken, lastId);
+    }
+
     public Call<AccountInfo> getMyAccountInfo(@NonNull String savoryToken) {
         return savoryService.getMyAccountInfo(savoryToken);
     }
 
-    public Call<List<Photo>> getMyPhotos(@NonNull String savoryToken,
-                                         int lastId) {
-        return savoryService.getMyPhotos(savoryToken, lastId);
+    public Call<List<Photo>> getPageOfMyPhotos(@NonNull String savoryToken,
+                                               @Nullable Integer lastId) {
+        return savoryService.getPageOfMyPhotos(savoryToken, lastId);
     }
 }

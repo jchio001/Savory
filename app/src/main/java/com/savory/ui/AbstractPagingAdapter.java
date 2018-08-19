@@ -27,4 +27,6 @@ public abstract class AbstractPagingAdapter<T> extends BaseAdapter {
         isPageAvailable = (page.size() == pageSize);
         notifyDataSetChanged();
     }
+
+    public abstract int getLastId();
 }

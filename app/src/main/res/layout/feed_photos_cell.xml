@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/dish_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:paddingTop="8dp"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:text="What is this?"
+        android:textColor="@color/grey"
+        android:textSize="24sp"/>
+
+    <TextView
+        android:id="@+id/photo_timestamp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/dish_name"
+        android:paddingLeft="6dp"
+        android:paddingRight="6dp"
+        android:textColor="@color/grey"
+        android:textSize="16sp"/>
+
+    <com.savory.ui.SquareImageView
+        android:id="@+id/imageview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/photo_timestamp"
+        android:background="@color/light_grey"
+        tools:src="@drawable/ic_person"/>
+
+    <com.savory.ui.RatingView
+        android:id="@+id/rating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/photo_timestamp"/>
+
+    <TextView
+        android:id="@+id/description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/imageview"
+        android:padding="6dp"
+        android:text="Best image ever."
+        android:textColor="@color/grey"
+        android:textSize="18sp"/>
+
+</RelativeLayout>

@@ -6,10 +6,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.FrameLayout;
-import android.widget.ImageView;
 
 import com.savory.R;
 import com.savory.account.AccountFragment;
+import com.savory.feed.FeedFragment;
 import com.savory.upload.UploadFragment;
 
 import java.util.List;

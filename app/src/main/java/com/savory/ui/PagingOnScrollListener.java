@@ -80,6 +80,8 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
     public void onScrollStateChanged(@NonNull AbsListView view, int scrollState) {
     }
 
+    // TODO: Fix up the call logic once this app is at the point where we care about managing calls
+    // TODO: with respect to fragment lifecycles.
     @SuppressWarnings("unchecked")
     @Override
     public void onScroll(@NonNull final AbsListView view,
@@ -90,21 +92,25 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
 
         if (totalItemCount == 0 && !isFetching) {
             isFetching = true;
-            currentPageCall.enqueue(new Callback() {
-                @Override
-                public void onResponse(@NonNull Call call,
-                                       @NonNull Response response) {
-                    pagingAdapter.onFirstPageResponse(response);
-                    supplier.onFirstPageLoaded();
-                    isFetching = false;
-                }
 
-                @Override
-                public void onFailure(@NonNull Call call,
-                                      @NonNull Throwable t) {
-                    isFetching = false;
-                }
-            });
+            if (!currentPageCall.isExecuted()) {
+                currentPageCall.enqueue(new Callback() {
+
+                    @Override
+                    public void onResponse(@NonNull Call call,
+                                           @NonNull Response response) {
+                        pagingAdapter.onFirstPageResponse(response);
+                        supplier.onFirstPageLoaded();
+                        isFetching = false;
+                    }
+
+                    @Override
+                    public void onFailure(@NonNull Call call,
+                                          @NonNull Throwable t) {
+                        isFetching = false;
+                    }
+                });
+            }
         } else if (totalItemCount != 0
                    && isLastItemProgressBar(pagingAdapter, firstVisibleItem,
                                             visibleItemCount, totalItemCount)
@@ -113,6 +119,7 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
 
             currentPageCall = supplier.supplyPage();
             currentPageCall.enqueue(new Callback<List<T>>() {
+                
                 @Override
                 public void onResponse(@NonNull Call<List<T>> call,
                                        @NonNull Response<List<T>> response) {

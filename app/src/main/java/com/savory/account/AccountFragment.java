@@ -12,9 +12,7 @@ import android.widget.ProgressBar;
 
 import com.savory.R;
 import com.savory.api.clients.savory.SavoryClient;
-import com.savory.api.clients.savory.models.AccountInfo;
 import com.savory.api.clients.savory.models.Photo;
-import com.savory.data.SPClient;
 import com.savory.ui.PagingOnScrollListener;
 import com.savory.ui.PagingOnScrollListener.PageSupplier;
 
@@ -23,21 +21,38 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class AccountFragment extends Fragment {
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.profile_listview) ListView profileListView;
 
-    protected SavoryClient savoryClient;
-    private SPClient spClient;
-
-    protected String savoryToken;
-
     private PagingOnScrollListener<Photo> pagingOnScrollListener;
     protected AccountAdapter accountAdapter = new AccountAdapter(15);
+
+    public AccountFragment() {
+        final SavoryClient savoryClient = SavoryClient.get();
+
+        PageSupplier<Photo> photoPageSupplier = new PageSupplier<Photo>() {
+            @Override
+            public Call<List<Photo>> supplyPage() {
+                return savoryClient.getPageOfMyPhotos(accountAdapter.getLastId());
+            }
+
+            @Override
+            public void onFirstPageLoaded() {
+                progressBar.setVisibility(View.GONE);
+                profileListView.setVisibility(View.VISIBLE);
+            }
+
+            @Override
+            public void onFailure(@NonNull Throwable throwable) {
+            }
+        };
+
+        pagingOnScrollListener = new PagingOnScrollListener<>(photoPageSupplier,
+                                                              savoryClient.getMyAccountInfo());
+    }
 
     @Nullable
     @Override
@@ -53,46 +68,13 @@ public class AccountFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
-        savoryClient = SavoryClient.get();
-        spClient = new SPClient(getContext());
-        savoryToken = spClient.retrieveSavoryToken();
-
-        PageSupplier<Photo> photoPageSupplier = new PageSupplier<Photo>() {
-            @Override
-            public Call<List<Photo>> supplyPage() {
-                return savoryClient.getPageOfMyPhotos(savoryToken, accountAdapter.getLastId());
-            }
-
-            @Override
-            public void onFailure(@NonNull Throwable throwable) {
-            }
-        };
-
-        pagingOnScrollListener = new PagingOnScrollListener<>(photoPageSupplier);
-        profileListView.setAdapter(accountAdapter);
-        profileListView.setOnScrollListener(pagingOnScrollListener);
-
-        if (accountAdapter.getCount() == 0) {
-            savoryClient.getMyAccountInfo(savoryToken)
-                .enqueue(new Callback<AccountInfo>() {
-                    @Override
-                    public void onResponse(@NonNull Call<AccountInfo> call,
-                                           @NonNull Response<AccountInfo> response) {
-                        if (response.isSuccessful()) {
-                            progressBar.setVisibility(View.GONE);
-                            profileListView.setVisibility(View.VISIBLE);
-                            accountAdapter.addAccountInfo(response.body());
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<AccountInfo> call, Throwable t) {
-                    }
-                });
-        } else {
+        if (!accountAdapter.isEmpty()) {
             progressBar.setVisibility(View.GONE);
             profileListView.setVisibility(View.VISIBLE);
         }
+
+        profileListView.setAdapter(accountAdapter);
+        profileListView.setOnScrollListener(pagingOnScrollListener);
     }
 
     @Override

@@ -16,10 +16,14 @@ import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class PhotosAdapter extends AbstractPagingAdapter<Photo> {
 
@@ -48,8 +52,20 @@ public class PhotosAdapter extends AbstractPagingAdapter<Photo> {
     }
 
     @Override
-    public int getLastId() {
-        return objects.get(objects.size() - 1).getId();
+    @Nullable
+    public Integer getLastId() {
+        int currentSize = objects.size();
+        return currentSize != 0 ? objects.get(currentSize - 1).getId() : null;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onFirstPageResponse(Response firstPageResponse) {
+        if (firstPageResponse.isSuccessful()) {
+            addPage(((Response<List<Photo>>) firstPageResponse).body());
+        } else {
+            // TODO: Do something eventually
+        }
     }
 
     @Override

@@ -9,6 +9,8 @@ import android.widget.FrameLayout;
 
 import com.savory.R;
 import com.savory.account.AccountFragment;
+import com.savory.api.clients.savory.SavoryClient;
+import com.savory.data.SPClient;
 import com.savory.feed.FeedFragment;
 import com.savory.upload.UploadFragment;
 
@@ -35,6 +37,8 @@ public class HomeActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
+
+        SavoryClient.get().setSavoryToken(new SPClient(this).retrieveSavoryToken());
 
         feedFragment = new FeedFragment();
         uploadFragment = new UploadFragment();

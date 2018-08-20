@@ -4,8 +4,6 @@ import android.support.annotation.NonNull;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 
-import com.savory.account.AccountAdapter;
-
 import java.util.List;
 
 import retrofit2.Call;
@@ -24,23 +22,62 @@ import retrofit2.Response;
  */
 public class PagingOnScrollListener<T> implements OnScrollListener {
 
+    /**
+     * High level client that the PagingOnScrollListener interacts with to fetch pages & to
+     * communicate back to the view layer.
+     * @param <S>
+     */
     public interface PageSupplier<S> {
+
+        /**
+         * High level method that represents making an API call for the next page. Exposing this as
+         * a high level method minimizes the amount of pagination related details
+         * PagingOnScrollListener has to worry about.
+         * @return A call for the next page.
+         */
         Call<List<S>> supplyPage();
+
+        /**
+         * Often times, when we have a list of data that doesn't have any data yet, we like to
+         * display a different view while our initial data is loading. Exposing this method in the
+         * PageSupplier interface allows a way for PagingOnScrollListener to communicate this back
+         * to the view layer.
+         */
+        void onFirstPageLoaded();
+
+        /**
+         * Communicates an error back to the view. This may not be needed, and is most definitely
+         * subject to removal (so keep the code in this method as decoupled as possible).
+         * @param throwable A throwable that I presume has been thrown from somewhere.
+         */
         void onFailure(@NonNull Throwable throwable);
     }
 
+    public static final int PROGRESS_BAR_FOOTER_ID = -1;
+
     protected PageSupplier<T> supplier;
 
-    protected Call<List<T>> currentPageCall = null;
+    // NOTE: Even though we're passing in a call object directly (which implies that we're handing
+    // this class a live request, a call object only triggers the moment a callback is attached.
+    // This means that we don't have to deal with nasty race conditions since we can control when
+    // the call starts processing by attaching a callback to it (ty Based God Jake Wharton).
+    protected Call currentPageCall;
 
     protected boolean isFetching = false;
 
-    public PagingOnScrollListener(PageSupplier<T> supplier) {
+    public PagingOnScrollListener(@NonNull PageSupplier<T> supplier) {
         this.supplier = supplier;
+        this.currentPageCall = supplier.supplyPage();
+    }
+
+    public PagingOnScrollListener(@NonNull PageSupplier<T> supplier,
+                                  @NonNull Call firstPageCall) {
+        this.supplier = supplier;
+        this.currentPageCall = firstPageCall;
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState) {
+    public void onScrollStateChanged(@NonNull AbsListView view, int scrollState) {
     }
 
     @SuppressWarnings("unchecked")
@@ -49,15 +86,40 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
                          int firstVisibleItem,
                          int visibleItemCount,
                          int totalItemCount) {
-        if (totalItemCount != 0
-            && isLastItemProgressBar(view, firstVisibleItem, visibleItemCount, totalItemCount)
-            && !isFetching) {
+        final AbstractPagingAdapter<T> pagingAdapter = (AbstractPagingAdapter<T>) view.getAdapter();
+
+        if (totalItemCount == 0 && !isFetching) {
             isFetching = true;
-            supplier.supplyPage().enqueue(new Callback<List<T>>() {
+            currentPageCall.enqueue(new Callback() {
+                @Override
+                public void onResponse(@NonNull Call call,
+                                       @NonNull Response response) {
+                    pagingAdapter.onFirstPageResponse(response);
+                    supplier.onFirstPageLoaded();
+                    isFetching = false;
+                }
+
+                @Override
+                public void onFailure(@NonNull Call call,
+                                      @NonNull Throwable t) {
+                    isFetching = false;
+                }
+            });
+        } else if (totalItemCount != 0
+                   && isLastItemProgressBar(pagingAdapter, firstVisibleItem,
+                                            visibleItemCount, totalItemCount)
+                   && !isFetching) {
+            isFetching = true;
+
+            currentPageCall = supplier.supplyPage();
+            currentPageCall.enqueue(new Callback<List<T>>() {
                 @Override
                 public void onResponse(@NonNull Call<List<T>> call,
                                        @NonNull Response<List<T>> response) {
-                    ((AbstractPagingAdapter<T>) view.getAdapter()).addPage(response.body());
+                    if (response.isSuccessful()) {
+                        pagingAdapter.addPage(response.body());
+                    }
+
                     isFetching = false;
                 }
 
@@ -71,18 +133,20 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
         }
     }
 
-    private boolean isLastItemProgressBar(@NonNull AbsListView view,
-                                          int firstVisibleItem,
-                                          int visibleItemCount,
-                                          int totalItemCount) {
+    private static boolean isLastItemProgressBar(@NonNull AbstractPagingAdapter pagingAdapter,
+                                                 int firstVisibleItem,
+                                                 int visibleItemCount,
+                                                 int totalItemCount) {
         int lastIndex = Math.min(firstVisibleItem + visibleItemCount, totalItemCount - 1);
-        return view.getAdapter().getItemViewType(lastIndex) == 3;
+        return pagingAdapter.getItemViewType(lastIndex) == PROGRESS_BAR_FOOTER_ID;
     }
 
     public void cancelPendingPage() {
-        Call<List<T>> currentPageCall = this.currentPageCall;
+        Call currentPageCall = this.currentPageCall;
         if (currentPageCall != null) {
             currentPageCall.cancel();
         }
+
+        isFetching = false;
     }
 }

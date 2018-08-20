@@ -21,6 +21,8 @@ public class SavoryClient {
 
     private SavoryService savoryService;
 
+    private String savoryToken;
+
     private SavoryClient() {
         savoryService = RetrofitBuilderFactory.createBase()
             .baseUrl(BASE_URL)
@@ -40,21 +42,23 @@ public class SavoryClient {
         return instance;
     }
 
+    public void setSavoryToken(@NonNull String savoryToken) {
+        this.savoryToken = savoryToken;
+    }
+
     public Call<SavoryToken> connect(@NonNull String socialPlatformToken) {
         return savoryService.connectWithSocial(socialPlatformToken);
     }
 
-    public Call<List<Photo>> getPageOfPhotos(@NonNull String savoryToken,
-                                             @Nullable Integer lastId)  {
+    public Call<List<Photo>> getPageOfPhotos(@Nullable Integer lastId)  {
         return savoryService.getPageOfPhotos(savoryToken, lastId);
     }
 
-    public Call<AccountInfo> getMyAccountInfo(@NonNull String savoryToken) {
+    public Call<AccountInfo> getMyAccountInfo() {
         return savoryService.getMyAccountInfo(savoryToken);
     }
 
-    public Call<List<Photo>> getPageOfMyPhotos(@NonNull String savoryToken,
-                                               @Nullable Integer lastId) {
+    public Call<List<Photo>> getPageOfMyPhotos(@Nullable Integer lastId) {
         return savoryService.getPageOfMyPhotos(savoryToken, lastId);
     }
 }

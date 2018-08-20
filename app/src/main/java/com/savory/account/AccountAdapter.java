@@ -1,5 +1,7 @@
 package com.savory.account;
 
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,10 +12,17 @@ import com.savory.api.clients.savory.models.AccountInfo;
 import com.savory.api.clients.savory.models.Photo;
 import com.savory.photos.PhotosCellViewHolder;
 import com.savory.ui.AbstractPagingAdapter;
+import com.savory.ui.PagingOnScrollListener;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class AccountAdapter extends AbstractPagingAdapter<Photo> {
 
-    private Account account;
+    protected Account account;
 
     public AccountAdapter(int pageSize) {
         super(pageSize);
@@ -21,7 +30,7 @@ public class AccountAdapter extends AbstractPagingAdapter<Photo> {
 
     @Override
     public int getCount() {
-        return (account != null ? 1 : 0) + (objects.size() / 3) + (isPageAvailable ? 1 : 0);
+        return (account != null ? 1 : 0) + (objects.size() / 3) + (isNextPageAvailable ? 1 : 0);
     }
 
     @Override
@@ -47,13 +56,30 @@ public class AccountAdapter extends AbstractPagingAdapter<Photo> {
         } else if (1 <= position && position < 1 + (objects.size() / 3)) {
             return 2;
         } else {
-            return 3;
+            return PagingOnScrollListener.PROGRESS_BAR_FOOTER_ID;
         }
     }
 
     @Override
     public int getViewTypeCount() {
         return 4;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void onFirstPageResponse(Response firstPageCall) {
+        if (firstPageCall.isSuccessful()) {
+            AccountInfo accountInfo = (AccountInfo) firstPageCall.body();
+
+            List<Photo> firstPageOfPhotos = accountInfo.getPhotos();
+
+            account = accountInfo.getAccount();
+            objects.addAll(firstPageOfPhotos);
+            isNextPageAvailable = (firstPageOfPhotos.size() == pageSize);
+            notifyDataSetChanged();
+        } else {
+            // TODO: Do important things here
+        }
     }
 
     @Override
@@ -69,21 +95,19 @@ public class AccountAdapter extends AbstractPagingAdapter<Photo> {
     }
 
     public void addAccountInfo(AccountInfo accountInfo) {
+        List<Photo> firstPageOfPhotos = accountInfo.getPhotos();
+
         this.account = accountInfo.getAccount();
-        objects.addAll(accountInfo.getPhotos());
-        isPageAvailable = (objects.size() == pageSize);
+        objects.addAll(firstPageOfPhotos);
+        isNextPageAvailable = (firstPageOfPhotos.size() == pageSize);
         notifyDataSetChanged();
     }
 
     @Override
-    public int getLastId() {
+    @Nullable
+    public Integer getLastId() {
         int currentSize = objects.size();
-
-        if (currentSize > 0) {
-            return objects.get(objects.size() - 1).getId();
-        } else {
-            return -1;
-        }
+        return currentSize != 0 ? objects.get(currentSize - 1).getId() : null;
     }
 
     private View renderAccountCell(View convertView, ViewGroup parent) {

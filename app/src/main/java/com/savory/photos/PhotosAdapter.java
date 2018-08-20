@@ -62,7 +62,7 @@ public class PhotosAdapter extends AbstractPagingAdapter<Photo> {
     @Override
     public void onFirstPageResponse(Response firstPageResponse) {
         if (firstPageResponse.isSuccessful()) {
-            addPage(((Response<List<Photo>>) firstPageResponse).body());
+            addPage(((Response<List<Photo>>) firstPageResponse));
         } else {
             // TODO: Do something eventually
         }

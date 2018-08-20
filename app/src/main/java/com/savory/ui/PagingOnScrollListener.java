@@ -117,7 +117,7 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
                 public void onResponse(@NonNull Call<List<T>> call,
                                        @NonNull Response<List<T>> response) {
                     if (response.isSuccessful()) {
-                        pagingAdapter.addPage(response.body());
+                        pagingAdapter.addPage(response);
                     }
 
                     isFetching = false;

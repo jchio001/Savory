@@ -28,10 +28,15 @@ public abstract class AbstractPagingAdapter<T> extends BaseAdapter {
 
     public abstract void onFirstPageResponse(Response firstPageResponse);
 
-    public final void addPage(@NonNull List<T> page) {
-        objects.addAll(page);
-        isNextPageAvailable = (page.size() == pageSize);
-        notifyDataSetChanged();
+    public final void addPage(@NonNull Response<List<T>> pageResponse) {
+        if (pageResponse.isSuccessful()) {
+            List<T> page = pageResponse.body();
+            objects.addAll(page);
+            isNextPageAvailable = (page.size() == pageSize);
+            notifyDataSetChanged();
+        } else {
+
+        }
     }
 
     @Nullable

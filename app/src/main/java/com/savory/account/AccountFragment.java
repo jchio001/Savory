@@ -25,7 +25,7 @@ import retrofit2.Call;
 public class AccountFragment extends Fragment {
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
-    @BindView(R.id.profile_listview) ListView profileListView;
+    @BindView(R.id.list_view) ListView ListView;
 
     private PagingOnScrollListener<Photo> pagingOnScrollListener;
     protected AccountAdapter accountAdapter = new AccountAdapter(15);
@@ -42,7 +42,7 @@ public class AccountFragment extends Fragment {
             @Override
             public void onFirstPageLoaded() {
                 progressBar.setVisibility(View.GONE);
-                profileListView.setVisibility(View.VISIBLE);
+                ListView.setVisibility(View.VISIBLE);
             }
 
             @Override
@@ -59,7 +59,7 @@ public class AccountFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater,
                              @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_profile, container, false);
+        return inflater.inflate(R.layout.layout_generic_list, container, false);
     }
 
     @Override
@@ -70,11 +70,11 @@ public class AccountFragment extends Fragment {
 
         if (!accountAdapter.isEmpty()) {
             progressBar.setVisibility(View.GONE);
-            profileListView.setVisibility(View.VISIBLE);
+            ListView.setVisibility(View.VISIBLE);
         }
 
-        profileListView.setAdapter(accountAdapter);
-        profileListView.setOnScrollListener(pagingOnScrollListener);
+        ListView.setAdapter(accountAdapter);
+        ListView.setOnScrollListener(pagingOnScrollListener);
     }
 
     @Override

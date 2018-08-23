@@ -1,4 +1,4 @@
-package com.savory.feed;
+package com.savory.photos;
 
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import retrofit2.Call;
 
-public class FeedFragment extends Fragment {
+public class PhotosFeedFragment extends Fragment {
 
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.list_view) ListView feedListView;
@@ -32,7 +32,7 @@ public class FeedFragment extends Fragment {
 
     private PagingOnScrollListener<Photo> pagingOnScrollListener;
 
-    public FeedFragment() {
+    public PhotosFeedFragment() {
         photosAdapter = new PhotosAdapter(10);
 
         final SavoryClient savoryClient = SavoryClient.get();

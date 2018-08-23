@@ -11,7 +11,7 @@ import com.savory.R;
 import com.savory.account.AccountFragment;
 import com.savory.api.clients.savory.SavoryClient;
 import com.savory.data.SPClient;
-import com.savory.feed.FeedFragment;
+import com.savory.photos.PhotosFeedFragment;
 import com.savory.upload.UploadFragment;
 
 import java.util.List;
@@ -28,7 +28,7 @@ public class HomeActivity extends AppCompatActivity {
     private FragmentManager fragmentManager;
     private ActionBarManager actionBarManager;
 
-    private FeedFragment feedFragment;
+    private PhotosFeedFragment feedFragment;
     private UploadFragment uploadFragment;
     private AccountFragment accountFragment;
 
@@ -40,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
 
         SavoryClient.get().setSavoryToken(new SPClient(this).retrieveSavoryToken());
 
-        feedFragment = new FeedFragment();
+        feedFragment = new PhotosFeedFragment();
         uploadFragment = new UploadFragment();
         accountFragment = new AccountFragment();
 
@@ -50,7 +50,7 @@ public class HomeActivity extends AppCompatActivity {
         if (fragmentManager.getBackStackEntryCount() == 0) {
             fragmentManager.beginTransaction()
                 .replace(R.id.fragment_container, feedFragment)
-                .addToBackStack("FeedFragment")
+                .addToBackStack("PhotosFeedFragment")
                 .commit();
         }
     }
@@ -67,7 +67,7 @@ public class HomeActivity extends AppCompatActivity {
     @OnClick(R.id.action_home)
     public void onActionHome() {
         List<Fragment> fragmentList = fragmentManager.getFragments();
-        if (!(fragmentList.get(fragmentList.size() - 1) instanceof FeedFragment)) {
+        if (!(fragmentList.get(fragmentList.size() - 1) instanceof PhotosFeedFragment)) {
             fragmentManager.popBackStack();
         }
     }

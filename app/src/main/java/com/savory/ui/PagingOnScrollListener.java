@@ -10,20 +10,22 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+import static com.savory.ui.HeaderPagingOnScrollListener.PROGRESS_BAR_FOOTER_ID;
+
 /**
  * Generic {@link OnScrollListener} for paging. This class interacts with the view layer & the data
  * layer through a {@link PageSupplier}, a high level interface to abstract away:
  * - Fetching data from the network
  * - Propagating any errors to the view layer
  * This listener expects that the adapter of the ListView it's observing extends
- * {@link AbstractPagingAdapter} and does a hard cast based on this assumption. Any other adapter
+ * {@link PagingAdapter} and does a hard cast based on this assumption. Any other adapter
  * will cause this class to crash the application.
  * @param <T>
  */
 public class PagingOnScrollListener<T> implements OnScrollListener {
 
     /**
-     * High level client that the PagingOnScrollListener interacts with to fetch pages & to
+     * High level client that the HeaderPagingOnScrollListener interacts with to fetch pages & to
      * communicate back to the view layer.
      * @param <S>
      */
@@ -32,7 +34,7 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
         /**
          * High level method that represents making an API call for the next page. Exposing this as
          * a high level method minimizes the amount of pagination related details
-         * PagingOnScrollListener has to worry about.
+         * HeaderPagingOnScrollListener has to worry about.
          * @return A call for the next page.
          */
         Call<List<S>> supplyPage();
@@ -40,8 +42,8 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
         /**
          * Often times, when we have a list of data that doesn't have any data yet, we like to
          * display a different view while our initial data is loading. Exposing this method in the
-         * PageSupplier interface allows a way for PagingOnScrollListener to communicate this back
-         * to the view layer.
+         * PageSupplier interface allows a way for HeaderPagingOnScrollListener to communicate this
+         * back to the view layer.
          */
         void onFirstPageLoaded();
 
@@ -53,8 +55,6 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
         void onFailure(@NonNull Throwable throwable);
     }
 
-    public static final int PROGRESS_BAR_FOOTER_ID = -1;
-
     protected PageSupplier<T> supplier;
 
     // NOTE: Even though we're passing in a call object directly (which implies that we're handing
@@ -65,65 +65,38 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
 
     protected boolean isFetching = false;
 
-    public PagingOnScrollListener(@NonNull PageSupplier<T> supplier) {
+    public PagingOnScrollListener(PageSupplier<T> supplier) {
         this.supplier = supplier;
-        this.currentPageCall = supplier.supplyPage();
-    }
-
-    public PagingOnScrollListener(@NonNull PageSupplier<T> supplier,
-                                  @NonNull Call firstPageCall) {
-        this.supplier = supplier;
-        this.currentPageCall = firstPageCall;
     }
 
     @Override
-    public void onScrollStateChanged(@NonNull AbsListView view, int scrollState) {
+    public void onScrollStateChanged(AbsListView view, int scrollState) {
     }
 
-    // TODO: Fix up the call logic once this app is at the point where we care about managing calls
-    // TODO: with respect to fragment lifecycles.
     @SuppressWarnings("unchecked")
     @Override
-    public void onScroll(@NonNull final AbsListView view,
+    public void onScroll(@NonNull AbsListView view,
                          int firstVisibleItem,
                          int visibleItemCount,
                          int totalItemCount) {
-        final AbstractPagingAdapter<T> pagingAdapter = (AbstractPagingAdapter<T>) view.getAdapter();
-
-        if (totalItemCount == 0 && !isFetching) {
-            isFetching = true;
-
-            if (!currentPageCall.isExecuted()) {
-                currentPageCall.enqueue(new Callback() {
-
-                    @Override
-                    public void onResponse(@NonNull Call call,
-                                           @NonNull Response response) {
-                        pagingAdapter.onFirstPageResponse(response);
-                        supplier.onFirstPageLoaded();
-                        isFetching = false;
-                    }
-
-                    @Override
-                    public void onFailure(@NonNull Call call,
-                                          @NonNull Throwable t) {
-                        isFetching = false;
-                    }
-                });
-            }
-        } else if (totalItemCount != 0
-                   && isLastItemProgressBar(pagingAdapter, firstVisibleItem,
-                                            visibleItemCount, totalItemCount)
-                   && !isFetching) {
+        final PagingAdapter<T> pagingAdapter = (PagingAdapter<T>) view.getAdapter();
+        if ((totalItemCount == 0
+             || isLastItemProgressBar(pagingAdapter, firstVisibleItem,
+                                      visibleItemCount, totalItemCount))
+            && !isFetching) {
             isFetching = true;
 
             currentPageCall = supplier.supplyPage();
             currentPageCall.enqueue(new Callback<List<T>>() {
-                
+
                 @Override
                 public void onResponse(@NonNull Call<List<T>> call,
                                        @NonNull Response<List<T>> response) {
                     if (response.isSuccessful()) {
+                        if (pagingAdapter.isEmpty()) {
+                            supplier.onFirstPageLoaded();
+                        }
+
                         pagingAdapter.addPage(response);
                     }
 
@@ -140,7 +113,7 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
         }
     }
 
-    private static boolean isLastItemProgressBar(@NonNull AbstractPagingAdapter pagingAdapter,
+    private static boolean isLastItemProgressBar(@NonNull PagingAdapter pagingAdapter,
                                                  int firstVisibleItem,
                                                  int visibleItemCount,
                                                  int totalItemCount) {
@@ -148,7 +121,7 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
         return pagingAdapter.getItemViewType(lastIndex) == PROGRESS_BAR_FOOTER_ID;
     }
 
-    public void cancelPendingPage() {
+    public final void cancelPendingPage() {
         Call currentPageCall = this.currentPageCall;
         if (currentPageCall != null) {
             currentPageCall.cancel();

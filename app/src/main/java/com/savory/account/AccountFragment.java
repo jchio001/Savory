@@ -12,8 +12,9 @@ import android.widget.ProgressBar;
 
 import com.savory.R;
 import com.savory.api.clients.savory.SavoryClient;
+import com.savory.api.clients.savory.models.AccountInfo;
 import com.savory.api.clients.savory.models.Photo;
-import com.savory.ui.PagingOnScrollListener;
+import com.savory.ui.HeaderPagingOnScrollListener;
 import com.savory.ui.PagingOnScrollListener.PageSupplier;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public class AccountFragment extends Fragment {
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.list_view) ListView ListView;
 
-    private PagingOnScrollListener<Photo> pagingOnScrollListener;
+    private HeaderPagingOnScrollListener<AccountInfo, Photo> pagingOnScrollListener;
     protected AccountAdapter accountAdapter = new AccountAdapter(15);
 
     public AccountFragment() {
@@ -50,8 +51,8 @@ public class AccountFragment extends Fragment {
             }
         };
 
-        pagingOnScrollListener = new PagingOnScrollListener<>(photoPageSupplier,
-                                                              savoryClient.getMyAccountInfo());
+        pagingOnScrollListener = new HeaderPagingOnScrollListener<>(savoryClient.getMyAccountInfo(),
+                                                                    photoPageSupplier);
     }
 
     @Nullable

@@ -11,16 +11,12 @@ import com.savory.api.clients.savory.models.Account;
 import com.savory.api.clients.savory.models.AccountInfo;
 import com.savory.api.clients.savory.models.Photo;
 import com.savory.photos.PhotosCellViewHolder;
-import com.savory.ui.AbstractPagingAdapter;
-import com.savory.ui.PagingOnScrollListener;
+import com.savory.ui.HeaderPagingAdapter;
+import com.savory.ui.HeaderPagingOnScrollListener;
 
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
-public class AccountAdapter extends AbstractPagingAdapter<Photo> {
+public class AccountAdapter extends HeaderPagingAdapter<AccountInfo, Photo> {
 
     protected Account account;
 
@@ -31,17 +27,6 @@ public class AccountAdapter extends AbstractPagingAdapter<Photo> {
     @Override
     public int getCount() {
         return (account != null ? 1 : 0) + (objects.size() / 3) + (isNextPageAvailable ? 1 : 0);
-    }
-
-    @Override
-    public Object getItem(int position) {
-        if (position == 0) {
-            return account;
-        } else if (1 <= position && position < 1 + (objects.size() / 3)) {
-            return objects.get(position - 1);
-        } else {
-            return null;
-        }
     }
 
     @Override
@@ -56,48 +41,14 @@ public class AccountAdapter extends AbstractPagingAdapter<Photo> {
         } else if (1 <= position && position < 1 + (objects.size() / 3)) {
             return 2;
         } else {
-            return PagingOnScrollListener.PROGRESS_BAR_FOOTER_ID;
+            return HeaderPagingOnScrollListener.PROGRESS_BAR_FOOTER_ID;
         }
     }
 
     @Override
-    public int getViewTypeCount() {
-        return 4;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onFirstPageResponse(Response firstPageCall) {
-        if (firstPageCall.isSuccessful()) {
-            AccountInfo accountInfo = (AccountInfo) firstPageCall.body();
-
-            List<Photo> firstPageOfPhotos = accountInfo.getPhotos();
-
-            account = accountInfo.getAccount();
-            objects.addAll(firstPageOfPhotos);
-            isNextPageAvailable = (firstPageOfPhotos.size() == pageSize);
-            notifyDataSetChanged();
-        } else {
-            // TODO: Do important things here
-        }
-    }
-
-    @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        switch (getItemViewType(position)) {
-            case 1:
-                return renderAccountCell(convertView, parent);
-            case 2:
-                return renderPhotosCell(position, convertView, parent);
-            default:
-                return renderProgressBarCell(convertView, parent);
-        }
-    }
-
-    public void addAccountInfo(AccountInfo accountInfo) {
+    public void addHeader(AccountInfo accountInfo) {
         List<Photo> firstPageOfPhotos = accountInfo.getPhotos();
-
-        this.account = accountInfo.getAccount();
+        account = accountInfo.getAccount();
         objects.addAll(firstPageOfPhotos);
         isNextPageAvailable = (firstPageOfPhotos.size() == pageSize);
         notifyDataSetChanged();
@@ -110,7 +61,9 @@ public class AccountAdapter extends AbstractPagingAdapter<Photo> {
         return currentSize != 0 ? objects.get(currentSize - 1).getId() : null;
     }
 
-    private View renderAccountCell(View convertView, ViewGroup parent) {
+    @Override
+    @NonNull
+    public View renderHeaderView(View convertView, ViewGroup parent) {
         AccountInfoViewHolder accountInfoViewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
@@ -125,7 +78,9 @@ public class AccountAdapter extends AbstractPagingAdapter<Photo> {
         return convertView;
     }
 
-    private View renderPhotosCell(int position, View convertView, ViewGroup parent) {
+    @Override
+    @NonNull
+    public View renderObjectView(int position, View convertView, ViewGroup parent) {
         PhotosCellViewHolder photosCellViewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
@@ -145,7 +100,9 @@ public class AccountAdapter extends AbstractPagingAdapter<Photo> {
         return convertView;
     }
 
-    private View renderProgressBarCell(View convertView, ViewGroup parent) {
+    @Override
+    @NonNull
+    public View renderProgressBarView(View convertView, ViewGroup parent) {
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.progress_bar_cell, parent, false);

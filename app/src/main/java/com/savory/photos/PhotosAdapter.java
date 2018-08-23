@@ -10,22 +10,18 @@ import android.widget.TextView;
 
 import com.savory.R;
 import com.savory.api.clients.savory.models.Photo;
-import com.savory.ui.AbstractPagingAdapter;
+import com.savory.ui.PagingAdapter;
 import com.savory.ui.RatingView;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.List;
 import java.util.Locale;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
-public class PhotosAdapter extends AbstractPagingAdapter<Photo> {
+public class PhotosAdapter extends PagingAdapter<Photo> {
 
     private static final SimpleDateFormat DATE_FORMAT =
         new SimpleDateFormat("EEEE, MMMM dd, yyyy - hh:mm a", Locale.US);
@@ -56,16 +52,6 @@ public class PhotosAdapter extends AbstractPagingAdapter<Photo> {
     public Integer getLastId() {
         int currentSize = objects.size();
         return currentSize != 0 ? objects.get(currentSize - 1).getId() : null;
-    }
-
-    @SuppressWarnings("unchecked")
-    @Override
-    public void onFirstPageResponse(Response firstPageResponse) {
-        if (firstPageResponse.isSuccessful()) {
-            addPage(((Response<List<Photo>>) firstPageResponse));
-        } else {
-            // TODO: Do something eventually
-        }
     }
 
     @Override

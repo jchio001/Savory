@@ -7,10 +7,10 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 
-import com.savory.api.clients.savory.SavoryClient;
-import com.savory.data.SPClient;
 import com.savory.R;
+import com.savory.api.clients.savory.SavoryClient;
 import com.savory.api.clients.savory.models.SavoryToken;
+import com.savory.data.SPClient;
 import com.savory.home.HomeActivity;
 import com.savory.login.LoginClient.LoginListener;
 

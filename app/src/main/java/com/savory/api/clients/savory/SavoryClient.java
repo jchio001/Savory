@@ -7,7 +7,6 @@ import com.savory.api.clients.savory.models.AccountInfo;
 import com.savory.api.clients.savory.models.Photo;
 import com.savory.api.clients.savory.models.SavoryToken;
 import com.savory.api.resources.RetrofitBuilderFactory;
-import com.savory.location.LocationManager;
 
 import java.util.List;
 

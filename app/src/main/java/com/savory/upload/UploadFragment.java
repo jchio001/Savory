@@ -11,11 +11,14 @@ import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.savory.R;
 import com.savory.api.clients.googleplaces.models.Place;
+import com.savory.camera.CameraActivity;
 import com.savory.restaurant.RestaurantPickerActivity;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindColor;
 import butterknife.BindView;
@@ -26,6 +29,7 @@ public class UploadFragment extends Fragment {
 
     private static final int REQUEST_CODE = 2343;
 
+    @BindView(R.id.preview_imageview) ImageView previewImageView;
     @BindView(R.id.restaurant_section) CardView restaurantSection;
     @BindView(R.id.restaurant_name) TextView restaurantName;
 
@@ -44,6 +48,12 @@ public class UploadFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
+
+        String filePathToImage = getArguments().getString(CameraActivity.PHOTO_FILE_PATH_KEY);
+
+        Picasso.get()
+            .load(filePathToImage)
+            .into(previewImageView);
     }
 
     @Override

@@ -21,6 +21,7 @@
 
             <ImageView
                 android:id="@+id/preview_imageview"
+                android:background="@color/light_grey"
                 android:layout_width="88dp"
                 android:layout_height="88dp"
                 android:layout_marginBottom="4dp"

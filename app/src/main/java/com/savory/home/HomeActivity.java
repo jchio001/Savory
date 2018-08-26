@@ -1,5 +1,6 @@
 package com.savory.home;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -10,9 +11,9 @@ import android.widget.FrameLayout;
 import com.savory.R;
 import com.savory.account.AccountFragment;
 import com.savory.api.clients.savory.SavoryClient;
+import com.savory.camera.CameraActivity;
 import com.savory.data.SPClient;
 import com.savory.photos.PhotosFeedFragment;
-import com.savory.upload.UploadFragment;
 
 import java.util.List;
 
@@ -29,7 +30,6 @@ public class HomeActivity extends AppCompatActivity {
     private ActionBarManager actionBarManager;
 
     private PhotosFeedFragment feedFragment;
-    private UploadFragment uploadFragment;
     private AccountFragment accountFragment;
 
     @Override
@@ -41,7 +41,6 @@ public class HomeActivity extends AppCompatActivity {
         SavoryClient.get().setSavoryToken(new SPClient(this).retrieveSavoryToken());
 
         feedFragment = new PhotosFeedFragment();
-        uploadFragment = new UploadFragment();
         accountFragment = new AccountFragment();
 
         actionBarManager = new ActionBarManager(getSupportActionBar());
@@ -74,13 +73,7 @@ public class HomeActivity extends AppCompatActivity {
 
     @OnClick(R.id.action_camera)
     public void onActionCamera() {
-        List<Fragment> fragmentList = fragmentManager.getFragments();
-        if (!(fragmentList.get(fragmentList.size() - 1) instanceof UploadFragment)) {
-            fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, uploadFragment)
-                .addToBackStack("UploadFragment")
-                .commit();
-        }
+        startActivity(new Intent(this, CameraActivity.class));
     }
 
     @OnClick(R.id.action_profile)

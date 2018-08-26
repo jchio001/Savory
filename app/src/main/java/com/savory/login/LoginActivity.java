@@ -55,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onSuccessfulLogin(SavoryToken savoryToken) {
+                progressDialog.dismiss();
                 spClient.persistSavoryToken(savoryToken.getToken());
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 finish();
@@ -66,7 +67,7 @@ public class LoginActivity extends AppCompatActivity {
 
             @Override
             public void onLoginError(Throwable throwable) {
-                progressDialog.hide();
+                progressDialog.dismiss();
             }
         });
     }

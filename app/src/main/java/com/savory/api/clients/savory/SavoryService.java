@@ -24,7 +24,7 @@ public interface SavoryService {
      * Represents connecting with Facebook.
      */
     @GET("connect")
-    Call<SavoryToken> connectWithSocial(@NonNull @Query("savoryToken") String socialPlatformToken);
+    Call<SavoryToken> connectWithSocial(@NonNull @Query("token") String socialPlatformToken);
 
     /**
      * Represents a user getting their own account information

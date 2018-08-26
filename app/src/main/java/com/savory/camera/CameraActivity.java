@@ -1,24 +1,21 @@
 package com.savory.camera;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.savory.R;
 import com.savory.upload.UploadFragment;
 import com.savory.utils.FileUtils;
-import com.savory.utils.PermissionsUtils;
+import com.savory.utils.PermissionUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -42,7 +39,7 @@ public class CameraActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         fragmentManager = getSupportFragmentManager();
 
-        if (PermissionsUtils.isPermissionGranted(this, Manifest.permission.CAMERA)) {
+        if (PermissionUtils.isPermissionGranted(Manifest.permission.CAMERA, this)) {
             openCamera();
         } else {
             ActivityCompat.requestPermissions(this,

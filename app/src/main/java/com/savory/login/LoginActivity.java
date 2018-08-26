@@ -10,7 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import com.savory.R;
 import com.savory.api.clients.savory.SavoryClient;
 import com.savory.api.clients.savory.models.SavoryToken;
-import com.savory.data.SPClient;
+import com.savory.data.SharedPreferencesClient;
 import com.savory.home.HomeActivity;
 import com.savory.login.LoginClient.LoginListener;
 
@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private SavoryClient savoryClient;
     private LoginClient loginClient;
-    protected SPClient spClient;
+    protected SharedPreferencesClient SharedPreferencesClient;
 
     protected ProgressDialog progressDialog;
 
@@ -33,8 +33,8 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        spClient = new SPClient(this);
-        if (spClient.retrieveSavoryToken() != null) {
+        SharedPreferencesClient = new SharedPreferencesClient(this);
+        if (SharedPreferencesClient.retrieveSavoryToken() != null) {
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             finish();
             return;
@@ -56,7 +56,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccessfulLogin(SavoryToken savoryToken) {
                 progressDialog.dismiss();
-                spClient.persistSavoryToken(savoryToken.getToken());
+                SharedPreferencesClient.persistSavoryToken(savoryToken.getToken());
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 finish();
             }

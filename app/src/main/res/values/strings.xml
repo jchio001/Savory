@@ -10,4 +10,22 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="please_rate">
+        Hey, it looks like you\'re a frequent user of Savory!
+        If you have a couple seconds, please rate this app in the Play Store.
+        Every rating goes a long way towards motivating us to continue improving this app!
+    </string>
+    <string name="will_rate">Sure, I\'ll help</string>
+    <string name="no_im_good">No, I\'m good</string>
+    <string name="play_store_error">Unable to open the Google Play Store.</string>
+
+    <!-- Bottom navigation icons -->
+    <string name="home_icon">{ion-android-home}</string>
+    <string name="search_icon">{ion-android-search}</string>
+    <string name="camera_icon">{ion-android-camera}</string>
+    <string name="heart_filled_icon">{ion-ios-heart}</string>
+    <string name="user_icon">{ion-person}</string>
+
+    <string name="choose_image_from">Choose image from</string>
 </resources>

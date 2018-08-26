@@ -25,6 +25,12 @@ import retrofit2.Call;
 
 public class AccountFragment extends Fragment {
 
+    public static AccountFragment newInstance() {
+        AccountFragment fragment = new AccountFragment();
+        fragment.setRetainInstance(true);
+        return fragment;
+    }
+
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.list_view) ListView ListView;
 

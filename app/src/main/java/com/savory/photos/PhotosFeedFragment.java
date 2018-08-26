@@ -13,7 +13,6 @@ import android.widget.ProgressBar;
 import com.savory.R;
 import com.savory.api.clients.savory.SavoryClient;
 import com.savory.api.clients.savory.models.Photo;
-import com.savory.photos.PhotosAdapter;
 import com.savory.ui.PagingOnScrollListener;
 import com.savory.ui.PagingOnScrollListener.PageSupplier;
 

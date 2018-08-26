@@ -4,67 +4,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".home.HomeActivity">
+    tools:ignore="SpUsage">
 
-    <FrameLayout
-        android:id="@+id/fragment_container"
+    <View
+        android:layout_above="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@id/bottom_nav"/>
+        android:layout_height="2dp"
+        android:background="@drawable/bottom_nav_shadow"/>
 
     <LinearLayout
-        android:id="@+id/bottom_nav"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:id="@+id/bottom_navigation"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:weightSum="99">
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="@color/white">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/home"
+            android:text="@string/home_icon"
+            style="@style/bottom_navigation_item"/>
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/search"
+            android:text="@string/search_icon"
+            style="@style/bottom_navigation_item"/>
 
         <FrameLayout
-            android:id="@+id/action_home"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="33">
+            android:id="@+id/camera"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1">
 
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
+            <com.joanzapata.iconify.widget.IconTextView
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:layout_gravity="center"
-                android:padding="6dp"
-                android:src="@drawable/ic_home"/>
-
+                android:gravity="center"
+                android:background="@drawable/camera_circle"
+                android:text="@string/camera_icon"
+                android:textColor="@color/white"
+                android:textSize="24dp"/>
         </FrameLayout>
 
-        <FrameLayout
-            android:id="@+id/action_camera"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="33">
-            
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:padding="6dp"
-                android:src="@drawable/ic_camera"/>
-            
-        </FrameLayout>
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/favorites"
+            android:text="@string/heart_filled_icon"
+            style="@style/bottom_navigation_item"/>
 
-        <FrameLayout
-            android:id="@+id/action_profile"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="33">
-
-            <ImageView
-                android:layout_width="48dp"
-                android:layout_height="48dp"
-                android:layout_gravity="center"
-                android:padding="6dp"
-                android:src="@drawable/ic_person"/>
-
-        </FrameLayout>
-
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/profile"
+            android:text="@string/user_icon"
+            style="@style/bottom_navigation_item"/>
     </LinearLayout>
 
+    <FrameLayout
+        android:id="@+id/container"
+        android:layout_above="@id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

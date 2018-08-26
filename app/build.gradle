@@ -33,7 +33,7 @@ dependencies {
     implementation 'com.android.support:support-v4:27.1.1'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
 
-    // Standard Square Kotlin networking stack
+    // Standard Square networking stack
     implementation 'com.squareup.moshi:moshi:1.6.0'
     implementation 'com.squareup.retrofit2:converter-moshi:2.3.0'
     implementation 'com.squareup.retrofit2:retrofit:2.4.0'
@@ -41,4 +41,9 @@ dependencies {
 
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'de.hdodenhof:circleimageview:2.2.0'
+
+    implementation 'com.joanzapata.iconify:android-iconify-fontawesome:2.2.2'
+    implementation 'com.joanzapata.iconify:android-iconify-ionicons:2.2.2'
+
+    implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
 }

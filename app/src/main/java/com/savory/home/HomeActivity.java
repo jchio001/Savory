@@ -1,89 +1,132 @@
 package com.savory.home;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v7.app.AppCompatActivity;
-import android.widget.FrameLayout;
+import android.support.annotation.IdRes;
+import android.support.annotation.NonNull;
+import android.view.View;
 
+import com.afollestad.materialdialogs.DialogAction;
+import com.afollestad.materialdialogs.MaterialDialog;
 import com.savory.R;
-import com.savory.account.AccountFragment;
-import com.savory.api.clients.savory.SavoryClient;
-import com.savory.camera.CameraActivity;
-import com.savory.data.SPClient;
-import com.savory.photos.PhotosFeedFragment;
+import com.savory.data.SharedPreferencesClient;
+import com.savory.ui.BottomNavigationView;
+import com.savory.ui.StandardActivity;
+import com.savory.utils.Constants;
+import com.savory.utils.PermissionUtils;
+import com.savory.utils.UIUtils;
 
-import java.util.List;
-
+import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
-public class HomeActivity extends AppCompatActivity {
+public class HomeActivity extends StandardActivity {
 
-    @BindView(R.id.action_home) FrameLayout actionHome;
-    @BindView(R.id.action_profile) FrameLayout actionProfile;
+    @BindView(R.id.bottom_navigation) View bottomNavigation;
+    @BindString(R.string.choose_image_from) String chooseImageFrom;
 
-    private FragmentManager fragmentManager;
-    private ActionBarManager actionBarManager;
+    private final BottomNavigationView.Listener bottomNavListener = new BottomNavigationView.Listener() {
+        @Override
+        public void onNavItemSelected(@IdRes int viewId) {
+            UIUtils.hideKeyboard(HomeActivity.this);
+            navigationController.onNavItemSelected(viewId);
+        }
 
-    private PhotosFeedFragment feedFragment;
-    private AccountFragment accountFragment;
+        @Override
+        public void takePicture() {
+            addWithCamera();
+        }
+    };
+
+    private BottomNavigationView bottomNavigationView;
+    private HomepageFragmentController navigationController;
 
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Kill activity if it's above an existing stack due to launcher bug
+        if (!isTaskRoot()
+                && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
+                && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_MAIN)) {
+            finish();
+            return;
+        }
+
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
 
-        SavoryClient.get().setSavoryToken(new SPClient(this).retrieveSavoryToken());
+        navigationController = new HomepageFragmentController(getSupportFragmentManager(), R.id.container);
+        bottomNavigationView = new BottomNavigationView(bottomNavigation, bottomNavListener);
+        navigationController.loadHome();
 
-        feedFragment = new PhotosFeedFragment();
-        accountFragment = new AccountFragment();
+        SharedPreferencesClient sharedPreferencesClient = new SharedPreferencesClient(this);
+        if (sharedPreferencesClient.shouldAskForRating()) {
+            showRatingPrompt();
+        }
+    }
 
-        actionBarManager = new ActionBarManager(getSupportActionBar());
+    private void showRatingPrompt() {
+        new MaterialDialog.Builder(this)
+                .content(R.string.please_rate)
+                .negativeText(R.string.no_im_good)
+                .positiveText(R.string.will_rate)
+                .onPositive(new MaterialDialog.SingleButtonCallback() {
+                    @Override
+                    public void onClick(@NonNull MaterialDialog dialog, @NonNull DialogAction which) {
+                        Uri uri =  Uri.parse("market://details?id=" + getApplicationContext().getPackageName());
+                        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+                        if (!(getPackageManager().queryIntentActivities(intent, 0).size() > 0)) {
+                            UIUtils.showLongToast(R.string.play_store_error, HomeActivity.this);
+                            return;
+                        }
+                        startActivity(intent);
+                    }
+                })
+                .show();
+    }
 
-        fragmentManager = getSupportFragmentManager();
-        if (fragmentManager.getBackStackEntryCount() == 0) {
-            fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, feedFragment)
-                .addToBackStack("PhotosFeedFragment")
-                .commit();
+    /** Starts the flow to add a dish via the camera */
+    private void addWithCamera() {
+        if (PermissionUtils.isPermissionGranted(Manifest.permission.CAMERA, this)) {
+            startCameraPage();
+        } else {
+            PermissionUtils.requestPermission(this, Manifest.permission.CAMERA);
+        }
+    }
+
+    private void startCameraPage() {
+        // Let's make this not suck
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != Constants.CAMERA_CODE) {
+            return;
+        }
+
+        if (resultCode == Activity.RESULT_OK) {
+            // Open dish upload form
+        }
+
+        if (resultCode == Constants.DISH_ADDED) {
+            // Tab to home feed fragment and have the list simulate pulling to refresh
+            bottomNavigationView.onHomeClicked();
         }
     }
 
     @Override
-    public void onBackPressed() {
-        if (fragmentManager.getBackStackEntryCount() > 1) {
-            super.onBackPressed();
-        } else {
-            finish();
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
+        if (grantResults.length <= 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            return;
         }
-    }
 
-    @OnClick(R.id.action_home)
-    public void onActionHome() {
-        List<Fragment> fragmentList = fragmentManager.getFragments();
-        if (!(fragmentList.get(fragmentList.size() - 1) instanceof PhotosFeedFragment)) {
-            fragmentManager.popBackStack();
-        }
-    }
-
-    @OnClick(R.id.action_camera)
-    public void onActionCamera() {
-        startActivity(new Intent(this, CameraActivity.class));
-    }
-
-    @OnClick(R.id.action_profile)
-    public void onActionProfile() {
-        List<Fragment> fragmentList = fragmentManager.getFragments();
-        if (!(fragmentList.get(fragmentList.size() - 1) instanceof AccountFragment)) {
-            fragmentManager.beginTransaction()
-                .replace(R.id.fragment_container, accountFragment)
-                .addToBackStack("AccountFragment")
-                .commit();
-        }
+        // Camera permission granted
+        startCameraPage();
     }
 }

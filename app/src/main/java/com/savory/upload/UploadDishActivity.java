@@ -41,6 +41,8 @@ public class UploadDishActivity extends StandardActivity {
 
         Picasso.get()
                 .load(filePathToImage)
+                .fit()
+                .centerCrop()
                 .into(previewImageView);
     }
 

@@ -3,12 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".upload.UploadFragment">
+    android:layout_height="match_parent">
 
     <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:padding="16dp">
 
         <LinearLayout
@@ -22,13 +21,13 @@
             <ImageView
                 android:id="@+id/preview_imageview"
                 android:background="@color/light_grey"
-                android:layout_width="88dp"
-                android:layout_height="88dp"
+                android:layout_width="260dp"
+                android:layout_height="260dp"
                 android:layout_marginBottom="4dp"
                 tools:src="@drawable/ic_person"/>
 
             <android.support.v7.widget.CardView
-                style="@style/UploadCardTheme"
+                style="@style/upload_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="4dp">
@@ -43,11 +42,10 @@
                     android:maxLines="1"
                     android:textSize="18sp"
                     android:textColorHint="@color/light_grey"/>
-
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView
-                style="@style/UploadCardTheme"
+                style="@style/upload_card"
                 android:id="@+id/restaurant_section"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
@@ -60,11 +58,7 @@
                     android:text="Where did you get it?"
                     android:textColor="@color/light_grey"
                     android:textSize="18sp"/>
-
             </android.support.v7.widget.CardView>
-
         </LinearLayout>
-
     </ScrollView>
-
 </RelativeLayout>

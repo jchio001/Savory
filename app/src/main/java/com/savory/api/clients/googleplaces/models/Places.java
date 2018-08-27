@@ -2,7 +2,7 @@ package com.savory.api.clients.googleplaces.models;
 
 import java.util.List;
 
-public class NearbyPlaces {
+public class Places {
 
     private List<Place> results;
 

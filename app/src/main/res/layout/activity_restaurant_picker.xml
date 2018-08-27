@@ -1,14 +1,87 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".restaurant.RestaurantPickerActivity">
+    android:background="@color/white"
+    tools:ignore="RtlHardcoded">
 
-    <ListView
-        android:id="@+id/places_listview"
+    <FrameLayout
+        android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+        android:layout_height="?android:attr/actionBarSize"
+        android:background="@color/app_red"
+        android:focusable="true"
+        android:focusableInTouchMode="true">
 
-</FrameLayout>
+        <EditText
+            android:id="@+id/search_input"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical"
+            android:hint="@string/search"
+            android:background="@null"
+            android:textColor="@color/white_80_percent"
+            android:textColorHint="@color/half_white"
+            android:textCursorDrawable="@null"
+            android:paddingLeft="?android:attr/actionBarSize"
+            android:paddingRight="40dp"
+            android:inputType="text"
+            android:maxLines="1"
+            android:singleLine="true"
+            android:imeOptions="actionDone"/>
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/back_button"
+            android:text="@string/back_icon"
+            android:layout_height="?android:attr/actionBarSize"
+            android:layout_width="?android:attr/actionBarSize"
+            android:layout_gravity="start|center_vertical"
+            style="@style/toolbar_icon"/>
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/clear_search"
+            style="@style/clear_icon"/>
+    </FrameLayout>
+
+    <RelativeLayout
+        android:layout_below="@id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <FrameLayout
+            android:id="@+id/no_results"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <TextView
+                android:text="@string/no_restaurants_found"
+                style="@style/no_content"/>
+        </FrameLayout>
+
+        <ListView
+            android:id="@+id/places_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="88dp"
+            android:clipToPadding="false"/>
+
+        <ProgressBar
+            android:id="@+id/loading"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="72dp"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone"/>
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/set_location"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_margin="16dp"/>
+</RelativeLayout>

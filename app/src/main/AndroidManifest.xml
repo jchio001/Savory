@@ -59,6 +59,8 @@
 
         <activity
             android:name=".restaurant.RestaurantPickerActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait">
         </activity>
 

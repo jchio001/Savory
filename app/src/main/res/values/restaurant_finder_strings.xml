@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="back_icon">{ion-android-arrow-back}</string>
+    <string name="clear_icon">{ion-android-close}</string>
+    <string name="no_restaurants_found">No restaurants match your input.</string>
+</resources>

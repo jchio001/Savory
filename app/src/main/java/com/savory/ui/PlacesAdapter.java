@@ -11,9 +11,9 @@ import android.widget.TextView;
 
 import com.savory.R;
 import com.savory.api.clients.googleplaces.GooglePlacesClient;
-import com.savory.api.clients.googleplaces.models.NearbyPlaces;
 import com.savory.api.clients.googleplaces.models.Photo;
 import com.savory.api.clients.googleplaces.models.Place;
+import com.savory.api.clients.googleplaces.models.Places;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -34,17 +34,13 @@ public class PlacesAdapter extends BaseAdapter {
     public static final String DEFAULT_KEYWORD = "food";
 
     private Picasso picasso;
-
     private GooglePlacesClient googlePlacesClient;
-
     protected List<Place> places = new LinkedList<>();
-
     protected ErrorListener errorListener;
 
-    private Callback<NearbyPlaces> nearbyPlacesCallback = new Callback<NearbyPlaces>() {
+    private Callback<Places> nearbyPlacesCallback = new Callback<Places>() {
         @Override
-        public void onResponse(@NonNull Call<NearbyPlaces> call,
-            @NonNull Response<NearbyPlaces> response) {
+        public void onResponse(@NonNull Call<Places> call, @NonNull Response<Places> response) {
             if (response.isSuccessful()) {
                 places = response.body().getResults();
                 notifyDataSetChanged();
@@ -52,13 +48,13 @@ public class PlacesAdapter extends BaseAdapter {
         }
 
         @Override
-        public void onFailure(@NonNull Call<NearbyPlaces> call,
+        public void onFailure(@NonNull Call<Places> call,
             @NonNull Throwable t) {
             errorListener.onErrorReceived(t);
         }
     };
 
-    private Call<NearbyPlaces> nearbyPlacesCall;
+    private Call<Places> nearbyPlacesCall;
 
     public PlacesAdapter(@NonNull Picasso picasso,
                          @NonNull GooglePlacesClient googlePlacesClient,
@@ -115,13 +111,13 @@ public class PlacesAdapter extends BaseAdapter {
     public void query(@NonNull String keyword) {
         cancelPendingRequest();
 
-        Call<NearbyPlaces> nearbyPlacesCall = googlePlacesClient.getPlaces(keyword);
+        Call<Places> nearbyPlacesCall = googlePlacesClient.getPlaces(keyword);
         this.nearbyPlacesCall = nearbyPlacesCall;
         nearbyPlacesCall.enqueue(nearbyPlacesCallback);
     }
 
     public void cancelPendingRequest() {
-        Call<NearbyPlaces> nearbyPlacesCall = this.nearbyPlacesCall;
+        Call<Places> nearbyPlacesCall = this.nearbyPlacesCall;
         if (nearbyPlacesCall != null) {
             nearbyPlacesCall.cancel();
         }

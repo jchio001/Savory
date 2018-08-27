@@ -100,7 +100,7 @@ public class HomeActivity extends StandardActivity {
         if (PermissionUtils.isPermissionGranted(Manifest.permission.CAMERA, this)) {
             startCameraPage();
         } else {
-            PermissionUtils.requestPermission(this, Manifest.permission.CAMERA);
+            PermissionUtils.requestPermission(this, Manifest.permission.CAMERA, Constants.CAMERA_CODE);
         }
     }
 
@@ -136,8 +136,14 @@ public class HomeActivity extends StandardActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
-        if (grantResults.length <= 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
+        if (requestCode != Constants.CAMERA_CODE
+                || grantResults.length <= 0
+                || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
             return;
         }
 

@@ -1,6 +1,7 @@
 package com.savory.home;
 
 import android.Manifest;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -18,7 +19,9 @@ import android.view.ViewGroup;
 
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
+import com.savory.upload.UploadDishActivity;
 import com.savory.utils.Constants;
+import com.savory.utils.FileUtils;
 import com.savory.utils.PermissionUtils;
 import com.savory.utils.UIUtils;
 
@@ -62,7 +65,8 @@ public class HomeFeedFragment extends Fragment{
         } else {
             PermissionUtils.requestPermission(
                     this,
-                    Manifest.permission.READ_EXTERNAL_STORAGE);
+                    Manifest.permission.READ_EXTERNAL_STORAGE,
+                    Constants.GALLERY_CODE);
         }
     }
 
@@ -76,6 +80,19 @@ public class HomeFeedFragment extends Fragment{
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode != Constants.GALLERY_CODE || resultCode != Activity.RESULT_OK) {
+            return;
+        }
+
+        String chosenFilePath = FileUtils.getGalleryImagePath(data, getActivity());
+        if (chosenFilePath == null) {
+            UIUtils.showLongToast(R.string.gallery_choice_fail, getActivity());
+            return;
+        }
+
+        Intent intent = new Intent(getActivity(), UploadDishActivity.class)
+                .putExtra(Constants.PHOTO_FILE_PATH_KEY, chosenFilePath);
+        startActivityForResult(intent, 1);
     }
 
     @Override
@@ -83,7 +100,9 @@ public class HomeFeedFragment extends Fragment{
             int requestCode,
             @NonNull String permissions[],
             @NonNull int[] grantResults) {
-        if (grantResults.length <= 0 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
+        if (requestCode != Constants.GALLERY_CODE
+                || grantResults.length <= 0
+                || grantResults[0] != PackageManager.PERMISSION_GRANTED) {
             return;
         }
 
@@ -93,7 +112,6 @@ public class HomeFeedFragment extends Fragment{
 
     @Override
     public void startActivityForResult(Intent intent, int requestCode) {
-        UIUtils.hideKeyboard(getActivity());
         super.startActivityForResult(intent, requestCode);
         getActivity().overridePendingTransition(R.anim.slide_left_out, R.anim.slide_left_in);
     }

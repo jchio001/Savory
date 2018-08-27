@@ -31,4 +31,5 @@
     <string name="camera_fail">Failed to pull image from camera</string>
 
     <string name="upload_from_gallery">Upload from gallery</string>
+    <string name="gallery_choice_fail">Failed to process chosen image from gallery</string>
 </resources>

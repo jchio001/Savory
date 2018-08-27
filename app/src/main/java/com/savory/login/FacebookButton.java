@@ -10,8 +10,7 @@ import com.savory.R;
 
 public class FacebookButton extends FrameLayout {
 
-    public FacebookButton(@NonNull Context context,
-                          @Nullable AttributeSet attrs) {
+    public FacebookButton(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
         inflate(context, R.layout.button_facebook, this);
     }

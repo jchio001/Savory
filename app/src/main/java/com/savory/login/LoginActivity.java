@@ -23,7 +23,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private SavoryClient savoryClient;
     private LoginClient loginClient;
-    protected SharedPreferencesClient SharedPreferencesClient;
+    protected SharedPreferencesClient sharedPreferencesClient;
 
     protected ProgressDialog progressDialog;
 
@@ -33,15 +33,17 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.activity_login);
         ButterKnife.bind(this);
 
-        SharedPreferencesClient = new SharedPreferencesClient(this);
-        if (SharedPreferencesClient.retrieveSavoryToken() != null) {
+        savoryClient = SavoryClient.get();
+        loginClient = new LoginClient(savoryClient);
+
+        sharedPreferencesClient = new SharedPreferencesClient(this);
+        String savoryToken = sharedPreferencesClient.retrieveSavoryToken();
+        if (savoryToken != null) {
+            savoryClient.setSavoryToken(savoryToken);
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             finish();
             return;
         }
-
-        savoryClient = SavoryClient.get();
-        loginClient = new LoginClient(savoryClient);
 
         loginClient.bindFacebookButton(facebookButton);
         loginClient.listen(new LoginListener() {
@@ -56,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccessfulLogin(SavoryToken savoryToken) {
                 progressDialog.dismiss();
-                SharedPreferencesClient.persistSavoryToken(savoryToken.getToken());
+                sharedPreferencesClient.persistSavoryToken(savoryToken.getToken());
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 finish();
             }

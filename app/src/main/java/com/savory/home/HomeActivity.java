@@ -43,7 +43,7 @@ public class HomeActivity extends StandardActivity {
     };
 
     private BottomNavigationView bottomNavigationView;
-    private HomepageFragmentController navigationController;
+    protected HomepageFragmentController navigationController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +91,7 @@ public class HomeActivity extends StandardActivity {
     }
 
     /** Starts the flow to add a dish via the camera */
-    private void addWithCamera() {
+    protected void addWithCamera() {
         if (PermissionUtils.isPermissionGranted(Manifest.permission.CAMERA, this)) {
             startCameraPage();
         } else {

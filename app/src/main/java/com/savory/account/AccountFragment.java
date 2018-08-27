@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,13 +33,16 @@ public class AccountFragment extends Fragment {
         return fragment;
     }
 
+    @BindView(R.id.toolbar) Toolbar toolbar;
     @BindView(R.id.progress_bar) ProgressBar progressBar;
     @BindView(R.id.list_view) ListView ListView;
 
     private HeaderPagingOnScrollListener<AccountInfo, Photo> pagingOnScrollListener;
     protected AccountAdapter accountAdapter = new AccountAdapter(15);
 
-    public AccountFragment() {
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         final SavoryClient savoryClient = SavoryClient.get();
 
         PageSupplier<Photo> photoPageSupplier = new PageSupplier<Photo>() {
@@ -53,12 +58,11 @@ public class AccountFragment extends Fragment {
             }
 
             @Override
-            public void onFailure(@NonNull Throwable throwable) {
-            }
+            public void onFailure(@NonNull Throwable throwable) {}
         };
 
         pagingOnScrollListener = new HeaderPagingOnScrollListener<>(savoryClient.getMyAccountInfo(),
-                                                                    photoPageSupplier);
+                photoPageSupplier);
     }
 
     @Nullable
@@ -70,8 +74,7 @@ public class AccountFragment extends Fragment {
     }
 
     @Override
-    public void onViewCreated(@NonNull View view,
-                              @Nullable Bundle savedInstanceState) {
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         ButterKnife.bind(this, view);
 
@@ -82,6 +85,14 @@ public class AccountFragment extends Fragment {
 
         ListView.setAdapter(accountAdapter);
         ListView.setOnScrollListener(pagingOnScrollListener);
+    }
+
+    @Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+        toolbar.setTitle(R.string.profile);
+        ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
+        setHasOptionsMenu(true);
     }
 
     @Override

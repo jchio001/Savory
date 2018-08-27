@@ -50,9 +50,12 @@ public class HomeActivity extends StandardActivity {
         super.onCreate(savedInstanceState);
 
         // Kill activity if it's above an existing stack due to launcher bug
+        Intent intent = getIntent();
+        String action = intent != null ? intent.getAction() : null;
         if (!isTaskRoot()
-                && getIntent().hasCategory(Intent.CATEGORY_LAUNCHER)
-                && getIntent().getAction() != null && getIntent().getAction().equals(Intent.ACTION_MAIN)) {
+            && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+            && action != null
+            && action.equals(Intent.ACTION_MAIN)) {
             finish();
             return;
         }

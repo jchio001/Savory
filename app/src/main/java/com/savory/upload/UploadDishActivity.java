@@ -4,20 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.CardView;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.savory.R;
 import com.savory.api.clients.googleplaces.models.Place;
-import com.savory.camera.CameraActivity;
 import com.savory.restaurant.RestaurantPickerActivity;
+import com.savory.ui.StandardActivity;
+import com.savory.utils.Constants;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindColor;
@@ -25,8 +20,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class UploadFragment extends Fragment {
-
+public class UploadDishActivity extends StandardActivity {
     private static final int REQUEST_CODE = 2343;
 
     @BindView(R.id.preview_imageview) ImageView previewImageView;
@@ -38,22 +32,16 @@ public class UploadFragment extends Fragment {
     private Place place;
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater,
-                             @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_upload, container, false);
-    }
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_upload);
+        ButterKnife.bind(this);
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-        ButterKnife.bind(this, view);
-
-        String filePathToImage = getArguments().getString(CameraActivity.PHOTO_FILE_PATH_KEY);
+        String filePathToImage = getIntent().getStringExtra(Constants.PHOTO_FILE_PATH_KEY);
 
         Picasso.get()
-            .load(filePathToImage)
-            .into(previewImageView);
+                .load(filePathToImage)
+                .into(previewImageView);
     }
 
     @Override
@@ -68,7 +56,6 @@ public class UploadFragment extends Fragment {
 
     @OnClick(R.id.restaurant_section)
     public void onRestaurantSectionClicked() {
-        startActivityForResult(
-            new Intent(getContext(), RestaurantPickerActivity.class), REQUEST_CODE);
+        startActivityForResult(new Intent(this, RestaurantPickerActivity.class), REQUEST_CODE);
     }
 }

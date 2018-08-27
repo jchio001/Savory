@@ -4,11 +4,16 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.view.View;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -16,9 +21,14 @@ import com.savory.R;
 import com.savory.data.SharedPreferencesClient;
 import com.savory.ui.BottomNavigationView;
 import com.savory.ui.StandardActivity;
+import com.savory.upload.UploadDishActivity;
 import com.savory.utils.Constants;
+import com.savory.utils.FileUtils;
 import com.savory.utils.PermissionUtils;
 import com.savory.utils.UIUtils;
+
+import java.io.File;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -52,10 +62,8 @@ public class HomeActivity extends StandardActivity {
         // Kill activity if it's above an existing stack due to launcher bug
         Intent intent = getIntent();
         String action = intent != null ? intent.getAction() : null;
-        if (!isTaskRoot()
-            && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
-            && action != null
-            && action.equals(Intent.ACTION_MAIN)) {
+        if (!isTaskRoot() && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+                && action != null && action.equals(Intent.ACTION_MAIN)) {
             finish();
             return;
         }
@@ -103,24 +111,34 @@ public class HomeActivity extends StandardActivity {
     }
 
     private void startCameraPage() {
-        // Let's make this not suck
+        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        if (takePictureIntent.resolveActivity(getPackageManager()) == null) {
+            return;
+        }
+        startActivityForResult(takePictureIntent, Constants.CAMERA_CODE);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != Constants.CAMERA_CODE) {
+        if (requestCode != Constants.CAMERA_CODE || resultCode != Activity.RESULT_OK) {
             return;
         }
 
-        if (resultCode == Activity.RESULT_OK) {
-            // Open dish upload form
+        if (data.getExtras() == null) {
+            UIUtils.showLongToast(R.string.camera_fail, this);
+            return;
         }
 
-        if (resultCode == Constants.DISH_ADDED) {
-            // Tab to home feed fragment and have the list simulate pulling to refresh
-            bottomNavigationView.onHomeClicked();
+        Bitmap imageBitmap = (Bitmap) data.getExtras().get(Constants.DATA_KEY);
+        if (imageBitmap == null) {
+            UIUtils.showLongToast(R.string.camera_fail, this);
+            return;
         }
+        String filePath = FileUtils.createImageFile(this, imageBitmap);
+        Intent intent = new Intent(this, UploadDishActivity.class)
+                .putExtra(Constants.PHOTO_FILE_PATH_KEY, filePath);
+        startActivityForResult(intent, 1);
     }
 
     @Override

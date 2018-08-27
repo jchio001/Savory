@@ -28,5 +28,7 @@
     <string name="user_icon">{ion-person}</string>
 
     <string name="choose_image_from">Choose image from</string>
-    <string name="camera_fail">Failed to pull image from camera.</string>
+    <string name="camera_fail">Failed to pull image from camera</string>
+
+    <string name="upload_from_gallery">Upload from gallery</string>
 </resources>

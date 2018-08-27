@@ -21,5 +21,4 @@
         android:text="Continue with Facebook"
         android:textColor="@color/white"
         android:textSize="20sp"/>
-
 </FrameLayout>

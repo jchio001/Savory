@@ -4,6 +4,7 @@ import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 
 import com.savory.BuildConfig;
 import com.savory.api.clients.googleplaces.models.Places;
@@ -25,6 +26,7 @@ public class GooglePlacesClient {
 
     private static final String BASE_URL = "https://maps.googleapis.com/";
     private static final String GOOGLE_API_KEY = BuildConfig.GOOGLE_API_KEY;
+    private static final String DEFAULT_SEARCH_TERM = "food";
 
     private static GooglePlacesClient instance;
 
@@ -82,7 +84,8 @@ public class GooglePlacesClient {
     }
 
     public void getPlaces(String keyword, String location) {
-        Call<Places> nextCall = googlePlacesService.getPlaces(GOOGLE_API_KEY, keyword, location);
+        String query = TextUtils.isEmpty(keyword) ? DEFAULT_SEARCH_TERM : keyword;
+        Call<Places> nextCall = googlePlacesService.getPlaces(GOOGLE_API_KEY, query, location);
         cancelCurrentCallAndMaybeRunNext(nextCall);
     }
 

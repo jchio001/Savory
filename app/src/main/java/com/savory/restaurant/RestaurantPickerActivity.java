@@ -47,7 +47,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant_picker);
         ButterKnife.bind(this);
 
-        placesAdapter = new PlacesAdapter();
+        placesAdapter = new PlacesAdapter(this);
         placesListView.setAdapter(placesAdapter);
 
         locationManager = new LocationManager(locationListener, this);

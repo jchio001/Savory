@@ -1,5 +1,7 @@
 package com.savory.ui;
 
+import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
@@ -9,6 +11,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.joanzapata.iconify.IconDrawable;
+import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
 import com.savory.api.clients.googleplaces.models.Photo;
 import com.savory.api.clients.googleplaces.models.Place;
@@ -25,9 +29,13 @@ public class PlacesAdapter extends BaseAdapter {
 
     private Picasso picasso;
     private List<Place> places = new LinkedList<>();
+    private Drawable defaultThumbnail;
 
-    public PlacesAdapter() {
+    public PlacesAdapter(Context context) {
         this.picasso = Picasso.get();
+        defaultThumbnail = new IconDrawable(
+                context,
+                IoniconsIcons.ion_android_restaurant).colorRes(R.color.dark_gray);
     }
 
     public void setPlaces(Places newPlaces) {
@@ -66,10 +74,13 @@ public class PlacesAdapter extends BaseAdapter {
         Place place = places.get(position);
         List<Photo> photos = place.getPhotos();
 
-        String imageUrl = (photos != null && !photos.isEmpty()) ? photos.get(0).getPhotoUrl() :
-                place.getIcon();
+        String imageUrl = (photos != null && !photos.isEmpty())
+                ? photos.get(0).getPhotoUrl()
+                : place.getIcon();
 
         picasso.load(imageUrl)
+                .error(defaultThumbnail)
+                .fit().centerCrop()
                 .into(placesViewHolder.previewImage);
 
         placesViewHolder.nameTextView.setText(place.getName());
@@ -80,9 +91,9 @@ public class PlacesAdapter extends BaseAdapter {
 
     static class PlacesViewHolder {
 
-        @BindView(R.id.preview_image) ImageView previewImage;
-        @BindView(R.id.name_textview) TextView nameTextView;
-        @BindView(R.id.address_textview) TextView addressTextView;
+        @BindView(R.id.restaurant_thumbnail) ImageView previewImage;
+        @BindView(R.id.restaurant_name) TextView nameTextView;
+        @BindView(R.id.restaurant_address) TextView addressTextView;
 
         PlacesViewHolder(View view) {
             ButterKnife.bind(this, view);

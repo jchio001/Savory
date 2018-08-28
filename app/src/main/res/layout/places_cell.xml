@@ -2,43 +2,37 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:gravity="center_vertical"
-    android:orientation="horizontal"
-    android:padding="8dp">
+    android:padding="8dp"
+    tools:ignore="ContentDescription, RtlHardcoded">
 
     <ImageView
-        android:id="@+id/preview_image"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_gravity="center_vertical"
-        android:background="@color/light_grey"
-        android:scaleType="fitXY"/>
+        android:id="@+id/restaurant_thumbnail"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:layout_marginRight="8dp"/>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:layout_marginLeft="8dp">
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/name_textview"
+            android:id="@+id/restaurant_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="2dp"
-            android:textColor="@color/grey"
-            android:textSize="28sp"
-            tools:text="Pizza Hut"/>
+            android:textColor="@color/black"
+            android:textSize="21sp"
+            android:layout_marginBottom="2dp"/>
 
         <TextView
-            android:id="@+id/address_textview"
+            android:id="@+id/restaurant_address"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/grey"
-            android:textSize="20sp"
-            tools:text="I prefer Domino's"/>
-
+            android:textColor="@color/dark_gray"
+            android:textSize="17sp"/>
     </LinearLayout>
-
 </LinearLayout>

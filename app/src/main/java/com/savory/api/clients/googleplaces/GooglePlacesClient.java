@@ -5,7 +5,6 @@ import android.support.annotation.NonNull;
 import com.savory.BuildConfig;
 import com.savory.api.clients.googleplaces.models.Places;
 import com.savory.api.resources.RetrofitBuilderFactory;
-import com.savory.location.LocationManager;
 
 import retrofit2.Call;
 
@@ -17,7 +16,6 @@ public class GooglePlacesClient {
     private static GooglePlacesClient instance;
 
     private GooglePlacesService googlePlacesService;
-    private LocationManager locationManager = new LocationManager();
 
     public static GooglePlacesClient get() {
         if (instance == null) {
@@ -32,17 +30,13 @@ public class GooglePlacesClient {
     }
 
     private GooglePlacesClient() {
-        googlePlacesService = RetrofitBuilderFactory.createBase(locationManager)
+        googlePlacesService = RetrofitBuilderFactory.createBase()
             .baseUrl(BASE_URL)
             .build()
             .create(GooglePlacesService.class);
     }
 
-    public LocationManager getLocationManager() {
-        return locationManager;
-    }
-
-    public Call<Places> getPlaces(@NonNull String keyword) {
-        return googlePlacesService.getPlaces(GOOGLE_API_KEY, keyword);
+    public Call<Places> getPlaces(@NonNull String keyword, String location) {
+        return googlePlacesService.getPlaces(GOOGLE_API_KEY, keyword, location);
     }
 }

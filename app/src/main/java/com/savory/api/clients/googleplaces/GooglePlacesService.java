@@ -18,5 +18,6 @@ public interface GooglePlacesService {
      */
     @GET("maps/api/place/nearbysearch/json?rankby=distance&type=food,restaurant")
     Call<Places> getPlaces(@NonNull @Query("key") String apiKey,
-                           @NonNull @Query("keyword") String keyword);
+                           @NonNull @Query("keyword") String keyword,
+                           @NonNull @Query("location") String location);
 }

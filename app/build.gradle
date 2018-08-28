@@ -47,4 +47,7 @@ dependencies {
     implementation 'com.joanzapata.iconify:android-iconify-ionicons:2.2.2'
 
     implementation 'com.afollestad.material-dialogs:core:0.9.6.0'
+
+    // Be careful updating to 15.0.1, it doesn't seem to be actually published yet
+    implementation 'com.google.android.gms:play-services-location:15.0.0'
 }

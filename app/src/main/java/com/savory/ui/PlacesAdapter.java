@@ -111,7 +111,7 @@ public class PlacesAdapter extends BaseAdapter {
     public void query(@NonNull String keyword) {
         cancelPendingRequest();
 
-        Call<Places> nearbyPlacesCall = googlePlacesClient.getPlaces(keyword);
+        Call<Places> nearbyPlacesCall = googlePlacesClient.getPlaces(keyword, "");
         this.nearbyPlacesCall = nearbyPlacesCall;
         nearbyPlacesCall.enqueue(nearbyPlacesCallback);
     }

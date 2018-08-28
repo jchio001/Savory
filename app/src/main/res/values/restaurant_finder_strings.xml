@@ -3,4 +3,37 @@
     <string name="back_icon">{ion-android-arrow-back}</string>
     <string name="clear_icon">{ion-android-close}</string>
     <string name="no_restaurants_found">No restaurants match your input.</string>
+
+    <string name="turn_on_location_services">
+        Please turn on location services so Savory can find restaurants near you.
+    </string>
+
+    <string name="location">Location</string>
+    <string name="location_form_title">Set Location</string>
+    <string name="location_form_after_fail">
+        We failed to fetch your current location.
+        Please tell Savory where you want it to search.
+    </string>
+
+    <string name="auto_location_fail">
+        We couldn\'t get your current location.
+        Please try again or reset location services.
+    </string>
+
+    <string name="location_services_needed">Location Services Needed</string>
+    <string name="location_services_denial">
+        Savory needs location services to find restaurants near you.
+    </string>
+    <string name="location_services_confirm">Turn on location services</string>
+    <string name="enter_location_manually">Enter in location manually</string>
+
+    <string name="location_services_on">Location services turned on. Fetching current location&#8230;</string>
+
+    <string name="location_form_prompt">Where do you want to search for restaurants?</string>
+
+    <string name="location_permission_needed">Location Permission Needed</string>
+    <string name="location_permission_denial">
+        Food Diary needs permission to access your current location to find restaurants near you.
+    </string>
+    <string name="give_location_permission">Give us location permission</string>
 </resources>

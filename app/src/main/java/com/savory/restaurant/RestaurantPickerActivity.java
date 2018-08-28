@@ -6,33 +6,35 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.text.Editable;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.ListView;
 
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
 import com.savory.api.clients.googleplaces.GooglePlacesClient;
+import com.savory.api.clients.googleplaces.models.Place;
 import com.savory.api.clients.googleplaces.models.Places;
 import com.savory.location.LocationManager;
 import com.savory.ui.PlacesAdapter;
+import com.savory.ui.SimpleItemDividerDecoration;
 import com.savory.utils.UIUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import butterknife.OnItemClick;
 import butterknife.OnTextChanged;
 
 public class RestaurantPickerActivity extends AppCompatActivity {
 
     public static final String PLACE_KEY = "place";
 
+    @BindView(R.id.parent) View parent;
     @BindView(R.id.search_input) EditText searchInput;
     @BindView(R.id.clear_search) View clearSearch;
-    @BindView(R.id.places_listview) ListView placesListView;
+    @BindView(R.id.places_list) RecyclerView placesList;
     @BindView(R.id.set_location) FloatingActionButton setLocation;
 
     private PlacesAdapter placesAdapter;
@@ -47,8 +49,23 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant_picker);
         ButterKnife.bind(this);
 
-        placesAdapter = new PlacesAdapter(this);
-        placesListView.setAdapter(placesAdapter);
+        placesAdapter = new PlacesAdapter(this, placeChoiceListener);
+        placesList.setAdapter(placesAdapter);
+        placesList.addItemDecoration(new SimpleItemDividerDecoration(this));
+
+        // When the user is scrolling to browse options, close the soft keyboard
+        placesList.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+                if (newState == RecyclerView.SCROLL_STATE_DRAGGING) {
+                    UIUtils.hideKeyboard(RestaurantPickerActivity.this);
+
+                    // Stop the EditText cursor from blinking
+                    parent.requestFocus();
+                }
+            }
+        });
 
         locationManager = new LocationManager(locationListener, this);
         googlePlacesClient = GooglePlacesClient.get();
@@ -158,13 +175,15 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         }
     }
 
-    @OnItemClick(R.id.places_listview)
-    public void onPlaceSelected(int position) {
-        Intent intent = new Intent();
-        intent.putExtra(PLACE_KEY, placesAdapter.getItem(position));
-        setResult(RESULT_OK, intent);
-        finish();
-    }
+    private final PlacesAdapter.Listener placeChoiceListener = new PlacesAdapter.Listener() {
+        @Override
+        public void onItemClick(Place place) {
+            Intent intent = new Intent();
+            intent.putExtra(PLACE_KEY, place);
+            setResult(RESULT_OK, intent);
+            finish();
+        }
+    };
 
     @Override
     public void onDestroy() {

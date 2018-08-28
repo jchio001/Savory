@@ -3,11 +3,10 @@ package com.savory.ui;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -24,15 +23,22 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class PlacesAdapter extends BaseAdapter {
+public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder> {
+
+    public interface Listener {
+        void onItemClick(Place place);
+    }
 
     private Picasso picasso;
     private List<Place> places = new LinkedList<>();
     private Drawable defaultThumbnail;
+    private Listener listener;
 
-    public PlacesAdapter(Context context) {
+    public PlacesAdapter(Context context, Listener listener) {
         this.picasso = Picasso.get();
+        this.listener = listener;
         defaultThumbnail = new IconDrawable(
                 context,
                 IoniconsIcons.ion_android_restaurant).colorRes(R.color.dark_gray);
@@ -45,32 +51,20 @@ public class PlacesAdapter extends BaseAdapter {
     }
 
     @Override
-    public int getCount() {
+    public int getItemCount() {
         return places.size();
     }
 
+    @NonNull
     @Override
-    public Place getItem(int position) {
-        return places.get(position);
+    public PlacesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        View itemView = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.places_cell, parent, false);
+        return new PlacesViewHolder(itemView);
     }
 
     @Override
-    public long getItemId(int position) {
-        return position;
-    }
-
-    @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        PlacesViewHolder placesViewHolder;
-        if (convertView == null) {
-            convertView = LayoutInflater.from(parent.getContext())
-                    .inflate(R.layout.places_cell, parent, false);
-            placesViewHolder = new PlacesViewHolder(convertView);
-            convertView.setTag(placesViewHolder);
-        } else {
-            placesViewHolder = (PlacesViewHolder) convertView.getTag();
-        }
-
+    public void onBindViewHolder(@NonNull PlacesViewHolder holder, int position) {
         Place place = places.get(position);
         List<Photo> photos = place.getPhotos();
 
@@ -81,22 +75,26 @@ public class PlacesAdapter extends BaseAdapter {
         picasso.load(imageUrl)
                 .error(defaultThumbnail)
                 .fit().centerCrop()
-                .into(placesViewHolder.previewImage);
+                .into(holder.previewImage);
 
-        placesViewHolder.nameTextView.setText(place.getName());
-        placesViewHolder.addressTextView.setText(place.getVicinity());
-
-        return convertView;
+        holder.nameTextView.setText(place.getName());
+        holder.addressTextView.setText(place.getVicinity());
     }
 
-    static class PlacesViewHolder {
+    class PlacesViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.restaurant_thumbnail) ImageView previewImage;
         @BindView(R.id.restaurant_name) TextView nameTextView;
         @BindView(R.id.restaurant_address) TextView addressTextView;
 
         PlacesViewHolder(View view) {
+            super(view);
             ButterKnife.bind(this, view);
+        }
+
+        @OnClick(R.id.parent)
+        public void onClick() {
+            listener.onItemClick(places.get(getAdapterPosition()));
         }
     }
 }

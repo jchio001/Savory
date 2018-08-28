@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
@@ -61,12 +63,13 @@
                 style="@style/no_content"/>
         </FrameLayout>
 
-        <ListView
-            android:id="@+id/places_listview"
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/places_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingBottom="88dp"
-            android:clipToPadding="false"/>
+            android:clipToPadding="false"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
 
         <ProgressBar
             android:id="@+id/loading"

@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.savory.R;
-import com.savory.api.clients.googleplaces.GooglePlacesClient;
 import com.savory.api.clients.googleplaces.models.Photo;
 import com.savory.api.clients.googleplaces.models.Place;
 import com.savory.api.clients.googleplaces.models.Places;
@@ -21,47 +20,20 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class PlacesAdapter extends BaseAdapter {
 
-    public interface ErrorListener {
-        void onErrorReceived(Throwable t);
+    private Picasso picasso;
+    private List<Place> places = new LinkedList<>();
+
+    public PlacesAdapter() {
+        this.picasso = Picasso.get();
     }
 
-    public static final String DEFAULT_KEYWORD = "food";
-
-    private Picasso picasso;
-    private GooglePlacesClient googlePlacesClient;
-    protected List<Place> places = new LinkedList<>();
-    protected ErrorListener errorListener;
-
-    private Callback<Places> nearbyPlacesCallback = new Callback<Places>() {
-        @Override
-        public void onResponse(@NonNull Call<Places> call, @NonNull Response<Places> response) {
-            if (response.isSuccessful()) {
-                places = response.body().getResults();
-                notifyDataSetChanged();
-            }
-        }
-
-        @Override
-        public void onFailure(@NonNull Call<Places> call,
-            @NonNull Throwable t) {
-            errorListener.onErrorReceived(t);
-        }
-    };
-
-    private Call<Places> nearbyPlacesCall;
-
-    public PlacesAdapter(@NonNull Picasso picasso,
-                         @NonNull GooglePlacesClient googlePlacesClient,
-                         @NonNull final ErrorListener errorListener) {
-        this.picasso = picasso;
-        this.googlePlacesClient = googlePlacesClient;
-        this.errorListener = errorListener;
+    public void setPlaces(Places newPlaces) {
+        places.clear();
+        places.addAll(newPlaces.getResults());
+        notifyDataSetChanged();
     }
 
     @Override
@@ -80,13 +52,11 @@ public class PlacesAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position,
-                        @Nullable View convertView,
-                        @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         PlacesViewHolder placesViewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.places_cell, parent, false);
+                    .inflate(R.layout.places_cell, parent, false);
             placesViewHolder = new PlacesViewHolder(convertView);
             convertView.setTag(placesViewHolder);
         } else {
@@ -97,30 +67,15 @@ public class PlacesAdapter extends BaseAdapter {
         List<Photo> photos = place.getPhotos();
 
         String imageUrl = (photos != null && !photos.isEmpty()) ? photos.get(0).getPhotoUrl() :
-            place.getIcon();
+                place.getIcon();
 
         picasso.load(imageUrl)
-            .into(placesViewHolder.previewImage);
+                .into(placesViewHolder.previewImage);
 
         placesViewHolder.nameTextView.setText(place.getName());
         placesViewHolder.addressTextView.setText(place.getVicinity());
 
         return convertView;
-    }
-
-    public void query(@NonNull String keyword) {
-        cancelPendingRequest();
-
-        Call<Places> nearbyPlacesCall = googlePlacesClient.getPlaces(keyword, "");
-        this.nearbyPlacesCall = nearbyPlacesCall;
-        nearbyPlacesCall.enqueue(nearbyPlacesCallback);
-    }
-
-    public void cancelPendingRequest() {
-        Call<Places> nearbyPlacesCall = this.nearbyPlacesCall;
-        if (nearbyPlacesCall != null) {
-            nearbyPlacesCall.cancel();
-        }
     }
 
     static class PlacesViewHolder {
@@ -129,8 +84,8 @@ public class PlacesAdapter extends BaseAdapter {
         @BindView(R.id.name_textview) TextView nameTextView;
         @BindView(R.id.address_textview) TextView addressTextView;
 
-        public PlacesViewHolder(View v) {
-            ButterKnife.bind(this, v);
+        PlacesViewHolder(View view) {
+            ButterKnife.bind(this, view);
         }
     }
 }

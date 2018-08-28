@@ -15,10 +15,10 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
 import com.savory.api.clients.googleplaces.GooglePlacesClient;
+import com.savory.api.clients.googleplaces.models.Places;
 import com.savory.location.LocationManager;
 import com.savory.ui.PlacesAdapter;
 import com.savory.utils.UIUtils;
-import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +26,7 @@ import butterknife.OnClick;
 import butterknife.OnItemClick;
 import butterknife.OnTextChanged;
 
-public class RestaurantPickerActivity extends AppCompatActivity implements LocationManager.Listener {
+public class RestaurantPickerActivity extends AppCompatActivity {
 
     public static final String PLACE_KEY = "place";
 
@@ -39,6 +39,7 @@ public class RestaurantPickerActivity extends AppCompatActivity implements Locat
     private LocationManager locationManager;
     private boolean denialLock;
     private String currentLocation;
+    private GooglePlacesClient googlePlacesClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,17 +47,12 @@ public class RestaurantPickerActivity extends AppCompatActivity implements Locat
         setContentView(R.layout.activity_restaurant_picker);
         ButterKnife.bind(this);
 
-        locationManager = new LocationManager(this, this);
-        placesAdapter = new PlacesAdapter(Picasso.get(), GooglePlacesClient.get(),
-            new PlacesAdapter.ErrorListener() {
-                @Override
-                public void onErrorReceived(Throwable t) {
-
-                }
-            });
-
-        placesAdapter.query(PlacesAdapter.DEFAULT_KEYWORD);
+        placesAdapter = new PlacesAdapter();
         placesListView.setAdapter(placesAdapter);
+
+        locationManager = new LocationManager(locationListener, this);
+        googlePlacesClient = GooglePlacesClient.get();
+        googlePlacesClient.setListener(placeFetchListener);
 
         setLocation.setImageDrawable(new IconDrawable(
                 this,
@@ -75,6 +71,10 @@ public class RestaurantPickerActivity extends AppCompatActivity implements Locat
 
     @OnTextChanged(value = R.id.search_input, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void afterTextChanged(Editable input) {
+        if (currentLocation != null) {
+            fetchRestaurants();
+        }
+
         if (input.length() == 0) {
             clearSearch.setVisibility(View.GONE);
         } else {
@@ -84,7 +84,7 @@ public class RestaurantPickerActivity extends AppCompatActivity implements Locat
 
     /** Fetches restaurants with the current location and search input */
     private void fetchRestaurants() {
-        // restClient.fetchRestaurants(searchInput.getText().toString(), currentLocation);
+        googlePlacesClient.getPlaces(searchInput.getText().toString(), currentLocation);
     }
 
     @OnClick(R.id.clear_search)
@@ -92,31 +92,39 @@ public class RestaurantPickerActivity extends AppCompatActivity implements Locat
         searchInput.setText("");
     }
 
-    @Override
-    protected void onStop() {
-        super.onStop();
-        placesAdapter.cancelPendingRequest();
-    }
-
     @OnClick(R.id.back_button)
     public void goBack() {
         finish();
     }
 
+    private final LocationManager.Listener locationListener = new LocationManager.Listener() {
+        @Override
+        public void onServicesOrPermissionChoice() {
+            denialLock = false;
+        }
+
+        @Override
+        public void onLocationFetched(String location) {
+            currentLocation = location;
+            fetchRestaurants();
+        }
+    };
+
+    private final GooglePlacesClient.Listener placeFetchListener = new GooglePlacesClient.Listener() {
+        @Override
+        public void onPlacesFetched(Places places) {
+            placesAdapter.setPlaces(places);
+        }
+
+        @Override
+        public void onPlaceFetchFail() {
+            // TODO: Change the UI here, preferably with a CTA to refetch
+        }
+    };
+
     @OnClick(R.id.set_location)
     public void setLocation() {
         locationManager.showLocationForm();
-    }
-
-    @Override
-    public void onServicesOrPermissionChoice() {
-        denialLock = false;
-    }
-
-    @Override
-    public void onLocationFetched(String location) {
-        currentLocation = location;
-        fetchRestaurants();
     }
 
     @Override
@@ -156,5 +164,11 @@ public class RestaurantPickerActivity extends AppCompatActivity implements Locat
         intent.putExtra(PLACE_KEY, placesAdapter.getItem(position));
         setResult(RESULT_OK, intent);
         finish();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        googlePlacesClient.shutdown();
     }
 }

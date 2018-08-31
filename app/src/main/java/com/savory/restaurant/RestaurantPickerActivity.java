@@ -20,6 +20,7 @@ import com.savory.api.clients.yelp.models.RestaurantSearchResults;
 import com.savory.location.LocationManager;
 import com.savory.ui.PlacesAdapter;
 import com.savory.ui.SimpleItemDividerDecoration;
+import com.savory.utils.Constants;
 import com.savory.utils.UIUtils;
 
 import java.util.List;
@@ -31,9 +32,7 @@ import butterknife.OnTextChanged;
 
 public class RestaurantPickerActivity extends AppCompatActivity {
 
-    public static final String PLACE_KEY = "place";
-
-    @BindView(R.id.parent) View parent;
+    @BindView(R.id.yelp_restaurant_parent) View parent;
     @BindView(R.id.search_input) EditText searchInput;
     @BindView(R.id.clear_search) View clearSearch;
     @BindView(R.id.restaurant_search_skeleton) View loadingView;
@@ -200,7 +199,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         @Override
         public void onItemClick(Restaurant place) {
             Intent intent = new Intent();
-            // intent.putExtra(PLACE_KEY, place);
+            intent.putExtra(Constants.PLACE_KEY, place);
             setResult(RESULT_OK, intent);
             finish();
         }

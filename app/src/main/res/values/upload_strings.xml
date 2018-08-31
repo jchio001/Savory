@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="ask_for_dish_location">
+        That looks delicious! Where did you get it?
+    </string>
+</resources>

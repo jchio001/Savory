@@ -88,7 +88,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
             ButterKnife.bind(this, view);
         }
 
-        @OnClick(R.id.parent)
+        @OnClick(R.id.yelp_restaurant_parent)
         public void onClick() {
             listener.onItemClick(places.get(getAdapterPosition()));
         }

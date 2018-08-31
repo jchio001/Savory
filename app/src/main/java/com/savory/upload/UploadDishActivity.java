@@ -56,5 +56,6 @@ public class UploadDishActivity extends StandardActivity {
     @OnClick(R.id.restaurant_section)
     public void onRestaurantSectionClicked() {
         startActivityForResult(new Intent(this, RestaurantPickerActivity.class), REQUEST_CODE);
+        overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay);
     }
 }

@@ -207,6 +207,12 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     };
 
     @Override
+    public void finish() {
+        super.finish();
+        overridePendingTransition(0, R.anim.slide_out_bottom);
+    }
+
+    @Override
     public void onDestroy() {
         super.onDestroy();
         yelpPlacesClient.shutdown();

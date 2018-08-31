@@ -53,7 +53,7 @@
         android:layout_height="match_parent">
 
         <FrameLayout
-            android:id="@+id/no_results"
+            android:id="@+id/no_restaurant_results"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:visibility="gone">
@@ -63,6 +63,27 @@
                 style="@style/no_content"/>
         </FrameLayout>
 
+        <LinearLayout
+            android:id="@+id/restaurant_search_skeleton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <include layout="@layout/restaurant_search_cell"/>
+
+            <include layout="@layout/restaurant_search_cell"/>
+
+            <include layout="@layout/restaurant_search_cell"/>
+
+            <include layout="@layout/restaurant_search_cell"/>
+
+            <include layout="@layout/restaurant_search_cell"/>
+
+            <include layout="@layout/restaurant_search_cell"/>
+
+            <include layout="@layout/restaurant_search_cell"/>
+        </LinearLayout>
+
         <android.support.v7.widget.RecyclerView
             android:id="@+id/places_list"
             android:layout_width="match_parent"
@@ -70,14 +91,6 @@
             android:paddingBottom="88dp"
             android:clipToPadding="false"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
-
-        <ProgressBar
-            android:id="@+id/loading"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="72dp"
-            android:layout_centerHorizontal="true"
-            android:visibility="gone"/>
     </RelativeLayout>
 
     <android.support.design.widget.FloatingActionButton

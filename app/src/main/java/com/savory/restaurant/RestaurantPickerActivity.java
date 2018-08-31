@@ -22,6 +22,8 @@ import com.savory.ui.PlacesAdapter;
 import com.savory.ui.SimpleItemDividerDecoration;
 import com.savory.utils.UIUtils;
 
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
@@ -34,6 +36,8 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     @BindView(R.id.parent) View parent;
     @BindView(R.id.search_input) EditText searchInput;
     @BindView(R.id.clear_search) View clearSearch;
+    @BindView(R.id.restaurant_search_skeleton) View loadingView;
+    @BindView(R.id.no_restaurant_results) View noResults;
     @BindView(R.id.places_list) RecyclerView placesList;
     @BindView(R.id.set_location) FloatingActionButton setLocation;
 
@@ -76,6 +80,10 @@ public class RestaurantPickerActivity extends AppCompatActivity {
                 IoniconsIcons.ion_android_map).colorRes(R.color.white));
     }
 
+    protected void scrollToTopOfResults() {
+        placesList.getLayoutManager().scrollToPosition(0);
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -88,6 +96,10 @@ public class RestaurantPickerActivity extends AppCompatActivity {
 
     @OnTextChanged(value = R.id.search_input, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
     public void afterTextChanged(Editable input) {
+        placesList.setVisibility(View.GONE);
+        noResults.setVisibility(View.GONE);
+        loadingView.setVisibility(View.VISIBLE);
+
         if (currentLocation != null) {
             fetchRestaurants();
         }
@@ -130,7 +142,16 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     private final YelpPlacesClient.Listener placeFetchListener = new YelpPlacesClient.Listener() {
         @Override
         public void onPlacesFetched(RestaurantSearchResults results) {
-            placesAdapter.setPlaces(results.getRestaurants());
+            List<Restaurant> restaurants = results.getRestaurants();
+
+            loadingView.setVisibility(View.GONE);
+            if (restaurants.isEmpty()) {
+                noResults.setVisibility(View.VISIBLE);
+            } else {
+                placesAdapter.setPlaces(restaurants);
+                placesList.setVisibility(View.VISIBLE);
+                scrollToTopOfResults();
+            }
         }
 
         @Override

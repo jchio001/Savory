@@ -73,6 +73,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
 
         holder.nameTextView.setText(place.getName());
         holder.addressTextView.setText(place.getLocation().getAddress());
+        holder.categoriesText.setText(place.getCategoriesString());
     }
 
     class PlacesViewHolder extends RecyclerView.ViewHolder {
@@ -80,6 +81,7 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
         @BindView(R.id.restaurant_thumbnail) ImageView previewImage;
         @BindView(R.id.restaurant_name) TextView nameTextView;
         @BindView(R.id.restaurant_address) TextView addressTextView;
+        @BindView(R.id.restaurant_categories) TextView categoriesText;
 
         PlacesViewHolder(View view) {
             super(view);

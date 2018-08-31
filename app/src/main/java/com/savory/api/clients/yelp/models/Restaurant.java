@@ -106,19 +106,22 @@ public class Restaurant {
         return imageUrl;
     }
 
-    public String getPhoneNumber() {
-        return phoneNumber;
-    }
-
-    public Coordinates getCoordinates() {
-        return coordinates;
-    }
-
     public Location getLocation() {
         return location;
     }
 
     public List<Category> getCategories() {
         return categories;
+    }
+
+    public String getCategoriesString() {
+        StringBuilder categoriesList = new StringBuilder();
+        for (Category placeCategory : categories) {
+            if (categoriesList.length() > 0) {
+                categoriesList.append(", ");
+            }
+            categoriesList.append(placeCategory.getTitle());
+        }
+        return categoriesList.toString();
     }
 }

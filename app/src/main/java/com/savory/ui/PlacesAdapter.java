@@ -13,9 +13,7 @@ import android.widget.TextView;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
-import com.savory.api.clients.googleplaces.models.Photo;
-import com.savory.api.clients.googleplaces.models.Place;
-import com.savory.api.clients.googleplaces.models.Places;
+import com.savory.api.clients.yelp.models.Restaurant;
 import com.squareup.picasso.Picasso;
 
 import java.util.LinkedList;
@@ -28,11 +26,11 @@ import butterknife.OnClick;
 public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder> {
 
     public interface Listener {
-        void onItemClick(Place place);
+        void onItemClick(Restaurant place);
     }
 
     private Picasso picasso;
-    private List<Place> places = new LinkedList<>();
+    private List<Restaurant> places = new LinkedList<>();
     private Drawable defaultThumbnail;
     private Listener listener;
 
@@ -44,9 +42,9 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
                 IoniconsIcons.ion_android_restaurant).colorRes(R.color.dark_gray);
     }
 
-    public void setPlaces(Places newPlaces) {
+    public void setPlaces(List<Restaurant> newPlaces) {
         places.clear();
-        places.addAll(newPlaces.getResults());
+        places.addAll(newPlaces);
         notifyDataSetChanged();
     }
 
@@ -65,20 +63,16 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
 
     @Override
     public void onBindViewHolder(@NonNull PlacesViewHolder holder, int position) {
-        Place place = places.get(position);
-        List<Photo> photos = place.getPhotos();
+        Restaurant place = places.get(position);
 
-        String imageUrl = (photos != null && !photos.isEmpty())
-                ? photos.get(0).getPhotoUrl()
-                : place.getIcon();
-
-        picasso.load(imageUrl)
+        picasso.load(place.getImageUrl())
                 .error(defaultThumbnail)
-                .fit().centerCrop()
+                .fit()
+                .centerCrop()
                 .into(holder.previewImage);
 
         holder.nameTextView.setText(place.getName());
-        holder.addressTextView.setText(place.getVicinity());
+        holder.addressTextView.setText(place.getLocation().getAddress());
     }
 
     class PlacesViewHolder extends RecyclerView.ViewHolder {

@@ -1,13 +1,11 @@
-package com.savory.api.clients.googleplaces;
+package com.savory.api.clients.yelp;
 
 import android.os.Handler;
 import android.os.HandlerThread;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.text.TextUtils;
 
-import com.savory.BuildConfig;
-import com.savory.api.clients.googleplaces.models.Places;
+import com.savory.api.clients.yelp.models.RestaurantSearchResults;
 import com.savory.api.resources.RetrofitBuilderFactory;
 
 import java.util.UUID;
@@ -16,30 +14,31 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class GooglePlacesClient {
+public class YelpPlacesClient {
 
     public interface Listener {
-        void onPlacesFetched(Places places);
+        void onPlacesFetched(RestaurantSearchResults results);
 
         void onPlaceFetchFail();
     }
 
-    private static final String BASE_URL = "https://maps.googleapis.com/";
-    private static final String GOOGLE_API_KEY = BuildConfig.GOOGLE_API_KEY;
-    private static final String DEFAULT_SEARCH_TERM = "food";
+    private static final String BASE_URL = "https://api.yelp.com";
+    private static final int DEFAULT_NUM_RESTAURANTS = 10;
+    private static final String BEST_MATCH = "best_match";
+    private static final String DISTANCE = "distance";
 
-    private static GooglePlacesClient instance;
+    private static YelpPlacesClient instance;
 
-    private GooglePlacesService googlePlacesService;
+    private YelpService yelpService;
     private Handler backgroundHandler;
     private @Nullable Listener listener;
-    private @Nullable Call<Places> currentPlacesCall;
+    private @Nullable Call<RestaurantSearchResults> currentPlacesCall;
 
-    public static GooglePlacesClient get() {
+    public static YelpPlacesClient get() {
         if (instance == null) {
-            synchronized (GooglePlacesClient.class) {
+            synchronized (YelpPlacesClient.class) {
                 if (instance == null) {
-                    instance = new GooglePlacesClient();
+                    instance = new YelpPlacesClient();
                 }
             }
         }
@@ -47,11 +46,11 @@ public class GooglePlacesClient {
         return instance;
     }
 
-    private GooglePlacesClient() {
-        googlePlacesService = RetrofitBuilderFactory.createBase()
+    private YelpPlacesClient() {
+        yelpService = RetrofitBuilderFactory.createBase(new YelpAuthInterceptor())
             .baseUrl(BASE_URL)
             .build()
-            .create(GooglePlacesService.class);
+            .create(YelpService.class);
 
         HandlerThread handlerThread = new HandlerThread(UUID.randomUUID().toString());
         handlerThread.start();
@@ -67,7 +66,7 @@ public class GooglePlacesClient {
         cancelCurrentCallAndMaybeRunNext(null);
     }
 
-    private void cancelCurrentCallAndMaybeRunNext(@Nullable final Call<Places> nextCall) {
+    private void cancelCurrentCallAndMaybeRunNext(@Nullable final Call<RestaurantSearchResults> nextCall) {
         backgroundHandler.post(new Runnable() {
             @Override
             public void run() {
@@ -84,14 +83,17 @@ public class GooglePlacesClient {
     }
 
     public void getPlaces(String keyword, String location) {
-        String query = TextUtils.isEmpty(keyword) ? DEFAULT_SEARCH_TERM : keyword;
-        Call<Places> nextCall = googlePlacesService.getPlaces(GOOGLE_API_KEY, query, location);
+        Call<RestaurantSearchResults> nextCall = yelpService.fetchRestaurants(
+                keyword,
+                location,
+                DEFAULT_NUM_RESTAURANTS,
+                keyword.isEmpty() ? DISTANCE : BEST_MATCH);
         cancelCurrentCallAndMaybeRunNext(nextCall);
     }
 
-    private Callback<Places> placesCallback = new Callback<Places>() {
+    private Callback<RestaurantSearchResults> placesCallback = new Callback<RestaurantSearchResults>() {
         @Override
-        public void onResponse(@NonNull Call<Places> call, @NonNull Response<Places> response) {
+        public void onResponse(@NonNull Call<RestaurantSearchResults> call, @NonNull Response<RestaurantSearchResults> response) {
             if (listener == null) {
                 return;
             }
@@ -104,7 +106,7 @@ public class GooglePlacesClient {
         }
 
         @Override
-        public void onFailure(@NonNull Call<Places> call, @NonNull Throwable t) {
+        public void onFailure(@NonNull Call<RestaurantSearchResults> call, @NonNull Throwable t) {
             // TODO: Handle failure while dealing with cancelled calls
         }
     };

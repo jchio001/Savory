@@ -9,7 +9,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.savory.R;
-import com.savory.api.clients.googleplaces.models.Place;
 import com.savory.restaurant.RestaurantPickerActivity;
 import com.savory.ui.StandardActivity;
 import com.savory.utils.Constants;
@@ -21,6 +20,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class UploadDishActivity extends StandardActivity {
+
     private static final int REQUEST_CODE = 2343;
 
     @BindView(R.id.preview_imageview) ImageView previewImageView;
@@ -29,7 +29,6 @@ public class UploadDishActivity extends StandardActivity {
 
     @BindColor(R.color.grey) @ColorInt int grey;
 
-    private Place place;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,9 +49,7 @@ public class UploadDishActivity extends StandardActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            place = data.getParcelableExtra(RestaurantPickerActivity.PLACE_KEY);
-            restaurantName.setTextColor(grey);
-            restaurantName.setText(place.getName());
+
         }
     }
 

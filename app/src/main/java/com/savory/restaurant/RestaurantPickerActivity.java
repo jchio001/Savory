@@ -14,9 +14,9 @@ import android.widget.EditText;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
-import com.savory.api.clients.googleplaces.GooglePlacesClient;
-import com.savory.api.clients.googleplaces.models.Place;
-import com.savory.api.clients.googleplaces.models.Places;
+import com.savory.api.clients.yelp.YelpPlacesClient;
+import com.savory.api.clients.yelp.models.Restaurant;
+import com.savory.api.clients.yelp.models.RestaurantSearchResults;
 import com.savory.location.LocationManager;
 import com.savory.ui.PlacesAdapter;
 import com.savory.ui.SimpleItemDividerDecoration;
@@ -41,7 +41,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     private LocationManager locationManager;
     private boolean denialLock;
     private String currentLocation;
-    private GooglePlacesClient googlePlacesClient;
+    private YelpPlacesClient yelpPlacesClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -68,8 +68,8 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         });
 
         locationManager = new LocationManager(locationListener, this);
-        googlePlacesClient = GooglePlacesClient.get();
-        googlePlacesClient.setListener(placeFetchListener);
+        yelpPlacesClient = YelpPlacesClient.get();
+        yelpPlacesClient.setListener(placeFetchListener);
 
         setLocation.setImageDrawable(new IconDrawable(
                 this,
@@ -101,7 +101,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
 
     /** Fetches restaurants with the current location and search input */
     private void fetchRestaurants() {
-        googlePlacesClient.getPlaces(searchInput.getText().toString(), currentLocation);
+        yelpPlacesClient.getPlaces(searchInput.getText().toString(), currentLocation);
     }
 
     @OnClick(R.id.clear_search)
@@ -127,10 +127,10 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         }
     };
 
-    private final GooglePlacesClient.Listener placeFetchListener = new GooglePlacesClient.Listener() {
+    private final YelpPlacesClient.Listener placeFetchListener = new YelpPlacesClient.Listener() {
         @Override
-        public void onPlacesFetched(Places places) {
-            placesAdapter.setPlaces(places);
+        public void onPlacesFetched(RestaurantSearchResults results) {
+            placesAdapter.setPlaces(results.getRestaurants());
         }
 
         @Override
@@ -177,9 +177,9 @@ public class RestaurantPickerActivity extends AppCompatActivity {
 
     private final PlacesAdapter.Listener placeChoiceListener = new PlacesAdapter.Listener() {
         @Override
-        public void onItemClick(Place place) {
+        public void onItemClick(Restaurant place) {
             Intent intent = new Intent();
-            intent.putExtra(PLACE_KEY, place);
+            // intent.putExtra(PLACE_KEY, place);
             setResult(RESULT_OK, intent);
             finish();
         }
@@ -188,6 +188,6 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        googlePlacesClient.shutdown();
+        yelpPlacesClient.shutdown();
     }
 }

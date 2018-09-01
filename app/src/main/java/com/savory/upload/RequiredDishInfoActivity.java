@@ -4,7 +4,10 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -15,17 +18,24 @@ import com.savory.api.clients.yelp.models.Restaurant;
 import com.savory.restaurant.RestaurantPickerActivity;
 import com.savory.ui.StandardActivity;
 import com.savory.utils.Constants;
+import com.savory.utils.UIUtils;
 import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnEditorAction;
+import butterknife.OnTextChanged;
 
-public class UploadDishActivity extends StandardActivity {
+public class RequiredDishInfoActivity extends StandardActivity {
 
     private static final int REQUEST_CODE = 2343;
+    private static final float DISABLED_ALPHA = 0.25f;
 
+    @BindView(R.id.focus_sink) View focusSink;
+    @BindView(R.id.next) View nextButton;
     @BindView(R.id.preview_imageview) ImageView dishPreview;
+    @BindView(R.id.dish_title_input) EditText dishTitleInput;
     @BindView(R.id.restaurant_picker_cta_text) View pickRestaurantCta;
     @BindView(R.id.yelp_restaurant_parent) View restaurantContainerView;
     @BindView(R.id.restaurant_thumbnail) ImageView restaurantThumbnailView;
@@ -35,11 +45,12 @@ public class UploadDishActivity extends StandardActivity {
 
     private Picasso picasso;
     private Drawable defaultRestaurantThumbnail;
+    private @Nullable Restaurant restaurant;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_upload);
+        setContentView(R.layout.required_dish_info);
         ButterKnife.bind(this);
         picasso = Picasso.get();
 
@@ -55,6 +66,7 @@ public class UploadDishActivity extends StandardActivity {
     }
 
     private void loadRestaurantInfo(Restaurant restaurant) {
+        this.restaurant = restaurant;
         picasso.load(restaurant.getImageUrl())
                 .error(defaultRestaurantThumbnail)
                 .fit()
@@ -67,6 +79,43 @@ public class UploadDishActivity extends StandardActivity {
 
         pickRestaurantCta.setVisibility(View.GONE);
         restaurantContainerView.setVisibility(View.VISIBLE);
+
+        updateNextButtonEnabledState();
+    }
+
+    @OnTextChanged(value = R.id.dish_title_input, callback = OnTextChanged.Callback.AFTER_TEXT_CHANGED)
+    public void afterTextChanged() {
+        updateNextButtonEnabledState();
+    }
+
+    private void updateNextButtonEnabledState() {
+        nextButton.setAlpha(isFormValid() ? 1.0f : DISABLED_ALPHA);
+    }
+
+    private boolean isFormValid() {
+        return !dishTitleInput.getText().toString().trim().isEmpty() && restaurant != null;
+    }
+
+    @OnEditorAction(R.id.dish_title_input)
+    public boolean onEditorAction(int actionId) {
+        if (actionId == EditorInfo.IME_ACTION_DONE) {
+            focusSink.requestFocus();
+            UIUtils.hideKeyboard(this);
+            return true;
+        }
+        return false;
+    }
+
+    @OnClick(R.id.back_button)
+    public void onBackButtonPressed() {
+
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        // Show a dialog here instead
     }
 
     @Override

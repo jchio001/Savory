@@ -18,7 +18,7 @@ import com.savory.R;
 import com.savory.data.SharedPreferencesClient;
 import com.savory.ui.BottomNavigationView;
 import com.savory.ui.StandardActivity;
-import com.savory.upload.UploadDishActivity;
+import com.savory.upload.RequiredDishInfoActivity;
 import com.savory.utils.Constants;
 import com.savory.utils.FileUtils;
 import com.savory.utils.PermissionUtils;
@@ -56,7 +56,7 @@ public class HomeActivity extends StandardActivity {
         // Kill activity if it's above an existing stack due to launcher bug
         Intent intent = getIntent();
         String action = intent != null ? intent.getAction() : null;
-        if (!isTaskRoot() && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
+        if (!isTaskRoot() && intent != null && intent.hasCategory(Intent.CATEGORY_LAUNCHER)
                 && action != null && action.equals(Intent.ACTION_MAIN)) {
             finish();
             return;
@@ -130,7 +130,7 @@ public class HomeActivity extends StandardActivity {
             return;
         }
         String filePath = FileUtils.createImageFile(this, imageBitmap);
-        Intent intent = new Intent(this, UploadDishActivity.class)
+        Intent intent = new Intent(this, RequiredDishInfoActivity.class)
                 .putExtra(Constants.PHOTO_FILE_PATH_KEY, filePath);
         startActivityForResult(intent, 1);
     }

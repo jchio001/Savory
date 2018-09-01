@@ -19,7 +19,7 @@ import android.view.ViewGroup;
 
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
-import com.savory.upload.UploadDishActivity;
+import com.savory.upload.RequiredDishInfoActivity;
 import com.savory.utils.Constants;
 import com.savory.utils.FileUtils;
 import com.savory.utils.PermissionUtils;
@@ -90,7 +90,7 @@ public class HomeFeedFragment extends Fragment{
             return;
         }
 
-        Intent intent = new Intent(getActivity(), UploadDishActivity.class)
+        Intent intent = new Intent(getActivity(), RequiredDishInfoActivity.class)
                 .putExtra(Constants.PHOTO_FILE_PATH_KEY, chosenFilePath);
         startActivityForResult(intent, 1);
     }

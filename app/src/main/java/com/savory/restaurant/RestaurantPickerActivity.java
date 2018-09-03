@@ -14,11 +14,11 @@ import android.widget.EditText;
 import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
-import com.savory.api.clients.yelp.YelpPlacesClient;
+import com.savory.api.clients.yelp.YelpRestaurantClient;
 import com.savory.api.clients.yelp.models.Restaurant;
 import com.savory.api.clients.yelp.models.RestaurantSearchResults;
 import com.savory.location.LocationManager;
-import com.savory.ui.PlacesAdapter;
+import com.savory.ui.RestaurantAdapter;
 import com.savory.ui.SimpleItemDividerDecoration;
 import com.savory.utils.Constants;
 import com.savory.utils.UIUtils;
@@ -40,11 +40,11 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     @BindView(R.id.places_list) RecyclerView placesList;
     @BindView(R.id.set_location) FloatingActionButton setLocation;
 
-    private PlacesAdapter placesAdapter;
+    private RestaurantAdapter placesAdapter;
     private LocationManager locationManager;
     private boolean denialLock;
     private String currentLocation;
-    private YelpPlacesClient yelpPlacesClient;
+    private YelpRestaurantClient yelpRestaurantClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant_picker);
         ButterKnife.bind(this);
 
-        placesAdapter = new PlacesAdapter(this, placeChoiceListener);
+        placesAdapter = new RestaurantAdapter(this, placeChoiceListener);
         placesList.setAdapter(placesAdapter);
         placesList.addItemDecoration(new SimpleItemDividerDecoration(this));
 
@@ -71,8 +71,8 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         });
 
         locationManager = new LocationManager(locationListener, this);
-        yelpPlacesClient = YelpPlacesClient.get();
-        yelpPlacesClient.setListener(placeFetchListener);
+        yelpRestaurantClient = YelpRestaurantClient.get();
+        yelpRestaurantClient.setListener(placeFetchListener);
 
         setLocation.setImageDrawable(new IconDrawable(
                 this,
@@ -112,7 +112,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
 
     /** Fetches restaurants with the current location and search input */
     private void fetchRestaurants() {
-        yelpPlacesClient.getPlaces(searchInput.getText().toString(), currentLocation);
+        yelpRestaurantClient.getRestaurant(searchInput.getText().toString(), currentLocation);
     }
 
     @OnClick(R.id.clear_search)
@@ -138,23 +138,23 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         }
     };
 
-    private final YelpPlacesClient.Listener placeFetchListener = new YelpPlacesClient.Listener() {
+    private final YelpRestaurantClient.Listener placeFetchListener = new YelpRestaurantClient.Listener() {
         @Override
-        public void onPlacesFetched(RestaurantSearchResults results) {
+        public void onRestaurantFetched(RestaurantSearchResults results) {
             List<Restaurant> restaurants = results.getRestaurants();
 
             loadingView.setVisibility(View.GONE);
             if (restaurants.isEmpty()) {
                 noResults.setVisibility(View.VISIBLE);
             } else {
-                placesAdapter.setPlaces(restaurants);
+                placesAdapter.setRestaurants(restaurants);
                 placesList.setVisibility(View.VISIBLE);
                 scrollToTopOfResults();
             }
         }
 
         @Override
-        public void onPlaceFetchFail() {
+        public void onRestaurantFetchFail() {
             // TODO: Change the UI here, preferably with a CTA to refetch
         }
     };
@@ -195,7 +195,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         }
     }
 
-    private final PlacesAdapter.Listener placeChoiceListener = new PlacesAdapter.Listener() {
+    private final RestaurantAdapter.Listener placeChoiceListener = new RestaurantAdapter.Listener() {
         @Override
         public void onItemClick(Restaurant place) {
             Intent intent = new Intent();
@@ -214,6 +214,6 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     @Override
     public void onDestroy() {
         super.onDestroy();
-        yelpPlacesClient.shutdown();
+        yelpRestaurantClient.shutdown();
     }
 }

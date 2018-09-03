@@ -87,7 +87,7 @@
                     android:textSize="17sp"/>
 
                 <include
-                    layout="@layout/places_cell"
+                    layout="@layout/restaurant_cell"
                     android:visibility="gone"/>
             </FrameLayout>
 

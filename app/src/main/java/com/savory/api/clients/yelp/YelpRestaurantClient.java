@@ -14,12 +14,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class YelpPlacesClient {
+public class YelpRestaurantClient {
 
     public interface Listener {
-        void onPlacesFetched(RestaurantSearchResults results);
+        void onRestaurantFetched(RestaurantSearchResults results);
 
-        void onPlaceFetchFail();
+        void onRestaurantFetchFail();
     }
 
     private static final String BASE_URL = "https://api.yelp.com";
@@ -27,18 +27,18 @@ public class YelpPlacesClient {
     private static final String BEST_MATCH = "best_match";
     private static final String DISTANCE = "distance";
 
-    private static YelpPlacesClient instance;
+    private static YelpRestaurantClient instance;
 
     private YelpService yelpService;
     private Handler backgroundHandler;
-    private @Nullable Listener listener;
-    private @Nullable Call<RestaurantSearchResults> currentPlacesCall;
+    protected @Nullable Listener listener;
+    protected @Nullable Call<RestaurantSearchResults> currentRestaurantCall;
 
-    public static YelpPlacesClient get() {
+    public static YelpRestaurantClient get() {
         if (instance == null) {
-            synchronized (YelpPlacesClient.class) {
+            synchronized (YelpRestaurantClient.class) {
                 if (instance == null) {
-                    instance = new YelpPlacesClient();
+                    instance = new YelpRestaurantClient();
                 }
             }
         }
@@ -46,7 +46,7 @@ public class YelpPlacesClient {
         return instance;
     }
 
-    private YelpPlacesClient() {
+    private YelpRestaurantClient() {
         yelpService = RetrofitBuilderFactory.createBase(new YelpAuthInterceptor())
             .baseUrl(BASE_URL)
             .build()
@@ -70,19 +70,19 @@ public class YelpPlacesClient {
         backgroundHandler.post(new Runnable() {
             @Override
             public void run() {
-                if (currentPlacesCall != null) {
-                    currentPlacesCall.cancel();
+                if (currentRestaurantCall != null) {
+                    currentRestaurantCall.cancel();
                 }
 
                 if (nextCall != null) {
-                    currentPlacesCall = nextCall;
-                    currentPlacesCall.enqueue(placesCallback);
+                    currentRestaurantCall = nextCall;
+                    currentRestaurantCall.enqueue(restaurantCallback);
                 }
             }
         });
     }
 
-    public void getPlaces(String keyword, String location) {
+    public void getRestaurant(String keyword, String location) {
         Call<RestaurantSearchResults> nextCall = yelpService.fetchRestaurants(
                 keyword,
                 location,
@@ -91,23 +91,25 @@ public class YelpPlacesClient {
         cancelCurrentCallAndMaybeRunNext(nextCall);
     }
 
-    private Callback<RestaurantSearchResults> placesCallback = new Callback<RestaurantSearchResults>() {
-        @Override
-        public void onResponse(@NonNull Call<RestaurantSearchResults> call, @NonNull Response<RestaurantSearchResults> response) {
-            if (listener == null) {
-                return;
+    protected Callback<RestaurantSearchResults> restaurantCallback =
+        new Callback<RestaurantSearchResults>() {
+            @Override
+            public void onResponse(@NonNull Call<RestaurantSearchResults> call,
+                                   @NonNull Response<RestaurantSearchResults> response) {
+                if (listener == null) {
+                    return;
+                }
+
+                if (response.isSuccessful()) {
+                    listener.onRestaurantFetched(response.body());
+                } else {
+                    listener.onRestaurantFetchFail();
+                }
             }
 
-            if (response.isSuccessful()) {
-                listener.onPlacesFetched(response.body());
-            } else {
-                listener.onPlaceFetchFail();
+            @Override
+            public void onFailure(@NonNull Call<RestaurantSearchResults> call, @NonNull Throwable t) {
+                // TODO: Handle failure while dealing with cancelled calls
             }
-        }
-
-        @Override
-        public void onFailure(@NonNull Call<RestaurantSearchResults> call, @NonNull Throwable t) {
-            // TODO: Handle failure while dealing with cancelled calls
-        }
     };
 }

@@ -15,27 +15,28 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
 import com.savory.api.clients.yelp.models.Restaurant;
+import com.savory.ui.RestaurantAdapter.RestaurantViewHolder;
 import com.squareup.picasso.Picasso;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesViewHolder> {
+public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
     public interface Listener {
         void onItemClick(Restaurant place);
     }
 
     private Picasso picasso;
-    protected List<Restaurant> places = new LinkedList<>();
+    protected List<Restaurant> restaurants = new ArrayList<>();
     private Drawable defaultThumbnail;
     protected Listener listener;
 
-    public PlacesAdapter(Context context, Listener listener) {
+    public RestaurantAdapter(Context context, Listener listener) {
         this.picasso = Picasso.get();
         this.listener = listener;
         defaultThumbnail = new IconDrawable(
@@ -43,28 +44,28 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
                 IoniconsIcons.ion_android_restaurant).colorRes(R.color.dark_gray);
     }
 
-    public void setPlaces(List<Restaurant> newPlaces) {
-        places.clear();
-        places.addAll(newPlaces);
+    public void setRestaurants(List<Restaurant> newRestaurants) {
+        restaurants.clear();
+        restaurants.addAll(newRestaurants);
         notifyDataSetChanged();
     }
 
     @Override
     public int getItemCount() {
-        return places.size();
+        return restaurants.size();
     }
 
     @NonNull
     @Override
-    public PlacesViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public RestaurantViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.places_cell, parent, false);
-        return new PlacesViewHolder(itemView);
+                .inflate(R.layout.restaurant_cell, parent, false);
+        return new RestaurantViewHolder(itemView);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull PlacesViewHolder holder, int position) {
-        Restaurant place = places.get(position);
+    public void onBindViewHolder(@NonNull RestaurantViewHolder holder, int position) {
+        Restaurant place = restaurants.get(position);
 
         String placeImageUrl = place.getImageUrl();
         if (!TextUtils.isEmpty(placeImageUrl)) {
@@ -82,21 +83,21 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
         holder.categoriesText.setText(place.getCategoriesString());
     }
 
-    class PlacesViewHolder extends RecyclerView.ViewHolder {
+    class RestaurantViewHolder extends RecyclerView.ViewHolder {
 
         @BindView(R.id.restaurant_thumbnail) ImageView previewImage;
         @BindView(R.id.restaurant_name) TextView nameTextView;
         @BindView(R.id.restaurant_address) TextView addressTextView;
         @BindView(R.id.restaurant_categories) TextView categoriesText;
 
-        PlacesViewHolder(View view) {
+        RestaurantViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
 
         @OnClick(R.id.yelp_restaurant_parent)
         public void onClick() {
-            listener.onItemClick(places.get(getAdapterPosition()));
+            listener.onItemClick(restaurants.get(getAdapterPosition()));
         }
     }
 }

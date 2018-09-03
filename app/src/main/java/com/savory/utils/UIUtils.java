@@ -36,10 +36,10 @@ public class UIUtils {
     }
 
     public static void showLongToast(@StringRes int stringId, Context context) {
-        Toast.makeText(context, stringId, Toast.LENGTH_LONG).show();
+        showToast(stringId, Toast.LENGTH_LONG, context);
     }
 
-    public static void showToast(@StringRes int stringId, int length, Context context) {
+    private static void showToast(@StringRes int stringId, int length, Context context) {
         Toast.makeText(context, stringId, length).show();
     }
 }

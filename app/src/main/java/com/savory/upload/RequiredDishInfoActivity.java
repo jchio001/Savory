@@ -147,6 +147,7 @@ public class RequiredDishInfoActivity extends StandardActivity {
     private final ExitDishFormDialog.Listener exitListener = new ExitDishFormDialog.Listener() {
         @Override
         public void onExitConfirmed() {
+            setResult(Activity.RESULT_CANCELED);
             finish();
         }
     };

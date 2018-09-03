@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:ignore="SpUsage, RtlHardcoded">
+    tools:ignore="SpUsage, RtlHardcoded, RtlSymmetry">
 
     <FrameLayout
         android:id="@+id/toolbar"
@@ -25,12 +25,13 @@
         <TextView
             android:id="@+id/next"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right|center_vertical"
+            android:layout_height="?android:attr/actionBarSize"
+            android:layout_gravity="right"
+            android:paddingRight="16dp"
+            android:gravity="center_vertical"
             android:text="@string/next"
             android:textColor="@color/white"
             android:textSize="19dp"
-            android:padding="16dp"
             android:alpha="0.25"/>
     </FrameLayout>
 

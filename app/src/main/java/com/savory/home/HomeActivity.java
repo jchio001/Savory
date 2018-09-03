@@ -12,7 +12,6 @@ import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
 import android.support.v4.content.FileProvider;
 import android.view.View;
-import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -137,25 +136,26 @@ public class HomeActivity extends StandardActivity {
             takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takenPhotoUri);
             startActivityForResult(takePictureIntent, Constants.CAMERA_CODE);
         } else {
-            UIUtils.showToast(R.string.image_file_failed, Toast.LENGTH_LONG, this);
+            UIUtils.showLongToast(R.string.image_file_failed, this);
         }
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode != Constants.CAMERA_CODE || resultCode != Activity.RESULT_OK) {
-            return;
+        if (requestCode == Constants.CAMERA_CODE && resultCode == Activity.RESULT_OK) {
+            // Returning from picture taking
+            revokeUriPermission(
+                    takenPhotoUri,
+                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+
+            Intent cameraIntent = new Intent(this, RequiredDishInfoActivity.class)
+                    .putExtra(Constants.PHOTO_FILE_PATH_KEY, takenPhotoUri.toString());
+            startActivityForResult(cameraIntent, Constants.UPLOAD_CODE);
         }
-
-        // Returning from picture taking
-        revokeUriPermission(
-                takenPhotoUri,
-                Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-        Intent cameraIntent = new Intent(this, RequiredDishInfoActivity.class)
-                .putExtra(Constants.PHOTO_FILE_PATH_KEY, takenPhotoUri.toString());
-        startActivityForResult(cameraIntent, 1);
+        if (requestCode == Constants.UPLOAD_CODE && resultCode == Activity.RESULT_CANCELED) {
+            FileUtils.deleteCameraImageWithUri(takenPhotoUri);
+        }
     }
 
     @Override

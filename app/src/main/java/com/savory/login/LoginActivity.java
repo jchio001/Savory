@@ -21,7 +21,7 @@ public class LoginActivity extends AppCompatActivity {
 
     @BindView(R.id.facebook_button) FacebookButton facebookButton;
 
-    private SavoryClient savoryClient;
+    protected SavoryClient savoryClient;
     private LoginClient loginClient;
     protected SharedPreferencesClient sharedPreferencesClient;
 
@@ -58,7 +58,10 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onSuccessfulLogin(SavoryToken savoryToken) {
                 progressDialog.dismiss();
-                sharedPreferencesClient.persistSavoryToken(savoryToken.getToken());
+
+                String token = savoryToken.getToken();
+                savoryClient.setSavoryToken(token);
+                sharedPreferencesClient.persistSavoryToken(token);
                 startActivity(new Intent(LoginActivity.this, HomeActivity.class));
                 finish();
             }

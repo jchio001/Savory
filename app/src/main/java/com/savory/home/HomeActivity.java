@@ -4,13 +4,15 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
+import android.support.v4.content.FileProvider;
 import android.view.View;
+import android.widget.Toast;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
@@ -23,6 +25,9 @@ import com.savory.utils.Constants;
 import com.savory.utils.FileUtils;
 import com.savory.utils.PermissionUtils;
 import com.savory.utils.UIUtils;
+
+import java.io.File;
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -48,6 +53,7 @@ public class HomeActivity extends StandardActivity {
 
     private BottomNavigationView bottomNavigationView;
     protected HomepageFragmentController navigationController;
+    private Uri takenPhotoUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -86,7 +92,9 @@ public class HomeActivity extends StandardActivity {
                         Uri uri =  Uri.parse("market://details?id=" + getApplicationContext().getPackageName());
                         Intent intent = new Intent(Intent.ACTION_VIEW, uri);
                         if (!(getPackageManager().queryIntentActivities(intent, 0).size() > 0)) {
-                            UIUtils.showLongToast(R.string.play_store_error, HomeActivity.this);
+                            UIUtils.showLongToast(
+                                    R.string.play_store_error,
+                                    HomeActivity.this);
                             return;
                         }
                         startActivity(intent);
@@ -106,10 +114,31 @@ public class HomeActivity extends StandardActivity {
 
     private void startCameraPage() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
         if (takePictureIntent.resolveActivity(getPackageManager()) == null) {
             return;
         }
-        startActivityForResult(takePictureIntent, Constants.CAMERA_CODE);
+
+        File photoFile = FileUtils.createImageFile(this);
+        if (photoFile != null) {
+            takenPhotoUri = FileProvider.getUriForFile(this, Constants.FILE_PROVIDER_AUTHORITY, photoFile);
+
+            // Grant access to content URI so camera app doesn't crash
+            List<ResolveInfo> resolvedIntentActivities = getPackageManager()
+                    .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
+
+            for (ResolveInfo resolvedIntentInfo : resolvedIntentActivities) {
+                String packageName = resolvedIntentInfo.activityInfo.packageName;
+                grantUriPermission(packageName, takenPhotoUri,
+                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
+                                | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            }
+
+            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takenPhotoUri);
+            startActivityForResult(takePictureIntent, Constants.CAMERA_CODE);
+        } else {
+            UIUtils.showToast(R.string.image_file_failed, Toast.LENGTH_LONG, this);
+        }
     }
 
     @Override
@@ -119,27 +148,20 @@ public class HomeActivity extends StandardActivity {
             return;
         }
 
-        if (data.getExtras() == null) {
-            UIUtils.showLongToast(R.string.camera_fail, this);
-            return;
-        }
+        // Returning from picture taking
+        revokeUriPermission(
+                takenPhotoUri,
+                Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
 
-        Bitmap imageBitmap = (Bitmap) data.getExtras().get(Constants.DATA_KEY);
-        if (imageBitmap == null) {
-            UIUtils.showLongToast(R.string.camera_fail, this);
-            return;
-        }
-        String filePath = FileUtils.createImageFile(this, imageBitmap);
-        Intent intent = new Intent(this, RequiredDishInfoActivity.class)
-                .putExtra(Constants.PHOTO_FILE_PATH_KEY, filePath);
-        startActivityForResult(intent, 1);
+        Intent cameraIntent = new Intent(this, RequiredDishInfoActivity.class)
+                .putExtra(Constants.PHOTO_FILE_PATH_KEY, takenPhotoUri.toString());
+        startActivityForResult(cameraIntent, 1);
     }
 
     @Override
-    public void onRequestPermissionsResult(
-            int requestCode,
-            @NonNull String permissions[],
-            @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode,
+                                           @NonNull String permissions[],
+                                           @NonNull int[] grantResults) {
         if (requestCode != Constants.CAMERA_CODE
                 || grantResults.length <= 0
                 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {

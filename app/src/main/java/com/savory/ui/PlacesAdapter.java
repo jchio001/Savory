@@ -16,7 +16,6 @@ import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
 import com.savory.api.clients.yelp.models.Restaurant;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 
 import java.util.LinkedList;
 import java.util.List;

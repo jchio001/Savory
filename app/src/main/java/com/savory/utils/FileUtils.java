@@ -3,38 +3,29 @@ package com.savory.utils;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 
 public class FileUtils {
 
     // Need to prepend this to file path so Picasso can load them
     private static final String FILE_PREFIX = "file://";
 
-    @Nullable
-    public static String createImageFile(Context context, Bitmap bitmap) {
+    public static File createImageFile(Context context) {
+        File imageFile;
         try {
             String imageFileName = String.valueOf(System.currentTimeMillis());
             File storageDir = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-            File imageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
-
-            OutputStream os = new BufferedOutputStream(new FileOutputStream(imageFile));
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, os);
-            os.close();
-
-            return FILE_PREFIX + imageFile.getAbsolutePath();
+            imageFile = File.createTempFile(imageFileName, ".jpg", storageDir);
         } catch (IOException exception) {
             return null;
         }
+        return imageFile;
     }
 
     @Nullable

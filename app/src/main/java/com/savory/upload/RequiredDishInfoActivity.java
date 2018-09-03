@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.text.TextUtils;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
@@ -15,6 +16,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
 import com.savory.api.clients.yelp.models.Restaurant;
+import com.savory.dialogs.ExitDishFormDialog;
 import com.savory.restaurant.RestaurantPickerActivity;
 import com.savory.ui.StandardActivity;
 import com.savory.utils.Constants;
@@ -46,14 +48,17 @@ public class RequiredDishInfoActivity extends StandardActivity {
     private Picasso picasso;
     private Drawable defaultRestaurantThumbnail;
     private @Nullable Restaurant restaurant;
+    private ExitDishFormDialog exitDishFormDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.required_dish_info);
         ButterKnife.bind(this);
-        picasso = Picasso.get();
 
+        exitDishFormDialog = new ExitDishFormDialog(exitListener, this);
+
+        picasso = Picasso.get();
         String filePathToImage = getIntent().getStringExtra(Constants.PHOTO_FILE_PATH_KEY);
         picasso.load(filePathToImage)
                 .fit()
@@ -67,11 +72,15 @@ public class RequiredDishInfoActivity extends StandardActivity {
 
     private void loadRestaurantInfo(Restaurant restaurant) {
         this.restaurant = restaurant;
-        picasso.load(restaurant.getImageUrl())
-                .error(defaultRestaurantThumbnail)
-                .fit()
-                .centerCrop()
-                .into(restaurantThumbnailView);
+        if (TextUtils.isEmpty(restaurant.getImageUrl())) {
+            restaurantThumbnailView.setImageDrawable(defaultRestaurantThumbnail);
+        } else {
+            picasso.load(restaurant.getImageUrl())
+                    .error(defaultRestaurantThumbnail)
+                    .fit()
+                    .centerCrop()
+                    .into(restaurantThumbnailView);
+        }
 
         restaurantNameView.setText(restaurant.getName());
         addressTextView.setText(restaurant.getLocation().getAddress());
@@ -96,6 +105,25 @@ public class RequiredDishInfoActivity extends StandardActivity {
         return !dishTitleInput.getText().toString().trim().isEmpty() && restaurant != null;
     }
 
+    @OnClick(R.id.next)
+    public void onNextClicked() {
+        if (verifyFormAndMaybeShowErrors()) {
+            // Go to next step
+        }
+    }
+
+    private boolean verifyFormAndMaybeShowErrors() {
+        if (dishTitleInput.getText().toString().trim().isEmpty()) {
+            UIUtils.showLongToast(R.string.no_dish_title_error, this);
+            return false;
+        }
+        if (restaurant == null) {
+            UIUtils.showLongToast(R.string.no_dish_location_error, this);
+            return false;
+        }
+        return true;
+    }
+
     @OnEditorAction(R.id.dish_title_input)
     public boolean onEditorAction(int actionId) {
         if (actionId == EditorInfo.IME_ACTION_DONE) {
@@ -108,15 +136,20 @@ public class RequiredDishInfoActivity extends StandardActivity {
 
     @OnClick(R.id.back_button)
     public void onBackButtonPressed() {
-
+        exitDishFormDialog.show();
     }
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
-
-        // Show a dialog here instead
+        exitDishFormDialog.show();
     }
+
+    private final ExitDishFormDialog.Listener exitListener = new ExitDishFormDialog.Listener() {
+        @Override
+        public void onExitConfirmed() {
+            finish();
+        }
+    };
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

@@ -32,4 +32,7 @@
 
     <string name="upload_from_gallery">Upload from gallery</string>
     <string name="gallery_choice_fail">Failed to process chosen image from gallery</string>
+
+    <string name="yes">Yes</string>
+    <string name="cancel">Cancel</string>
 </resources>

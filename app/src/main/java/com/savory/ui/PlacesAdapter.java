@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,7 @@ import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
 import com.savory.api.clients.yelp.models.Restaurant;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -30,9 +32,9 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
     }
 
     private Picasso picasso;
-    private List<Restaurant> places = new LinkedList<>();
+    protected List<Restaurant> places = new LinkedList<>();
     private Drawable defaultThumbnail;
-    private Listener listener;
+    protected Listener listener;
 
     public PlacesAdapter(Context context, Listener listener) {
         this.picasso = Picasso.get();
@@ -65,11 +67,16 @@ public class PlacesAdapter extends RecyclerView.Adapter<PlacesAdapter.PlacesView
     public void onBindViewHolder(@NonNull PlacesViewHolder holder, int position) {
         Restaurant place = places.get(position);
 
-        picasso.load(place.getImageUrl())
+        String placeImageUrl = place.getImageUrl();
+        if (!TextUtils.isEmpty(placeImageUrl)) {
+            picasso.load(place.getImageUrl())
                 .error(defaultThumbnail)
                 .fit()
                 .centerCrop()
                 .into(holder.previewImage);
+        } else {
+            holder.previewImage.setImageDrawable(defaultThumbnail);
+        }
 
         holder.nameTextView.setText(place.getName());
         holder.addressTextView.setText(place.getLocation().getAddress());

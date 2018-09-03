@@ -40,10 +40,10 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     @BindView(R.id.places_list) RecyclerView placesList;
     @BindView(R.id.set_location) FloatingActionButton setLocation;
 
-    private RestaurantAdapter placesAdapter;
+    protected RestaurantAdapter placesAdapter;
     private LocationManager locationManager;
-    private boolean denialLock;
-    private String currentLocation;
+    protected boolean denialLock;
+    protected String currentLocation;
     private YelpRestaurantClient yelpRestaurantClient;
 
     @Override
@@ -111,7 +111,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     }
 
     /** Fetches restaurants with the current location and search input */
-    private void fetchRestaurants() {
+    protected void fetchRestaurants() {
         yelpRestaurantClient.getRestaurant(searchInput.getText().toString(), currentLocation);
     }
 

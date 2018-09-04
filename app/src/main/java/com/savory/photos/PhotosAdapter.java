@@ -11,7 +11,6 @@ import android.widget.TextView;
 import com.savory.R;
 import com.savory.api.clients.savory.models.Photo;
 import com.savory.ui.PagingAdapter;
-import com.savory.ui.RatingView;
 import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
@@ -55,9 +54,7 @@ public class PhotosAdapter extends PagingAdapter<Photo> {
     }
 
     @Override
-    public View getView(int position,
-                        @Nullable View convertView,
-                        @NonNull ViewGroup parent) {
+    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
         ViewHolder viewHolder;
         if (convertView == null) {
             convertView = LayoutInflater.from(parent.getContext())
@@ -71,7 +68,6 @@ public class PhotosAdapter extends PagingAdapter<Photo> {
         Photo photo = objects.get(position);
 
         viewHolder.photoTimestamp.setText(DATE_FORMAT.format(new Date(photo.getCreationDate())));
-        viewHolder.ratingView.setRating(2.5);
 
         picasso.load(photo.getPhotoUrl())
             .into(viewHolder.imageView);
@@ -83,7 +79,6 @@ public class PhotosAdapter extends PagingAdapter<Photo> {
         @BindView(R.id.dish_name) TextView dishName;
         @BindView(R.id.photo_timestamp) TextView photoTimestamp;
         @BindView(R.id.imageview) ImageView imageView;
-        @BindView(R.id.rating) RatingView ratingView;
         @BindView(R.id.description) TextView description;
 
         public ViewHolder(View view) {

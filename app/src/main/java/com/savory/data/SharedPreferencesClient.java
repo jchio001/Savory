@@ -39,7 +39,7 @@ public class SharedPreferencesClient {
         sharedPreferences.edit().putInt(NUM_APP_OPENS_KEY, currentAppOpens).apply();
         return currentAppOpens == OPENS_BEFORE_RATING;
     }
-    
+
     public void clear() {
         sharedPreferences.edit()
             .clear()

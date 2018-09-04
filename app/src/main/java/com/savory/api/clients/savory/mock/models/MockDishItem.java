@@ -2,10 +2,22 @@ package com.savory.api.clients.savory.mock.models;
 
 public class MockDishItem {
 
+    private String name;
     private String photoUrl;
+    private String description;
+    private int rating;
     private int numLikes;
     private MockUser user;
     private MockRestaurant restaurant;
+
+    public String getName() {
+        return name;
+    }
+
+    public MockDishItem setName(String name) {
+        this.name = name;
+        return this;
+    }
 
     public String getPhotoUrl() {
         return photoUrl;
@@ -13,6 +25,24 @@ public class MockDishItem {
 
     public MockDishItem setPhotoUrl(String photoUrl) {
         this.photoUrl = photoUrl;
+        return this;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public MockDishItem setDescription(String description) {
+        this.description = description;
+        return this;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public MockDishItem setRating(int rating) {
+        this.rating = rating;
         return this;
     }
 

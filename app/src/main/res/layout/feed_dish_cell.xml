@@ -82,14 +82,54 @@
         android:textColor="@color/white"
         android:textSize="33dp"/>
 
+    <RelativeLayout
+        android:id="@+id/actions_bar"
+        android:layout_below="@id/dish_picture"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:paddingTop="4dp"
+        android:paddingRight="8dp">
+
+        <com.joanzapata.iconify.widget.IconTextView
+            android:id="@+id/like_toggle"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="@string/heart_filled_icon"
+            android:textColor="@color/dark_gray"
+            android:textSize="33dp"/>
+
+        <TextView
+            android:id="@+id/num_likes"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@id/like_toggle"
+            android:textSize="19dp"
+            android:textColor="@color/dark_gray"/>
+
+        <TextView
+            android:id="@+id/get_it"
+            android:layout_width="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:paddingTop="8dp"
+            android:paddingBottom="8dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:background="@drawable/get_it_button_background"
+            android:text="@string/get_it"
+            style="@style/button"/>
+    </RelativeLayout>
+
     <TextView
         android:id="@+id/dish_description"
-        android:layout_below="@id/dish_picture"
+        android:layout_below="@id/actions_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="8dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
         android:textColor="@color/gray"
-        android:textSize="18dp"/>
+        android:textSize="17dp"/>
 </RelativeLayout>

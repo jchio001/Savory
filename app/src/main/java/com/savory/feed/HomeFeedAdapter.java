@@ -13,6 +13,7 @@ import com.savory.R;
 import com.savory.api.clients.savory.mock.models.MockDishItem;
 import com.savory.data.SharedPreferencesClient;
 import com.savory.ui.StaticRatingView;
+import com.savory.utils.AnimationUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ import java.util.List;
 import butterknife.BindColor;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedItemViewHolder> {
 
@@ -65,6 +67,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
         @BindView(R.id.bookmark_toggle) TextView bookmarkToggle;
         @BindView(R.id.dish_rating_text) StaticRatingView dishRatingView;
         @BindView(R.id.dish_picture) ImageView dishPicture;
+        @BindView(R.id.like_toggle) TextView likeToggle;
+        @BindView(R.id.num_likes) TextView numLikesText;
         @BindView(R.id.dish_description) TextView dishDescription;
 
         @BindColor(R.color.dark_gray) int darkGray;
@@ -102,12 +106,43 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
                     .centerCrop()
                     .into(dishPicture);
 
+            boolean isLiked = sharedPreferencesClient.doesUserLikeDish(dish.getDishId());
+            likeToggle.setText(isLiked ? R.string.heart_filled_icon : R.string.heart_empty_icon);
+            likeToggle.setTextColor(isLiked ? lightRed : darkGray);
+            setNumLikesText();
+
             if (dish.getDescription().isEmpty()) {
                 dishDescription.setVisibility(View.GONE);
             } else {
                 dishDescription.setText(dish.getDescription());
                 dishDescription.setVisibility(View.VISIBLE);
             }
+        }
+
+        private void setNumLikesText() {
+            Context context = numLikesText.getContext();
+            int likesAmount = feedItems.get(getAdapterPosition()).getNumLikes();
+            numLikesText.setText(context.getString(R.string.x_likes, likesAmount));
+        }
+
+        @OnClick(R.id.like_toggle)
+        public void toggleLike() {
+            MockDishItem dish = feedItems.get(getAdapterPosition());
+            boolean isLiked = sharedPreferencesClient.doesUserLikeDish(dish.getDishId());
+            if (isLiked) {
+                sharedPreferencesClient.unlikeDish(dish.getDishId());
+                dish.removeLike();
+            } else {
+                sharedPreferencesClient.likeDish(dish.getDishId());
+                dish.addLike();
+            }
+            setNumLikesText();
+            AnimationUtils.animateLikeToggle(likeToggle, !isLiked);
+        }
+
+        @OnClick(R.id.get_it)
+        public void onGetItClicked() {
+
         }
     }
 }

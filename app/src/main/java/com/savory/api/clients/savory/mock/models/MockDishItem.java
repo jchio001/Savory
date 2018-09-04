@@ -65,6 +65,14 @@ public class MockDishItem {
         return this;
     }
 
+    public void addLike() {
+        this.numLikes++;
+    }
+
+    public void removeLike() {
+        this.numLikes--;
+    }
+
     public MockUser getUser() {
         return user;
     }

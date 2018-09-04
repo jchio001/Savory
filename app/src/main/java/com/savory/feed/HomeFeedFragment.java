@@ -20,7 +20,6 @@ import android.view.ViewGroup;
 
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
-import com.savory.api.clients.savory.mock.MockDataProvider;
 import com.savory.api.clients.savory.mock.MockSavoryDataFetcher;
 import com.savory.api.clients.savory.mock.models.MockDishItem;
 import com.savory.upload.RequiredDishInfoActivity;

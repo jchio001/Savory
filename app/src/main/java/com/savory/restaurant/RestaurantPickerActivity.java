@@ -18,8 +18,8 @@ import com.savory.api.clients.yelp.YelpRestaurantClient;
 import com.savory.api.clients.yelp.models.Restaurant;
 import com.savory.api.clients.yelp.models.RestaurantSearchResults;
 import com.savory.location.LocationManager;
-import com.savory.ui.YelpRestaurantSearchAdapter;
 import com.savory.ui.SimpleItemDividerDecoration;
+import com.savory.ui.YelpRestaurantSearchAdapter;
 import com.savory.utils.Constants;
 import com.savory.utils.UIUtils;
 

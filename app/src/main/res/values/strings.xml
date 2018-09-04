@@ -42,4 +42,10 @@
 
     <string name="bookmark_empty_icon">{ion-ios-bookmarks-outline}</string>
     <string name="bookmark_filled_icon">{ion-ios-bookmarks}</string>
+
+    <string name="heart_empty_icon">{ion-ios-heart-outline}</string>
+
+    <string name="get_it">Get It</string>
+
+    <string name="x_likes">%d likes</string>
 </resources>

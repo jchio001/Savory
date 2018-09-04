@@ -26,7 +26,8 @@ public class MockDataProvider {
                 .setName("Crispy Chicken")
                 .setNumLikes(10)
                 .setPhotoUrl("https://s3-media1.fl.yelpcdn.com/bphoto/CUC8Mew3HP8Yj6Qpgtmfww/o.jpg")
-                .setDescription("Great texture and perfectly seasoned!")
+                .setDescription("Great texture and perfectly seasoned! " +
+                        "Definitely some of the best fried chicken I've ever had.")
                 .setRating(5)
                 .setUser(tonyHawk)
                 .setRestaurant(sweetGarden);
@@ -69,6 +70,6 @@ public class MockDataProvider {
     }
 
     public List<MockDishItem> getMockDishItems() {
-        return dishItems;
+        return new ArrayList<>(dishItems);
     }
 }

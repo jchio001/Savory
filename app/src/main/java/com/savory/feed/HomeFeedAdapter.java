@@ -57,7 +57,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
     @Override
     public FeedItemViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View itemView = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.feed_dish_cell, parent, false);
+                .inflate(R.layout.feed_item_cell, parent, false);
         return new FeedItemViewHolder(itemView);
     }
 

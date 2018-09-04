@@ -13,14 +13,25 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/feed_list"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+
+    <FrameLayout
         android:layout_below="@id/toolbar"
-        android:paddingBottom="8dp"
-        android:clipToPadding="false"
-        app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- TODO: We need an empty state here -->
+
+        <include layout="@layout/skeleton_feed_item"/>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/feed_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingBottom="8dp"
+            android:clipToPadding="false"
+            android:visibility="gone"
+            app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
+    </FrameLayout>
 
     <View
         android:layout_width="match_parent"

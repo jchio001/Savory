@@ -46,6 +46,7 @@ public class HomeFeedFragment extends Fragment{
     }
 
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.feed_item_skeleton) View skeleton;
     @BindView(R.id.feed_list) RecyclerView feedList;
     @BindString(R.string.choose_image_from) String chooseImageFrom;
 
@@ -63,6 +64,13 @@ public class HomeFeedFragment extends Fragment{
 
             MockSavoryDataFetcher mockDataFetcher = new MockSavoryDataFetcher(dataFetchListener);
             mockDataFetcher.fetchData();
+        } else {
+            skeleton.setVisibility(View.GONE);
+            if (homeFeedAdapter.getItemCount() > 0) {
+                feedList.setVisibility(View.VISIBLE);
+            } else {
+                // TODO: Show empty state
+            }
         }
         feedList.setAdapter(homeFeedAdapter);
 
@@ -80,7 +88,13 @@ public class HomeFeedFragment extends Fragment{
     private final MockSavoryDataFetcher.Listener dataFetchListener = new MockSavoryDataFetcher.Listener() {
         @Override
         public void onDishItemsFetched(List<MockDishItem> items) {
-            homeFeedAdapter.setFeedItems(items);
+            skeleton.setVisibility(View.GONE);
+            if (items.isEmpty()) {
+                // TODO: Show empty state
+            } else {
+                feedList.setVisibility(View.VISIBLE);
+                homeFeedAdapter.setFeedItems(items);
+            }
         }
     };
 

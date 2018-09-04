@@ -47,7 +47,7 @@
             style="@style/clear_icon"/>
     </FrameLayout>
 
-    <RelativeLayout
+    <FrameLayout
         android:layout_below="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -91,7 +91,7 @@
             android:paddingBottom="88dp"
             android:clipToPadding="false"
             app:layoutManager="android.support.v7.widget.LinearLayoutManager"/>
-    </RelativeLayout>
+    </FrameLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/set_location"

@@ -57,11 +57,14 @@ public class HomeFeedFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.home_feed, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        homeFeedAdapter = new HomeFeedAdapter(feedClickListener, getContext());
-        feedList.setAdapter(homeFeedAdapter);
+        // If fragment is being restored, bring back state
+        if (homeFeedAdapter == null) {
+            homeFeedAdapter = new HomeFeedAdapter(feedClickListener, getContext());
 
-        MockSavoryDataFetcher mockDataFetcher = new MockSavoryDataFetcher(dataFetchListener);
-        mockDataFetcher.fetchData();
+            MockSavoryDataFetcher mockDataFetcher = new MockSavoryDataFetcher(dataFetchListener);
+            mockDataFetcher.fetchData();
+        }
+        feedList.setAdapter(homeFeedAdapter);
 
         return rootView;
     }

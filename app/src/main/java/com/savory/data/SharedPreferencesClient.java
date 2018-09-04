@@ -37,6 +37,12 @@ public class SharedPreferencesClient {
         return sharedPreferences.getString(TOKEN_KEY, null);
     }
 
+    public boolean isUserLoggedIn() {
+        return true;
+        // TODO: Once login is fixed, comment this back in
+        // return retrieveSavoryToken() != null;
+    }
+
     public boolean shouldAskForRating() {
         int currentAppOpens = sharedPreferences.getInt(NUM_APP_OPENS_KEY, 0);
         currentAppOpens++;

@@ -23,7 +23,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/welcome_text"
         android:layout_marginTop="4dp"
-        android:text="No cruft. Just food."
+        android:text="@string/login_intro_text"
         android:textColor="@color/white"
         android:textSize="18sp"/>
 
@@ -31,6 +31,5 @@
         android:id="@+id/facebook_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true" />
-
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

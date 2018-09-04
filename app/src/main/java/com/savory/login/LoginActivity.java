@@ -67,12 +67,14 @@ public class LoginActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onLoginCancelled() {
-            }
+            public void onLoginCancelled() {}
 
             @Override
             public void onLoginError(Throwable throwable) {
                 progressDialog.dismiss();
+
+                // Proceed to home anyways since login is currently broken
+                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             }
         });
     }

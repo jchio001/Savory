@@ -39,6 +39,16 @@
             android:value="@string/facebook_app_id"/>
 
         <activity
+            android:name=".splash.SplashActivity"
+            android:theme="@style/SplashTheme">
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+        <activity
             android:name="com.facebook.FacebookActivity"
             android:configChanges="keyboard|keyboardHidden|screenLayout|screenSize|orientation"
             android:label="@string/app_name"/>
@@ -58,37 +68,27 @@
         <activity
             android:name=".login.LoginActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/LoginTheme">
-        </activity>
+            android:theme="@style/LoginTheme"/>
 
         <activity
             android:name=".home.HomeActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar">
-
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+            android:theme="@style/AppTheme.NoActionBar"/>
 
         <activity
             android:name=".restaurant.RestaurantPickerActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".settings.SettingsActivity"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
 
         <activity
             android:name=".upload.RequiredDishInfoActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden"
-            android:screenOrientation="portrait">
-        </activity>
+            android:screenOrientation="portrait"/>
     </application>
 </manifest>

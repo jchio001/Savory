@@ -14,6 +14,7 @@ import com.savory.api.clients.savory.mock.models.MockDishItem;
 import com.savory.data.SharedPreferencesClient;
 import com.savory.ui.StaticRatingView;
 import com.savory.utils.AnimationUtils;
+import com.savory.utils.UIUtils;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -79,6 +80,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
 
         @BindColor(R.color.dark_gray) int darkGray;
         @BindColor(R.color.light_red) int lightRed;
+        @BindColor(R.color.white) int white;
 
         FeedItemViewHolder(View view) {
             super(view);
@@ -131,6 +133,27 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
             numLikesText.setText(context.getString(R.string.x_likes, likesAmount));
         }
 
+        @OnClick(R.id.bookmark_toggle)
+        public void toggleBookmark() {
+            MockDishItem dish = feedItems.get(getAdapterPosition());
+            boolean isBookmarked = sharedPreferencesClient.hasUserBookmarkedDish(dish.getDishId());
+            if (isBookmarked) {
+                sharedPreferencesClient.unbookmarkDish(dish.getDishId());
+            } else {
+                sharedPreferencesClient.bookmarkDish(dish.getDishId());
+            }
+            UIUtils.showShortToast(
+                    isBookmarked ? R.string.removed_from_bookmarks : R.string.saved_to_bookmarks,
+                    bookmarkToggle.getContext());
+            AnimationUtils.animateFeedItemToggle(
+                    bookmarkToggle,
+                    !isBookmarked,
+                    white,
+                    white,
+                    R.string.bookmark_filled_icon,
+                    R.string.bookmark_empty_icon);
+        }
+
         @OnClick(R.id.like_toggle)
         public void toggleLike() {
             MockDishItem dish = feedItems.get(getAdapterPosition());
@@ -143,7 +166,13 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
                 dish.addLike();
             }
             setNumLikesText();
-            AnimationUtils.animateLikeToggle(likeToggle, !isLiked);
+            AnimationUtils.animateFeedItemToggle(
+                    likeToggle,
+                    !isLiked,
+                    lightRed,
+                    darkGray,
+                    R.string.heart_filled_icon,
+                    R.string.heart_empty_icon);
         }
 
         @OnClick(R.id.get_it)

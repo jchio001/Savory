@@ -35,6 +35,10 @@ public class UIUtils {
                         .actionBarSize());
     }
 
+    public static void showShortToast(@StringRes int stringId, Context context) {
+        showToast(stringId, Toast.LENGTH_SHORT, context);
+    }
+
     public static void showLongToast(@StringRes int stringId, Context context) {
         showToast(stringId, Toast.LENGTH_LONG, context);
     }

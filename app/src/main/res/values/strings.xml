@@ -50,4 +50,7 @@
     <string name="x_likes">%d likes</string>
 
     <string name="navigate_with">Navigate with</string>
+
+    <string name="saved_to_bookmarks">Saved to bookmarks</string>
+    <string name="removed_from_bookmarks">Removed from bookmarks</string>
 </resources>

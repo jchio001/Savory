@@ -4,6 +4,7 @@ import android.animation.Animator;
 import android.animation.AnimatorSet;
 import android.animation.ObjectAnimator;
 import android.content.Context;
+import android.support.annotation.StringRes;
 import android.view.animation.AccelerateInterpolator;
 import android.view.animation.AnticipateOvershootInterpolator;
 import android.widget.TextView;
@@ -12,15 +13,23 @@ import com.savory.R;
 
 public class AnimationUtils {
 
-    public static void animateLikeToggle(final TextView likeToggle, final boolean isLiked) {
-        Context context = likeToggle.getContext();
+    /**
+     * Animates a toggle on a feed item, like the bookmark or like button.
+     * The animation consists of shrinking and then growing the item with an overshoot interpolator.
+     */
+    public static void animateFeedItemToggle(
+            final TextView toggle,
+            final boolean isToggled,
+            final int toggledColor,
+            final int untoggledColor,
+            @StringRes final int toggledIcon,
+            @StringRes final int unToggledIcon) {
+        Context context = toggle.getContext();
         final int animLength = context.getResources().getInteger(R.integer.shorter_anim_length);
-        final int lightRed = context.getResources().getColor(R.color.light_red);
-        final int darkGray = context.getResources().getColor(R.color.dark_gray);
 
-        if (likeToggle.getAnimation() == null || likeToggle.getAnimation().hasEnded()) {
-            ObjectAnimator animX = ObjectAnimator.ofFloat(likeToggle, "scaleX", 0.75f);
-            ObjectAnimator animY = ObjectAnimator.ofFloat(likeToggle, "scaleY", 0.75f);
+        if (toggle.getAnimation() == null || toggle.getAnimation().hasEnded()) {
+            ObjectAnimator animX = ObjectAnimator.ofFloat(toggle, "scaleX", 0.75f);
+            ObjectAnimator animY = ObjectAnimator.ofFloat(toggle, "scaleY", 0.75f);
             AnimatorSet shrink = new AnimatorSet();
             shrink.playTogether(animX, animY);
             shrink.setDuration(animLength);
@@ -31,11 +40,11 @@ public class AnimationUtils {
 
                 @Override
                 public void onAnimationEnd(Animator animation) {
-                    likeToggle.setText(isLiked ? R.string.heart_filled_icon : R.string.heart_empty_icon);
-                    likeToggle.setTextColor(isLiked ? lightRed : darkGray);
+                    toggle.setText(isToggled ? toggledIcon : unToggledIcon);
+                    toggle.setTextColor(isToggled ? toggledColor : untoggledColor);
 
-                    ObjectAnimator animX = ObjectAnimator.ofFloat(likeToggle, "scaleX", 1.0f);
-                    ObjectAnimator animY = ObjectAnimator.ofFloat(likeToggle, "scaleY", 1.0f);
+                    ObjectAnimator animX = ObjectAnimator.ofFloat(toggle, "scaleX", 1.0f);
+                    ObjectAnimator animY = ObjectAnimator.ofFloat(toggle, "scaleY", 1.0f);
                     AnimatorSet grow = new AnimatorSet();
                     grow.playTogether(animX, animY);
                     grow.setDuration(animLength);

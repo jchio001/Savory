@@ -60,7 +60,7 @@ public class MockDataProvider {
         MockDishItem rotiCanai = new MockDishItem()
                 .setDishId(3)
                 .setName("Roti Canai")
-                .setNumLikes(10)
+                .setNumLikes(157)
                 .setPhotoUrl("https://s3-media3.fl.yelpcdn.com/bphoto/bIGXzFqkoMIXr2wSGXGtWQ/o.jpg")
                 .setDescription("The dipping sauce was great!")
                 .setRating(4)

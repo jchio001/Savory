@@ -26,11 +26,17 @@ import butterknife.OnClick;
 
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedItemViewHolder> {
 
+    public interface Listener {
+        void onGetItClicked(MockDishItem mockDishItem);
+    }
+
+    protected Listener listener;
     protected Picasso picasso;
     protected List<MockDishItem> feedItems = new ArrayList<>();
     protected SharedPreferencesClient sharedPreferencesClient;
 
-    public HomeFeedAdapter(Context context) {
+    public HomeFeedAdapter(Listener listener, Context context) {
+        this.listener = listener;
         this.picasso = Picasso.get();
         this.sharedPreferencesClient = new SharedPreferencesClient(context);
     }
@@ -142,7 +148,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
 
         @OnClick(R.id.get_it)
         public void onGetItClicked() {
-
+            MockDishItem dish = feedItems.get(getAdapterPosition());
+            listener.onGetItClicked(dish);
         }
     }
 }

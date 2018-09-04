@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
@@ -22,6 +23,7 @@ import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
 import com.savory.api.clients.savory.mock.MockSavoryDataFetcher;
 import com.savory.api.clients.savory.mock.models.MockDishItem;
+import com.savory.api.clients.savory.mock.models.MockRestaurant;
 import com.savory.upload.RequiredDishInfoActivity;
 import com.savory.utils.Constants;
 import com.savory.utils.FileUtils;
@@ -55,7 +57,7 @@ public class HomeFeedFragment extends Fragment{
         View rootView = inflater.inflate(R.layout.home_feed, container, false);
         unbinder = ButterKnife.bind(this, rootView);
 
-        homeFeedAdapter = new HomeFeedAdapter(getContext());
+        homeFeedAdapter = new HomeFeedAdapter(feedClickListener, getContext());
         feedList.setAdapter(homeFeedAdapter);
 
         MockSavoryDataFetcher mockDataFetcher = new MockSavoryDataFetcher(dataFetchListener);
@@ -78,6 +80,21 @@ public class HomeFeedFragment extends Fragment{
             homeFeedAdapter.setFeedItems(items);
         }
     };
+
+    private final HomeFeedAdapter.Listener feedClickListener = new HomeFeedAdapter.Listener() {
+        @Override
+        public void onGetItClicked(MockDishItem mockDishItem) {
+            getDish(mockDishItem);
+        }
+    };
+
+    protected void getDish(MockDishItem dishItem) {
+        MockRestaurant restaurant = dishItem.getRestaurant();
+        String mapUri = "google.navigation:q=" + restaurant.getAddress() + " " + restaurant.getName();
+        startActivity(Intent.createChooser(
+                new Intent(android.content.Intent.ACTION_VIEW, Uri.parse(mapUri)),
+                getString(R.string.navigate_with)));
+    }
 
     /** Starts the flow to add a dish via uploading from gallery */
     private void addWithGallery() {

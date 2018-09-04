@@ -80,18 +80,19 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
                          int visibleItemCount,
                          int totalItemCount) {
         final PagingAdapter<T> pagingAdapter = (PagingAdapter<T>) view.getAdapter();
-        if ((totalItemCount == 0
-             || isLastItemProgressBar(pagingAdapter, firstVisibleItem,
-                                      visibleItemCount, totalItemCount))
-            && !isFetching) {
+        boolean isLastItemProgressBar = isLastItemProgressBar(
+                pagingAdapter,
+                firstVisibleItem,
+                visibleItemCount,
+                totalItemCount);
+        if ((totalItemCount == 0 || isLastItemProgressBar) && !isFetching) {
             isFetching = true;
 
             currentPageCall = supplier.supplyPage();
             currentPageCall.enqueue(new Callback<List<T>>() {
 
                 @Override
-                public void onResponse(@NonNull Call<List<T>> call,
-                                       @NonNull Response<List<T>> response) {
+                public void onResponse(@NonNull Call<List<T>> call, @NonNull Response<List<T>> response) {
                     if (response.isSuccessful()) {
                         if (pagingAdapter.isEmpty()) {
                             supplier.onFirstPageLoaded();
@@ -104,8 +105,7 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
                 }
 
                 @Override
-                public void onFailure(@NonNull Call<List<T>> call,
-                                      @NonNull Throwable t) {
+                public void onFailure(@NonNull Call<List<T>> call, @NonNull Throwable t) {
                     supplier.onFailure(t);
                     isFetching = false;
                 }
@@ -113,10 +113,11 @@ public class PagingOnScrollListener<T> implements OnScrollListener {
         }
     }
 
-    private static boolean isLastItemProgressBar(@NonNull PagingAdapter pagingAdapter,
-                                                 int firstVisibleItem,
-                                                 int visibleItemCount,
-                                                 int totalItemCount) {
+    private static boolean isLastItemProgressBar(
+            @NonNull PagingAdapter pagingAdapter,
+            int firstVisibleItem,
+            int visibleItemCount,
+            int totalItemCount) {
         int lastIndex = Math.min(firstVisibleItem + visibleItemCount, totalItemCount - 1);
         return pagingAdapter.getItemViewType(lastIndex) == PROGRESS_BAR_FOOTER_ID;
     }

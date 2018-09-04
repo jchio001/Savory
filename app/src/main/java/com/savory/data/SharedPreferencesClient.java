@@ -17,6 +17,8 @@ public class SharedPreferencesClient {
     private static final String NUM_APP_OPENS_KEY = "numAppOpens";
     private static final int OPENS_BEFORE_RATING = 5;
 
+    private static final String LIKED_DISHES_KEY = "likedDishes";
+
     public SharedPreferencesClient(Context context) {
         this.sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
     }
@@ -37,7 +39,7 @@ public class SharedPreferencesClient {
         sharedPreferences.edit().putInt(NUM_APP_OPENS_KEY, currentAppOpens).apply();
         return currentAppOpens == OPENS_BEFORE_RATING;
     }
-
+    
     public void clear() {
         sharedPreferences.edit()
             .clear()

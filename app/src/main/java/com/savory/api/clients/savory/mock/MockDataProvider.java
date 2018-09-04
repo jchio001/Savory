@@ -16,7 +16,8 @@ public class MockDataProvider {
 
         MockUser tonyHawk = new MockUser()
                 .setName("Tony Hawk")
-                .setProfilePictureUrl("http://s.huffpost.com/contributors/tony-hawk/headshot.jpg");
+                .setProfilePictureUrl("https://upload.wikimedia.org/wikipedia/commons/" +
+                        "thumb/3/36/Skater_Tony_Hawk.jpg/240px-Skater_Tony_Hawk.jpg");
         MockRestaurant sweetGarden = new MockRestaurant()
                 .setName("Sweet Garden")
                 .setAddress("39473 Fremont Blvd, Fremont, CA 94538");

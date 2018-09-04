@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 
 public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedItemViewHolder> {
 
-    private Picasso picasso;
+    protected Picasso picasso;
     protected List<MockDishItem> feedItems = new ArrayList<>();
     protected SharedPreferencesClient sharedPreferencesClient;
 
@@ -59,6 +59,8 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
 
     class FeedItemViewHolder extends RecyclerView.ViewHolder {
 
+        @BindView(R.id.user_profile_picture) ImageView userProfilePicture;
+        @BindView(R.id.user_name) TextView userName;
         @BindView(R.id.dish_info_text) TextView dishInfoText;
         @BindView(R.id.bookmark_toggle) TextView bookmarkToggle;
         @BindView(R.id.dish_rating_text) StaticRatingView dishRatingView;
@@ -76,12 +78,17 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
         public void loadFeedItem(int position) {
             MockDishItem dish = feedItems.get(position);
 
+            picasso.load(dish.getUser().getProfilePictureUrl())
+                    .fit()
+                    .centerCrop()
+                    .into(userProfilePicture);
+
+            userName.setText(dish.getUser().getName());
             dishInfoText.setText(dish.getTitle());
 
             bookmarkToggle.clearAnimation();
             boolean isBookmarked = sharedPreferencesClient.hasUserBookmarkedDish(dish.getDishId());
             bookmarkToggle.setText(isBookmarked ? R.string.bookmark_filled_icon : R.string.bookmark_empty_icon);
-            bookmarkToggle.setTextColor(isBookmarked ? lightRed : darkGray);
 
             if (dish.getRating() > 0) {
                 dishRatingView.setRating(dish.getRating());
@@ -90,8 +97,7 @@ public class HomeFeedAdapter extends RecyclerView.Adapter<HomeFeedAdapter.FeedIt
                 dishRatingView.setVisibility(View.GONE);
             }
 
-            Picasso.get()
-                    .load(dish.getPhotoUrl())
+            picasso.load(dish.getPhotoUrl())
                     .fit()
                     .centerCrop()
                     .into(dishPicture);

@@ -26,7 +26,7 @@ public class MockSavoryDataFetcher {
     private Handler handler;
     protected MockDataProvider mockDataProvider;
 
-    private MockSavoryDataFetcher(Listener listener) {
+    public MockSavoryDataFetcher(Listener listener) {
         this.listener = listener;
         this.handler = new Handler();
         this.mockDataProvider = new MockDataProvider();

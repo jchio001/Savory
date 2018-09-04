@@ -9,6 +9,7 @@ import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -19,11 +20,16 @@ import android.view.ViewGroup;
 
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
+import com.savory.api.clients.savory.mock.MockDataProvider;
+import com.savory.api.clients.savory.mock.MockSavoryDataFetcher;
+import com.savory.api.clients.savory.mock.models.MockDishItem;
 import com.savory.upload.RequiredDishInfoActivity;
 import com.savory.utils.Constants;
 import com.savory.utils.FileUtils;
 import com.savory.utils.PermissionUtils;
 import com.savory.utils.UIUtils;
+
+import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
@@ -39,14 +45,23 @@ public class HomeFeedFragment extends Fragment{
     }
 
     @BindView(R.id.toolbar) Toolbar toolbar;
+    @BindView(R.id.feed_list) RecyclerView feedList;
     @BindString(R.string.choose_image_from) String chooseImageFrom;
 
+    protected HomeFeedAdapter homeFeedAdapter;
     private Unbinder unbinder;
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.home_feed, container, false);
         unbinder = ButterKnife.bind(this, rootView);
+
+        homeFeedAdapter = new HomeFeedAdapter(getContext());
+        feedList.setAdapter(homeFeedAdapter);
+
+        MockSavoryDataFetcher mockDataFetcher = new MockSavoryDataFetcher(dataFetchListener);
+        mockDataFetcher.fetchData();
+
         return rootView;
     }
 
@@ -57,6 +72,13 @@ public class HomeFeedFragment extends Fragment{
         ((AppCompatActivity) getActivity()).setSupportActionBar(toolbar);
         setHasOptionsMenu(true);
     }
+
+    private final MockSavoryDataFetcher.Listener dataFetchListener = new MockSavoryDataFetcher.Listener() {
+        @Override
+        public void onDishItemsFetched(List<MockDishItem> items) {
+            homeFeedAdapter.setFeedItems(items);
+        }
+    };
 
     /** Starts the flow to add a dish via uploading from gallery */
     private void addWithGallery() {

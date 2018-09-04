@@ -11,4 +11,6 @@ public class Constants {
 
     public static final String FILE_PROVIDER_AUTHORITY = "com.savory.fileprovider";
     public static final String FILE_PROVIDER_PATH = "/Android/data/com.savory/files/Pictures";
+
+    public static final int MAX_NUM_STARS = 5;
 }

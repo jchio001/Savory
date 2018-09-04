@@ -1,4 +1,4 @@
-package com.savory.home;
+package com.savory.feed;
 
 import android.Manifest;
 import android.app.Activity;

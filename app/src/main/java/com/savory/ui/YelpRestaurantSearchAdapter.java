@@ -15,7 +15,7 @@ import com.joanzapata.iconify.IconDrawable;
 import com.joanzapata.iconify.fonts.IoniconsIcons;
 import com.savory.R;
 import com.savory.api.clients.yelp.models.Restaurant;
-import com.savory.ui.RestaurantAdapter.RestaurantViewHolder;
+import com.savory.ui.YelpRestaurantSearchAdapter.RestaurantViewHolder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -25,7 +25,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
+public class YelpRestaurantSearchAdapter extends RecyclerView.Adapter<RestaurantViewHolder> {
 
     public interface Listener {
         void onItemClick(Restaurant place);
@@ -36,7 +36,7 @@ public class RestaurantAdapter extends RecyclerView.Adapter<RestaurantViewHolder
     private Drawable defaultThumbnail;
     protected Listener listener;
 
-    public RestaurantAdapter(Context context, Listener listener) {
+    public YelpRestaurantSearchAdapter(Context context, Listener listener) {
         this.picasso = Picasso.get();
         this.listener = listener;
         defaultThumbnail = new IconDrawable(

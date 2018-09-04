@@ -4,6 +4,7 @@ import com.savory.api.clients.savory.mock.models.MockDishItem;
 import com.savory.api.clients.savory.mock.models.MockRestaurant;
 import com.savory.api.clients.savory.mock.models.MockUser;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class MockDataProvider {
@@ -11,6 +12,8 @@ public class MockDataProvider {
     private List<MockDishItem> dishItems;
 
     public MockDataProvider() {
+        dishItems = new ArrayList<>();
+
         MockUser tonyHawk = new MockUser()
                 .setName("Tony Hawk")
                 .setProfilePictureUrl("http://s.huffpost.com/contributors/tony-hawk/headshot.jpg");
@@ -18,6 +21,7 @@ public class MockDataProvider {
                 .setName("Sweet Garden")
                 .setAddress("39473 Fremont Blvd, Fremont, CA 94538");
         MockDishItem crispyChicken = new MockDishItem()
+                .setDishId(1)
                 .setName("Crispy Chicken")
                 .setNumLikes(10)
                 .setPhotoUrl("https://s3-media1.fl.yelpcdn.com/bphoto/CUC8Mew3HP8Yj6Qpgtmfww/o.jpg")
@@ -35,6 +39,7 @@ public class MockDataProvider {
                 .setName("KA YuMi Diner")
                 .setAddress("40645 Fremont Blvd, Ste 8, Fremont, CA 94538");
         MockDishItem tofuSoup = new MockDishItem()
+                .setDishId(2)
                 .setName("Seafood Spicy Tofu Soup")
                 .setNumLikes(3)
                 .setPhotoUrl("https://s3-media3.fl.yelpcdn.com/bphoto/uaj3Wj3aSYfTIy4lxmAOOg/o.jpg")
@@ -51,6 +56,7 @@ public class MockDataProvider {
                 .setName("Sala Thai")
                 .setAddress("3241 Walnut Ave, Fremont, CA 94538 ");
         MockDishItem rotiCanai = new MockDishItem()
+                .setDishId(3)
                 .setName("Roti Canai")
                 .setNumLikes(10)
                 .setPhotoUrl("https://s3-media3.fl.yelpcdn.com/bphoto/bIGXzFqkoMIXr2wSGXGtWQ/o.jpg")

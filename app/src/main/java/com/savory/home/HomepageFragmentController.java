@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import com.savory.R;
 import com.savory.account.AccountFragment;
 import com.savory.favorites.FavoritesFragment;
+import com.savory.feed.HomeFeedFragment;
 import com.savory.search.SearchFragment;
 
 public class HomepageFragmentController {

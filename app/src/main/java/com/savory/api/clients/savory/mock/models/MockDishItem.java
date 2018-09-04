@@ -2,6 +2,7 @@ package com.savory.api.clients.savory.mock.models;
 
 public class MockDishItem {
 
+    private int dishId;
     private String name;
     private String photoUrl;
     private String description;
@@ -9,6 +10,15 @@ public class MockDishItem {
     private int numLikes;
     private MockUser user;
     private MockRestaurant restaurant;
+
+    public int getDishId() {
+        return dishId;
+    }
+
+    public MockDishItem setDishId(int dishId) {
+        this.dishId = dishId;
+        return this;
+    }
 
     public String getName() {
         return name;
@@ -29,7 +39,7 @@ public class MockDishItem {
     }
 
     public String getDescription() {
-        return description;
+        return "\"" + description + "\"";
     }
 
     public MockDishItem setDescription(String description) {
@@ -71,5 +81,9 @@ public class MockDishItem {
     public MockDishItem setRestaurant(MockRestaurant restaurant) {
         this.restaurant = restaurant;
         return this;
+    }
+
+    public String getTitle() {
+        return name + " @ " + restaurant.getName();
     }
 }

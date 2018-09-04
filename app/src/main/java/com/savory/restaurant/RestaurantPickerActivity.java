@@ -18,7 +18,7 @@ import com.savory.api.clients.yelp.YelpRestaurantClient;
 import com.savory.api.clients.yelp.models.Restaurant;
 import com.savory.api.clients.yelp.models.RestaurantSearchResults;
 import com.savory.location.LocationManager;
-import com.savory.ui.RestaurantAdapter;
+import com.savory.ui.YelpRestaurantSearchAdapter;
 import com.savory.ui.SimpleItemDividerDecoration;
 import com.savory.utils.Constants;
 import com.savory.utils.UIUtils;
@@ -40,7 +40,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
     @BindView(R.id.places_list) RecyclerView placesList;
     @BindView(R.id.set_location) FloatingActionButton setLocation;
 
-    protected RestaurantAdapter placesAdapter;
+    protected YelpRestaurantSearchAdapter placesAdapter;
     private LocationManager locationManager;
     protected boolean denialLock;
     protected String currentLocation;
@@ -52,7 +52,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_restaurant_picker);
         ButterKnife.bind(this);
 
-        placesAdapter = new RestaurantAdapter(this, placeChoiceListener);
+        placesAdapter = new YelpRestaurantSearchAdapter(this, placeChoiceListener);
         placesList.setAdapter(placesAdapter);
         placesList.addItemDecoration(new SimpleItemDividerDecoration(this));
 
@@ -195,7 +195,7 @@ public class RestaurantPickerActivity extends AppCompatActivity {
         }
     }
 
-    private final RestaurantAdapter.Listener placeChoiceListener = new RestaurantAdapter.Listener() {
+    private final YelpRestaurantSearchAdapter.Listener placeChoiceListener = new YelpRestaurantSearchAdapter.Listener() {
         @Override
         public void onItemClick(Restaurant place) {
             Intent intent = new Intent();

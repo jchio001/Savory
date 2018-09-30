@@ -3,12 +3,16 @@
     <string name="welcome_header">Welcome to Savory</string>
     <string name="login_intro_text">Discover food you love from the people you care about.</string>
 
+    <string name="user_agreement">User Agreement</string>
     <string name="agreement_terms">
         <![CDATA[ By using Savory, you agree to our
         <a href="savory://web_view:/terms_of_use">Terms of Use</a>,
         <a href="savory://web_view:/privacy_policy">Privacy Policy</a>, and
         <a href="savory://web_view:/content_guidelines">Content Guidelines</a>. ]]>
     </string>
+
+    <string name="i_agree">I agree</string>
+    <string name="i_disagree">I disagree</string>
 
     <string name="terms_of_use">Terms of Use</string>
     <string name="privacy_policy">Privacy Policy</string>

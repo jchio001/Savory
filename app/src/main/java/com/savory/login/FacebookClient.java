@@ -3,7 +3,6 @@ package com.savory.login;
 import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
-import android.view.View;
 
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
@@ -20,13 +19,8 @@ public class FacebookClient {
     private CallbackManager callbackManager = CallbackManager.Factory.create();
     protected LoginManager loginManager = LoginManager.getInstance();
 
-    public void bind(@NonNull FacebookButton facebookButton) {
-        facebookButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                loginManager.logInWithReadPermissions((Activity) v.getContext(), FB_PERMISSIONS);
-            }
-        });
+    public void login(Activity activity) {
+        loginManager.logInWithReadPermissions(activity, FB_PERMISSIONS);
     }
 
     public void registerCallback(@NonNull FacebookCallback<LoginResult> callback) {

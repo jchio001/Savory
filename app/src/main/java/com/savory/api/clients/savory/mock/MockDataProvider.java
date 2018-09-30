@@ -45,7 +45,7 @@ public class MockDataProvider {
                 .setName("Seafood Spicy Tofu Soup")
                 .setNumLikes(3)
                 .setPhotoUrl("https://s3-media3.fl.yelpcdn.com/bphoto/uaj3Wj3aSYfTIy4lxmAOOg/o.jpg")
-                .setDescription("Waaay too mushrooms in this")
+                .setDescription("Waaay too many mushrooms in this")
                 .setRating(2)
                 .setUser(elonMusk)
                 .setRestaurant(kayumiDiner);

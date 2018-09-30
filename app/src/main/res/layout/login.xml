@@ -31,16 +31,5 @@
         android:id="@+id/facebook_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_above="@id/agreement_text"/>
-
-    <TextView
-        android:id="@+id/agreement_text"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginTop="12dp"
-        android:textColor="@color/white"
-        android:textColorLink="@color/blue"
-        android:textSize="15sp"
-        android:linksClickable="true"/>
+        android:layout_alignParentBottom="true"/>
 </RelativeLayout>

@@ -1,5 +1,6 @@
 package com.savory.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
@@ -17,19 +18,20 @@ public class LoginClient {
 
     interface LoginListener {
         void onLoginPending();
+
         void onSuccessfulLogin(SavoryToken savoryToken);
+
         void onLoginCancelled();
+
         void onLoginError(Throwable throwable);
     }
 
     protected SavoryClient savoryClient;
-
     protected Call<SavoryToken> savoryTokenCall;
-
     protected LoginListener listener;
 
     private FacebookClient facebookClient = new FacebookClient();
-    private FacebookCallback<LoginResult> fbLoginCallback = new FacebookCallback<LoginResult>() {
+    private final FacebookCallback<LoginResult> fbLoginCallback = new FacebookCallback<LoginResult>() {
         @Override
         public void onSuccess(LoginResult loginResult) {
             if (listener != null) {
@@ -50,9 +52,7 @@ public class LoginClient {
                     }
 
                     @Override
-                    public void onFailure(Call<SavoryToken> call, Throwable t) {
-
-                    }
+                    public void onFailure(Call<SavoryToken> call, Throwable t) {}
                 });
             }
         }
@@ -77,8 +77,8 @@ public class LoginClient {
         facebookClient.registerCallback(fbLoginCallback);
     }
 
-    void bindFacebookButton(@NonNull FacebookButton facebookButton) {
-        facebookClient.bind(facebookButton);
+    void loginWithFacebook(Activity activity) {
+        facebookClient.login(activity);
     }
 
     void listen(@NonNull LoginListener listener) {

@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.widget.TextView;
 
 import com.savory.R;
 import com.savory.api.clients.savory.SavoryClient;
@@ -18,16 +15,17 @@ import com.savory.login.LoginClient.LoginListener;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends AppCompatActivity implements UserAgreementDialog.Listener {
 
     @BindView(R.id.facebook_button) FacebookButton facebookButton;
-    @BindView(R.id.agreement_text) TextView agreementText;
 
     protected SavoryClient savoryClient;
     private LoginClient loginClient;
     protected SharedPreferencesClient sharedPreferencesClient;
 
+    private UserAgreementDialog userAgreementDialog;
     protected ProgressDialog progressDialog;
 
     @Override
@@ -36,8 +34,7 @@ public class LoginActivity extends AppCompatActivity {
         setContentView(R.layout.login);
         ButterKnife.bind(this);
 
-        agreementText.setMovementMethod(LinkMovementMethod.getInstance());
-        agreementText.setText(Html.fromHtml(getString(R.string.agreement_terms)));
+        userAgreementDialog = new UserAgreementDialog(this, this);
 
         savoryClient = SavoryClient.get();
         loginClient = new LoginClient(savoryClient);
@@ -51,7 +48,6 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        loginClient.bindFacebookButton(facebookButton);
         loginClient.listen(new LoginListener() {
             @Override
             public void onLoginPending() {
@@ -78,11 +74,18 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onLoginError(Throwable throwable) {
                 progressDialog.dismiss();
-
-                // Proceed to home anyways since login is currently broken
-                startActivity(new Intent(LoginActivity.this, HomeActivity.class));
             }
         });
+    }
+
+    @OnClick(R.id.facebook_button)
+    public void onFacebookLoginClicked() {
+        userAgreementDialog.show();
+    }
+
+    @Override
+    public void onUserAgreementAccepted() {
+        loginClient.loginWithFacebook(this);
     }
 
     @Override

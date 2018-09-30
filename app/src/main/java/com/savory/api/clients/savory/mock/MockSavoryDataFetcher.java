@@ -8,7 +8,7 @@ import java.util.List;
 
 public class MockSavoryDataFetcher {
 
-    private static final long MILLIS_DELAY_BEFORE_RETURN = 5000L;
+    private static final long MILLIS_DELAY_BEFORE_RETURN = 2000L;
 
     public interface Listener {
         void onDishItemsFetched(List<MockDishItem> items);

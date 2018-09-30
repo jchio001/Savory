@@ -1,4 +1,4 @@
-## General Guidelines
+## Content Guidelines
 
 Savory allows users to contribute different kinds of content, including reviews, photos, videos, events, votes, tips, direct messages, and more. Playing nice isn’t rocket science, but just in case, we’ve put together these general guidelines. Please also read the guidelines below for specific types of content that you might contribute to the site.
 

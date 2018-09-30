@@ -38,7 +38,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginTop="12dp"
         android:textColor="@color/white"
-        android:textSize="21sp"
+        android:textColorLink="@color/blue"
+        android:textSize="15sp"
         android:linksClickable="true"/>
 </RelativeLayout>

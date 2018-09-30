@@ -38,9 +38,7 @@ public class SharedPreferencesClient {
     }
 
     public boolean isUserLoggedIn() {
-        return true;
-        // TODO: Once login is fixed, comment this back in
-        // return retrieveSavoryToken() != null;
+        return retrieveSavoryToken() != null;
     }
 
     public boolean shouldAskForRating() {

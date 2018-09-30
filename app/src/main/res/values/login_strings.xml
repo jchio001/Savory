@@ -4,7 +4,10 @@
     <string name="login_intro_text">Discover food you love from the people you care about.</string>
 
     <string name="agreement_terms">
-        By using Savory, you agree to our Terms of Use, Privacy Policy, and Content Guidelines.
+        <![CDATA[ By using Savory, you agree to our
+        <a href="savory://web_view:/terms_of_use">Terms of Use</a>,
+        <a href="savory://web_view:/privacy_policy">Privacy Policy</a>, and
+        <a href="savory://web_view:/content_guidelines">Content Guidelines</a>. ]]>
     </string>
 
     <string name="terms_of_use">Terms of Use</string>

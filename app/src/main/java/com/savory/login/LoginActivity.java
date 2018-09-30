@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.widget.TextView;
 
 import com.savory.R;
 import com.savory.api.clients.savory.SavoryClient;
@@ -19,6 +22,7 @@ import butterknife.ButterKnife;
 public class LoginActivity extends AppCompatActivity {
 
     @BindView(R.id.facebook_button) FacebookButton facebookButton;
+    @BindView(R.id.agreement_text) TextView agreementText;
 
     protected SavoryClient savoryClient;
     private LoginClient loginClient;
@@ -31,6 +35,9 @@ public class LoginActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.login);
         ButterKnife.bind(this);
+
+        agreementText.setMovementMethod(LinkMovementMethod.getInstance());
+        agreementText.setText(Html.fromHtml(getString(R.string.agreement_terms)));
 
         savoryClient = SavoryClient.get();
         loginClient = new LoginClient(savoryClient);

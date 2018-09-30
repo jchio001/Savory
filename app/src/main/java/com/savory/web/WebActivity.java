@@ -3,6 +3,7 @@ package com.savory.web;
 import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v7.app.AppCompatActivity;
+import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -94,5 +95,14 @@ public class WebActivity extends AppCompatActivity {
     public void finish() {
         super.finish();
         overridePendingTransition(0, R.anim.slide_out_bottom);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

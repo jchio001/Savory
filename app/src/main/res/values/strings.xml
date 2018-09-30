@@ -6,7 +6,7 @@
     <string name="fb_login_protocol_scheme">fb409640192858052</string>
 
     <!-- Login Activity -->
-    <string name="connecting">Connecting&#8230;</string>
+    <string name="logging_you_in">Logging you in&#8230;</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

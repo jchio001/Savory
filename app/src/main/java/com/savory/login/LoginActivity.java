@@ -1,6 +1,5 @@
 package com.savory.login;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -12,6 +11,7 @@ import com.savory.api.clients.savory.models.SavoryToken;
 import com.savory.data.SharedPreferencesClient;
 import com.savory.home.HomeActivity;
 import com.savory.login.LoginClient.LoginListener;
+import com.savory.ui.SimpleBlockingProgressDialog;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -26,7 +26,7 @@ public class LoginActivity extends AppCompatActivity implements UserAgreementDia
     protected SharedPreferencesClient sharedPreferencesClient;
 
     private UserAgreementDialog userAgreementDialog;
-    protected ProgressDialog progressDialog;
+    protected SimpleBlockingProgressDialog progressDialog;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity implements UserAgreementDia
         ButterKnife.bind(this);
 
         userAgreementDialog = new UserAgreementDialog(this, this);
+        progressDialog = new SimpleBlockingProgressDialog(this, R.string.logging_you_in);
 
         savoryClient = SavoryClient.get();
         loginClient = new LoginClient(savoryClient);
@@ -51,9 +52,6 @@ public class LoginActivity extends AppCompatActivity implements UserAgreementDia
         loginClient.listen(new LoginListener() {
             @Override
             public void onLoginPending() {
-                progressDialog = new ProgressDialog(LoginActivity.this);
-                progressDialog.setMessage(getString(R.string.connecting));
-                progressDialog.setCancelable(false);
                 progressDialog.show();
             }
 

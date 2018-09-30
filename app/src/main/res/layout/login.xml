@@ -13,9 +13,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:text="Welcome To Savory."
+        android:text="@string/welcome_header"
         android:textColor="@color/white"
-        android:textSize="32sp"
+        android:textSize="33sp"
         android:textStyle="bold"/>
 
     <TextView
@@ -25,11 +25,20 @@
         android:layout_marginTop="4dp"
         android:text="@string/login_intro_text"
         android:textColor="@color/white"
-        android:textSize="18sp"/>
+        android:textSize="19sp"/>
 
     <com.savory.login.FacebookButton
         android:id="@+id/facebook_button"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:layout_alignParentBottom="true"/>
+        android:layout_above="@id/agreement_text"/>
+
+    <TextView
+        android:id="@+id/agreement_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:textColor="@color/white"
+        android:textSize="21sp"
+        android:linksClickable="true"/>
 </RelativeLayout>

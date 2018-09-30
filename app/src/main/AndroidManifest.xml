@@ -90,5 +90,19 @@
             android:theme="@style/AppTheme.NoActionBar"
             android:windowSoftInputMode="stateAlwaysHidden"
             android:screenOrientation="portrait"/>
+
+        <activity
+            android:name=".web.WebActivity"
+            android:screenOrientation="portrait">
+
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:scheme="savory"/>
+                <data android:host="web_view"/>
+                <data android:pathPattern="/.*"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>

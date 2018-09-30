@@ -1,4 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="welcome_header">Welcome to Savory</string>
     <string name="login_intro_text">Discover food you love from the people you care about.</string>
+
+    <string name="agreement_terms">
+        By using Savory, you agree to our Terms of Use, Privacy Policy, and Content Guidelines.
+    </string>
+
+    <string name="terms_of_use">Terms of Use</string>
+    <string name="privacy_policy">Privacy Policy</string>
+    <string name="content_guidelines">Content Guidelines</string>
 </resources>

@@ -13,12 +13,12 @@ android {
     buildTypes {
         debug {
             minifyEnabled false
-            buildConfigField("String", "GOOGLE_API_KEY", GOOGLE_API_KEY)
+            buildConfigField("String", "YELP_API_KEY", YELP_API_KEY)
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
         release {
             minifyEnabled false
-            buildConfigField("String", "GOOGLE_API_KEY", GOOGLE_API_KEY)
+            buildConfigField("String", "YELP_API_KEY", YELP_API_KEY)
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }

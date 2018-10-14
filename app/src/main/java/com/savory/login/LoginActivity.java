@@ -12,6 +12,7 @@ import com.savory.data.SharedPreferencesClient;
 import com.savory.home.HomeActivity;
 import com.savory.login.LoginClient.LoginListener;
 import com.savory.ui.SimpleBlockingProgressDialog;
+import com.savory.utils.UIUtils;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -49,7 +50,7 @@ public class LoginActivity extends AppCompatActivity implements UserAgreementDia
             return;
         }
 
-        loginClient.listen(new LoginListener() {
+        loginClient.setListener(new LoginListener() {
             @Override
             public void onLoginPending() {
                 progressDialog.show();
@@ -70,8 +71,9 @@ public class LoginActivity extends AppCompatActivity implements UserAgreementDia
             public void onLoginCancelled() {}
 
             @Override
-            public void onLoginError(Throwable throwable) {
+            public void onLoginError() {
                 progressDialog.dismiss();
+                UIUtils.showLongToast(R.string.login_fail, LoginActivity.this);
             }
         });
     }

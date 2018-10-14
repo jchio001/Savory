@@ -17,4 +17,6 @@
     <string name="terms_of_use">Terms of Use</string>
     <string name="privacy_policy">Privacy Policy</string>
     <string name="content_guidelines">Content Guidelines</string>
+
+    <string name="login_fail">We failed to log you in. Please try again later.</string>
 </resources>

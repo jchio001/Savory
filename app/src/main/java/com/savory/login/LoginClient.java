@@ -23,7 +23,7 @@ public class LoginClient {
 
         void onLoginCancelled();
 
-        void onLoginError(Throwable throwable);
+        void onLoginError();
     }
 
     protected SavoryClient savoryClient;
@@ -40,13 +40,12 @@ public class LoginClient {
                     loginResult.getAccessToken().getToken());
                 savoryTokenCall.enqueue(new Callback<SavoryToken>() {
                     @Override
-                    public void onResponse(Call<SavoryToken> call,
-                                           Response<SavoryToken> response) {
+                    public void onResponse(Call<SavoryToken> call, Response<SavoryToken> response) {
                         if (listener != null) {
                             if (response.isSuccessful()) {
                                 listener.onSuccessfulLogin(response.body());
                             } else {
-                                listener.onLoginError(new Exception("server error"));
+                                listener.onLoginError();
                             }
                         }
                     }
@@ -67,7 +66,7 @@ public class LoginClient {
         @Override
         public void onError(FacebookException error) {
             if (listener != null) {
-                listener.onLoginError(error);
+                listener.onLoginError();
             }
         }
     };
@@ -81,7 +80,7 @@ public class LoginClient {
         facebookClient.login(activity);
     }
 
-    void listen(@NonNull LoginListener listener) {
+    void setListener(@NonNull LoginListener listener) {
         this.listener = listener;
     }
 

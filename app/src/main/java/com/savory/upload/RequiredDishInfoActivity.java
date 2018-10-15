@@ -3,6 +3,7 @@ package com.savory.upload;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.text.TextUtils;
@@ -60,7 +61,7 @@ public class RequiredDishInfoActivity extends StandardActivity {
 
         picasso = Picasso.get();
         String filePathToImage = getIntent().getStringExtra(Constants.PHOTO_FILE_PATH_KEY);
-        picasso.load(filePathToImage)
+        picasso.load(Uri.parse(filePathToImage))
                 .fit()
                 .centerCrop()
                 .into(dishPreview);

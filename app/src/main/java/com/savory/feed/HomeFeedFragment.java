@@ -26,7 +26,6 @@ import com.savory.api.clients.savory.mock.models.MockDishItem;
 import com.savory.api.clients.savory.mock.models.MockRestaurant;
 import com.savory.upload.RequiredDishInfoActivity;
 import com.savory.utils.Constants;
-import com.savory.utils.FileUtils;
 import com.savory.utils.PermissionUtils;
 import com.savory.utils.UIUtils;
 
@@ -139,14 +138,13 @@ public class HomeFeedFragment extends Fragment{
             return;
         }
 
-        String chosenFilePath = FileUtils.getGalleryImagePath(data, getActivity());
-        if (chosenFilePath == null) {
-            UIUtils.showLongToast(R.string.gallery_choice_fail, getActivity());
+        if (data.getData() == null) {
+            UIUtils.showLongToast(R.string.gallery_choice_fail, getContext());
             return;
         }
 
         Intent intent = new Intent(getActivity(), RequiredDishInfoActivity.class)
-                .putExtra(Constants.PHOTO_FILE_PATH_KEY, chosenFilePath);
+                .putExtra(Constants.PHOTO_FILE_PATH_KEY, data.getData().toString());
         startActivityForResult(intent, 1);
     }
 

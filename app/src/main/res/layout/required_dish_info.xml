@@ -55,17 +55,11 @@
 
             <EditText
                 android:id="@+id/dish_title_input"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
                 android:hint="@string/ask_for_dish_title"
-                android:textColor="@color/dark_gray"
-                android:textSize="17dp"
-                android:inputType="text"
-                android:background="@null"
-                android:padding="16dp"
+                android:inputType="textCapWords"
                 android:maxLines="1"
                 android:singleLine="true"
-                android:imeOptions="actionDone"/>
+                style="@style/dish_form_input"/>
 
             <View
                 android:layout_width="match_parent"

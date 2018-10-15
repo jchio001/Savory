@@ -32,7 +32,9 @@ import butterknife.OnTextChanged;
 
 public class RequiredDishInfoActivity extends StandardActivity {
 
-    private static final int REQUEST_CODE = 2343;
+    private static final int RESTAURANT_REQUEST_CODE = 1;
+    private static final int COMPLETE_UPLOAD_CODE = 2;
+
     private static final float DISABLED_ALPHA = 0.25f;
 
     @BindView(R.id.focus_sink) View focusSink;
@@ -50,6 +52,7 @@ public class RequiredDishInfoActivity extends StandardActivity {
     private Drawable defaultRestaurantThumbnail;
     private @Nullable Restaurant restaurant;
     private ExitDishFormDialog exitDishFormDialog;
+    private DishForUpload dishForUpload;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +68,8 @@ public class RequiredDishInfoActivity extends StandardActivity {
                 .fit()
                 .centerCrop()
                 .into(dishPreview);
+
+        dishForUpload = new DishForUpload(filePathToImage);
 
         defaultRestaurantThumbnail = new IconDrawable(
                 this,
@@ -109,7 +114,12 @@ public class RequiredDishInfoActivity extends StandardActivity {
     @OnClick(R.id.next)
     public void onNextClicked() {
         if (verifyFormAndMaybeShowErrors()) {
-            // Go to next step
+            String title = dishTitleInput.getText().toString().trim();
+            dishForUpload.setTitle(title);
+            dishForUpload.setRestaurant(restaurant);
+            Intent intent = new Intent(this, ExtraDishInfoActivity.class)
+                    .putExtra(Constants.DISH_FOR_UPLOAD_EXTRA_KEY, dishForUpload);
+            startActivityForResult(intent, COMPLETE_UPLOAD_CODE);
         }
     }
 
@@ -156,15 +166,22 @@ public class RequiredDishInfoActivity extends StandardActivity {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Restaurant restaurant = data.getParcelableExtra(Constants.PLACE_KEY);
-            loadRestaurantInfo(restaurant);
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == RESTAURANT_REQUEST_CODE) {
+                Restaurant restaurant = data.getParcelableExtra(Constants.PLACE_KEY);
+                loadRestaurantInfo(restaurant);
+            } else if (requestCode == COMPLETE_UPLOAD_CODE) {
+                finish();
+            }
         }
     }
 
     @OnClick(R.id.pick_restaurant)
     public void onRestaurantSectionClicked() {
-        startActivityForResult(new Intent(this, RestaurantPickerActivity.class), REQUEST_CODE);
+        focusSink.requestFocus();
+        startActivityForResult(
+                new Intent(this, RestaurantPickerActivity.class),
+                RESTAURANT_REQUEST_CODE);
         overridePendingTransition(R.anim.slide_in_bottom, R.anim.stay);
     }
 }

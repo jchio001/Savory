@@ -120,7 +120,10 @@ public class HomeActivity extends StandardActivity {
 
         File photoFile = FileUtils.createImageFile(this);
         if (photoFile != null) {
-            takenPhotoUri = FileProvider.getUriForFile(this, Constants.FILE_PROVIDER_AUTHORITY, photoFile);
+            takenPhotoUri = FileProvider.getUriForFile(
+                    this,
+                    Constants.FILE_PROVIDER_AUTHORITY,
+                    photoFile);
 
             // Grant access to content URI so camera app doesn't crash
             List<ResolveInfo> resolvedIntentActivities = getPackageManager()
@@ -159,9 +162,10 @@ public class HomeActivity extends StandardActivity {
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[],
-                                           @NonNull int[] grantResults) {
+    public void onRequestPermissionsResult(
+            int requestCode,
+            @NonNull String permissions[],
+            @NonNull int[] grantResults) {
         if (requestCode != Constants.CAMERA_CODE
                 || grantResults.length <= 0
                 || grantResults[0] != PackageManager.PERMISSION_GRANTED) {

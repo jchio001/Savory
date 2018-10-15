@@ -14,4 +14,8 @@
     <string name="no_dish_location_error">Please tell us where you got this dish.</string>
 
     <string name="image_file_failed">Unable to create a file to save your dish picture to.</string>
+
+    <string name="description_hint">Describe this dish</string>
+    <string name="rate_this_dish">Rate this dish!</string>
+    <string name="share">Share</string>
 </resources>

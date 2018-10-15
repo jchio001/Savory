@@ -92,6 +92,12 @@
             android:screenOrientation="portrait"/>
 
         <activity
+            android:name=".upload.ExtraDishInfoActivity"
+            android:theme="@style/AppTheme.NoActionBar"
+            android:windowSoftInputMode="stateAlwaysHidden"
+            android:screenOrientation="portrait"/>
+
+        <activity
             android:name=".web.WebActivity"
             android:screenOrientation="portrait">
 

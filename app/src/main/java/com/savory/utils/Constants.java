@@ -13,4 +13,6 @@ public class Constants {
     public static final String FILE_PROVIDER_PATH = "/Android/data/com.savory/files/Pictures";
 
     public static final int MAX_NUM_STARS = 5;
+
+    public static final String DISH_FOR_UPLOAD_EXTRA_KEY = "dishForUpload";
 }

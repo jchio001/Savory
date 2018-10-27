@@ -9,6 +9,8 @@ import com.facebook.FacebookCallback;
 import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 

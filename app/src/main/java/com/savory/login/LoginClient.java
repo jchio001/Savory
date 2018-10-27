@@ -51,7 +51,11 @@ public class LoginClient {
                     }
 
                     @Override
-                    public void onFailure(Call<SavoryToken> call, Throwable t) {}
+                    public void onFailure(Call<SavoryToken> call, Throwable t) {
+                        if (listener != null) {
+                            listener.onLoginError();
+                        }
+                    }
                 });
             }
         }

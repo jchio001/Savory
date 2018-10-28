@@ -12,7 +12,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class BottomNavigationView {
+public class BottomNavigationViewBinder {
 
     public interface Listener {
         void onNavItemSelected(@IdRes int viewId);
@@ -30,7 +30,7 @@ public class BottomNavigationView {
     @NonNull private Listener listener;
     private TextView currentlySelected;
 
-    public BottomNavigationView(View parent, @NonNull Listener listener) {
+    public BottomNavigationViewBinder(View parent, @NonNull Listener listener) {
         ButterKnife.bind(this, parent);
         this.listener = listener;
 

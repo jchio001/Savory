@@ -21,6 +21,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    packagingOptions {
+        exclude 'META-INF/proguard/androidx-annotations.pro'
+        exclude 'META-INF/androidx.exifinterface_exifinterface.version'
+    }
 }
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
@@ -28,6 +32,7 @@ dependencies {
     implementation 'com.android.support:support-v4:28.0.0'
     implementation 'com.android.support:design:28.0.0'
     implementation 'com.android.support:customtabs:28.0.0'
+    implementation 'com.android.support:exifinterface:28.0.0'
 
     implementation ('com.facebook.android:facebook-login:4.37.0') {
         exclude group: 'com.android.support'
@@ -60,4 +65,5 @@ dependencies {
 
     // Be careful updating to 15.0.1, it doesn't seem to be actually published yet
     implementation 'com.google.android.gms:play-services-location:15.0.0'
+    implementation 'androidx.exifinterface:exifinterface:1.0.0'
 }

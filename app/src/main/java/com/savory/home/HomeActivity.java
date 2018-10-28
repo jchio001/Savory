@@ -4,40 +4,35 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.IdRes;
 import android.support.annotation.NonNull;
-import android.support.v4.content.FileProvider;
 import android.view.View;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.savory.R;
 import com.savory.data.SharedPreferencesClient;
-import com.savory.ui.BottomNavigationView;
+import com.savory.ui.BottomNavigationViewBinder;
+import com.savory.ui.SimpleBlockingProgressDialog;
 import com.savory.ui.StandardActivity;
+import com.savory.upload.PhotoTakerManager;
 import com.savory.upload.RequiredDishInfoActivity;
 import com.savory.utils.Constants;
-import com.savory.utils.FileUtils;
 import com.savory.utils.PermissionUtils;
 import com.savory.utils.UIUtils;
-
-import java.io.File;
-import java.util.List;
 
 import butterknife.BindString;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class HomeActivity extends StandardActivity {
+public class HomeActivity extends StandardActivity implements PhotoTakerManager.Listener {
 
     @BindView(R.id.bottom_navigation) View bottomNavigation;
     @BindString(R.string.choose_image_from) String chooseImageFrom;
 
-    private final BottomNavigationView.Listener bottomNavListener = new BottomNavigationView.Listener() {
+    private final BottomNavigationViewBinder.Listener bottomNavListener = new BottomNavigationViewBinder.Listener() {
         @Override
         public void onNavItemSelected(@IdRes int viewId) {
             UIUtils.hideKeyboard(HomeActivity.this);
@@ -50,9 +45,9 @@ public class HomeActivity extends StandardActivity {
         }
     };
 
-    private BottomNavigationView bottomNavigationView;
     protected HomepageFragmentController navigationController;
-    private Uri takenPhotoUri;
+    private PhotoTakerManager photoTakerManager;
+    protected SimpleBlockingProgressDialog photoProcessingDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +66,11 @@ public class HomeActivity extends StandardActivity {
         ButterKnife.bind(this);
 
         navigationController = new HomepageFragmentController(getSupportFragmentManager(), R.id.container);
-        bottomNavigationView = new BottomNavigationView(bottomNavigation, bottomNavListener);
+        new BottomNavigationViewBinder(bottomNavigation, bottomNavListener);
         navigationController.loadHome();
+
+        photoProcessingDialog = new SimpleBlockingProgressDialog(this, R.string.processing_taken_photo);
+        photoTakerManager = new PhotoTakerManager(this);
 
         SharedPreferencesClient sharedPreferencesClient = new SharedPreferencesClient(this);
         if (sharedPreferencesClient.shouldAskForRating()) {
@@ -112,52 +110,41 @@ public class HomeActivity extends StandardActivity {
     }
 
     private void startCameraPage() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-
-        if (takePictureIntent.resolveActivity(getPackageManager()) == null) {
-            return;
-        }
-
-        File photoFile = FileUtils.createImageFile(this);
-        if (photoFile != null) {
-            takenPhotoUri = FileProvider.getUriForFile(
-                    this,
-                    Constants.FILE_PROVIDER_AUTHORITY,
-                    photoFile);
-
-            // Grant access to content URI so camera app doesn't crash
-            List<ResolveInfo> resolvedIntentActivities = getPackageManager()
-                    .queryIntentActivities(takePictureIntent, PackageManager.MATCH_DEFAULT_ONLY);
-
-            for (ResolveInfo resolvedIntentInfo : resolvedIntentActivities) {
-                String packageName = resolvedIntentInfo.activityInfo.packageName;
-                grantUriPermission(packageName, takenPhotoUri,
-                        Intent.FLAG_GRANT_WRITE_URI_PERMISSION
-                                | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            }
-
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, takenPhotoUri);
-            startActivityForResult(takePictureIntent, Constants.CAMERA_CODE);
+        Intent takePhotoIntent = photoTakerManager.getPhotoTakingIntent(this);
+        if (takePhotoIntent == null) {
+            UIUtils.showLongToast(R.string.take_photo_with_camera_failed, this);
         } else {
-            UIUtils.showLongToast(R.string.image_file_failed, this);
+            startActivityForResult(takePhotoIntent, Constants.CAMERA_CODE);
         }
+    }
+
+    @Override
+    public void onTakePhotoFailure() {
+        UIUtils.showLongToast(R.string.take_photo_with_camera_failed, this);
+    }
+
+    @Override
+    public void onTakePhotoSuccess(final Uri takenPhotoUri) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                photoProcessingDialog.dismiss();
+                Intent cameraIntent = new Intent(HomeActivity.this, RequiredDishInfoActivity.class)
+                        .putExtra(Constants.PHOTO_FILE_PATH_KEY, takenPhotoUri.toString());
+                startActivityForResult(cameraIntent, Constants.UPLOAD_CODE);
+            }
+        });
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Constants.CAMERA_CODE && resultCode == Activity.RESULT_OK) {
-            // Returning from picture taking
-            revokeUriPermission(
-                    takenPhotoUri,
-                    Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
-
-            Intent cameraIntent = new Intent(this, RequiredDishInfoActivity.class)
-                    .putExtra(Constants.PHOTO_FILE_PATH_KEY, takenPhotoUri.toString());
-            startActivityForResult(cameraIntent, Constants.UPLOAD_CODE);
+            photoProcessingDialog.show();
+            photoTakerManager.processTakenPhoto(this);
         }
         if (requestCode == Constants.UPLOAD_CODE && resultCode == Activity.RESULT_CANCELED) {
-            FileUtils.deleteCameraImageWithUri(takenPhotoUri);
+            photoTakerManager.deleteLastTakenPhoto();
         }
     }
 

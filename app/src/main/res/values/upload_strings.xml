@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <string name="processing_taken_photo">Processing taken photo&#8230;</string>
+
     <string name="ask_for_dish_title">What is this dish called?</string>
     <string name="ask_for_dish_location">Where did you get it?</string>
     <string name="next">Next</string>
@@ -13,7 +15,9 @@
     <string name="no_dish_title_error">Please tell us what this dish is called.</string>
     <string name="no_dish_location_error">Please tell us where you got this dish.</string>
 
-    <string name="image_file_failed">Unable to create a file to save your dish picture to.</string>
+    <string name="take_photo_with_camera_failed">
+        Sorry, we are unable to process your device\'s camera photos.
+    </string>
 
     <string name="description_hint">Describe this dish</string>
     <string name="rate_this_dish">Rate this dish!</string>
